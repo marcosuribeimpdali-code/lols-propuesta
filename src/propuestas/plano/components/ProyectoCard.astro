@@ -1,0 +1,47 @@
+---
+import { Image } from 'astro:assets';
+import FotoPendiente from './FotoPendiente.astro';
+import Pendiente from '../../comun/Pendiente.astro';
+import { altObra, type Proyecto } from '../../../data/proyectos';
+
+interface Props {
+  proyecto: Proyecto;
+  numero: number;
+  /** nivel del título según dónde se use la tarjeta */
+  nivel?: 'h2' | 'h3';
+}
+const { proyecto: p, numero, nivel: H = 'h3' } = Astro.props;
+
+const n = String(numero).padStart(2, '0');
+const estado = p.estado === 'terminado' ? 'Terminado' : 'En construcción';
+const campos: [string, string | null][] = [
+  ['Mandante', p.mandante],
+  ['Comuna', p.comuna],
+  ['Año', p.anio],
+  ['Servicios', p.servicios?.join(' · ') ?? null],
+  ['Magnitud', p.magnitud],
+];
+---
+<article class="proyecto">
+  {p.imagen ? (
+    <div class="proyecto__media">
+      <Image class="proyecto__foto" src={p.imagen.src} alt={altObra(p, numero)} widths={[372, 744]} sizes="(max-width: 700px) 100vw, 372px" />
+      <span class="proyecto__origen">{p.imagen.tipo === 'render' ? 'Render' : 'Foto'} · {p.imagen.origen}</span>
+    </div>
+  ) : (
+    <FotoPendiente que={`obra ${n}`} proporcion="7 / 8" medida="mín. 1600 × 1200 px" />
+  )}
+  <div class="proyecto__cab">
+    <span class="proyecto__num">Obra {n}</span>
+    <span class:list={['estado', `estado--${p.estado}`]}>{estado}</span>
+  </div>
+  <H class="proyecto__titulo">{p.nombre ?? <Pendiente texto="nombre de la obra" />}</H>
+  <dl class="ficha">
+    {campos.map(([k, v]) => (
+      <>
+        <dt>{k}</dt>
+        <dd>{v ?? <span class="pendiente pendiente--mini">pendiente</span>}</dd>
+      </>
+    ))}
+  </dl>
+</article>

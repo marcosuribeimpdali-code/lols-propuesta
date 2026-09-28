@@ -1,0 +1,177 @@
+---
+// Portada a pantalla completa: las fotos giran como las caras de un cubo 3D (la referencia es
+// el slider de inmobiliariaskyblue.com, hecho aquí sin plugins).
+// Accesibilidad: botón de pausa (WCAG 2.2.2), flechas, puntos, teclado y deslizar con el dedo;
+// se detiene al pasar el mouse o enfocar un control; con "reducir movimiento" no avanza sola y
+// cambia con un fundido en vez del giro.
+import { Image } from 'astro:assets';
+import Revisar from '../../comun/Revisar.astro';
+import { diapositivas } from '../../../data/portada';
+import { empresa } from '../../../data/empresa';
+import { r } from '../config';
+
+const total = diapositivas.length;
+---
+<section class="cubo" aria-roledescription="carrusel" aria-label="Portada">
+  <h1 class="visually-hidden">{empresa.nombreCorto}: {empresa.lema}</h1>
+  <div class="cubo__escena" aria-live="off">
+    {diapositivas.map((d, i) => (
+      <div
+        class:list={['cubo__cara', { 'is-activa': i === 0 }]}
+        role="group"
+        aria-roledescription="diapositiva"
+        aria-label={`${i + 1} de ${total}: ${d.titulo}`}
+        inert={i !== 0}
+      >
+        <Image
+          class="cubo__img"
+          src={d.img}
+          alt={d.alt}
+          widths={[640, 1024, 1440, 2000]}
+          sizes="100vw"
+          loading="eager"
+          fetchpriority={i === 0 ? 'high' : 'low'}
+        />
+        <div class="cubo__velo" aria-hidden="true"></div>
+        <div class="wrap cubo__texto">
+          <p class="cubo__ante">{d.antetitulo}</p>
+          <p class="cubo__titulo">{d.titulo}</p>
+          <p class="cubo__bajada">{d.texto}</p>
+          {d.revisar && <p><Revisar nota={d.revisar} /></p>}
+          <a class="btn btn--lima" href={r(d.cta.pagina)}>{d.cta.label} <span aria-hidden="true">→</span></a>
+        </div>
+        {d.referencial && <p class="cubo__ref">Imagen referencial{d.credito && ` · ${d.credito}`}</p>}
+      </div>
+    ))}
+  </div>
+
+  <div class="cubo__controles">
+    <button class="cubo__flecha cubo__flecha--prev" type="button" aria-label="Diapositiva anterior">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 7 12l8 8" /></svg>
+    </button>
+    <div class="cubo__puntos" role="group" aria-label="Elegir diapositiva">
+      {diapositivas.map((d, i) => (
+        <button type="button" class="cubo__punto" aria-label={`Ir a la diapositiva ${i + 1}: ${d.titulo}`} aria-current={i === 0 ? 'true' : undefined} data-i={i}></button>
+      ))}
+    </div>
+    <button class="cubo__pausa" type="button" aria-pressed="false">
+      <span class="cubo__pausa-icono" aria-hidden="true"></span>
+      <span class="cubo__pausa-txt">Pausar</span>
+    </button>
+    <button class="cubo__flecha cubo__flecha--next" type="button" aria-label="Diapositiva siguiente">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 4 8 8-8 8" /></svg>
+    </button>
+  </div>
+  <div class="cubo__progreso" aria-hidden="true"><span></span></div>
+</section>
+
+<script>
+  const raiz = document.querySelector<HTMLElement>('.cubo');
+  if (raiz) {
+    const caras = [...raiz.querySelectorAll<HTMLElement>('.cubo__cara')];
+    const puntos = [...raiz.querySelectorAll<HTMLButtonElement>('.cubo__punto')];
+    const pausa = raiz.querySelector<HTMLButtonElement>('.cubo__pausa')!;
+    const pausaTxt = raiz.querySelector<HTMLElement>('.cubo__pausa-txt')!;
+    const barra = raiz.querySelector<HTMLElement>('.cubo__progreso span')!;
+    const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const INTERVALO = 6500;
+    const GIRO = 1300;
+
+    let actual = 0;
+    let ocupado = false;
+    let pausadoPorUsuario = reducido; // con "reducir movimiento" no avanza sola
+    let enPausaTemporal = false; // mouse encima, foco dentro o pestaña oculta
+    let timer: number | undefined;
+
+    const girar = (cara: HTMLElement, desde: number, hasta: number) => {
+      const mitad = raiz.clientWidth / 2;
+      const t = (g: number) => `translateZ(${-mitad}px) rotateY(${g}deg) translateZ(${mitad}px)`;
+      return cara.animate([{ transform: t(desde) }, { transform: t(hasta) }], {
+        duration: GIRO,
+        easing: 'cubic-bezier(.66,0,.34,1)',
+        fill: 'forwards',
+      });
+    };
+    const fundir = (cara: HTMLElement, desde: number, hasta: number) =>
+      cara.animate([{ opacity: desde }, { opacity: hasta }], { duration: 450, fill: 'forwards' });
+
+    const ir = (destino: number, dir = destino > actual ? 1 : -1) => {
+      destino = (destino + caras.length) % caras.length;
+      if (ocupado || destino === actual) return;
+      ocupado = true;
+      const sale = caras[actual];
+      const entra = caras[destino];
+      entra.classList.add('is-entrando');
+      const a1 = reducido ? fundir(sale, 1, 0) : girar(sale, 0, -90 * dir);
+      const a2 = reducido ? fundir(entra, 0, 1) : girar(entra, 90 * dir, 0);
+      a2.finished.then(() => {
+        sale.classList.remove('is-activa');
+        sale.inert = true;
+        a1.cancel();
+        entra.classList.remove('is-entrando');
+        entra.classList.add('is-activa');
+        entra.inert = false;
+        a2.cancel();
+        actual = destino;
+        puntos.forEach((p, i) => (i === actual ? p.setAttribute('aria-current', 'true') : p.removeAttribute('aria-current')));
+        ocupado = false;
+        programar();
+      });
+    };
+
+    const programar = () => {
+      clearTimeout(timer);
+      barra.getAnimations().forEach((a) => a.cancel());
+      if (pausadoPorUsuario || enPausaTemporal) return;
+      barra.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: INTERVALO, fill: 'forwards' });
+      timer = window.setTimeout(() => ir(actual + 1, 1), INTERVALO);
+    };
+
+    const mostrarPausa = () => {
+      pausa.setAttribute('aria-pressed', String(pausadoPorUsuario));
+      pausaTxt.textContent = pausadoPorUsuario ? 'Reproducir' : 'Pausar';
+      raiz.classList.toggle('is-pausado', pausadoPorUsuario);
+    };
+
+    raiz.querySelector('.cubo__flecha--prev')!.addEventListener('click', () => ir(actual - 1, -1));
+    raiz.querySelector('.cubo__flecha--next')!.addEventListener('click', () => ir(actual + 1, 1));
+    puntos.forEach((p) => p.addEventListener('click', () => ir(Number(p.dataset.i))));
+    pausa.addEventListener('click', () => {
+      pausadoPorUsuario = !pausadoPorUsuario;
+      mostrarPausa();
+      programar();
+    });
+
+    const temporal = (v: boolean) => {
+      enPausaTemporal = v;
+      programar();
+    };
+    raiz.addEventListener('mouseenter', () => temporal(true));
+    raiz.addEventListener('mouseleave', () => temporal(raiz.contains(document.activeElement)));
+    raiz.addEventListener('focusin', () => temporal(true));
+    raiz.addEventListener('focusout', (e) => {
+      if (!raiz.contains(e.relatedTarget as Node)) temporal(raiz.matches(':hover'));
+    });
+    document.addEventListener('visibilitychange', () => temporal(document.hidden));
+
+    raiz.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') ir(actual - 1, -1);
+      if (e.key === 'ArrowRight') ir(actual + 1, 1);
+    });
+
+    // deslizar con el dedo
+    let x0: number | null = null;
+    raiz.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse') x0 = e.clientX;
+    });
+    raiz.addEventListener('pointerup', (e) => {
+      if (x0 === null) return;
+      const dx = e.clientX - x0;
+      x0 = null;
+      if (Math.abs(dx) > 50) ir(actual + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+    });
+
+    mostrarPausa();
+    programar();
+  }
+</script>

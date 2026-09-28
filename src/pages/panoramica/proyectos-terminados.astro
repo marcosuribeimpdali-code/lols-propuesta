@@ -1,0 +1,14 @@
+---
+import Base from '../../propuestas/panoramica/Base.astro';
+import PageBanner from '../../propuestas/panoramica/components/PageBanner.astro';
+import ListadoObras from '../../propuestas/panoramica/components/ListadoObras.astro';
+import CtaFoto from '../../propuestas/panoramica/components/CtaFoto.astro';
+import { diapositivas } from '../../data/portada';
+
+const banner = diapositivas[0];
+---
+<Base title="Proyectos terminados" description="Obras terminadas por LOLS Ingeniería.">
+  <PageBanner titulo="Proyectos terminados" img={banner.img} referencial={banner.credito ?? undefined} />
+  <ListadoObras estado="terminado" />
+  <CtaFoto />
+</Base>

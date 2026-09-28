@@ -1,0 +1,55 @@
+---
+import Base from '../../propuestas/plano/Base.astro';
+import { r } from '../../propuestas/plano/config';
+import PageHero from '../../propuestas/plano/components/PageHero.astro';
+import Pendiente from '../../propuestas/comun/Pendiente.astro';
+import Revisar from '../../propuestas/comun/Revisar.astro';
+import FormContacto from '../../propuestas/comun/FormContacto.astro';
+import { empresa } from '../../data/empresa';
+
+const mapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(empresa.direccion.valor)}`;
+---
+<Base title="Contacto" description="Contacte a LOLS Ingeniería: dirección, teléfono y correo.">
+  <PageHero titulo="Contacto" seccion="Contacto">
+    <p>Cuéntenos de su proyecto y le responderemos.</p>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap contacto-grid">
+      <div>
+        <h2 class="visually-hidden">Datos de contacto</h2>
+        <dl class="datos">
+          <div class="dato">
+            <dt>Dirección</dt>
+            <dd>
+              {empresa.direccion.valor}
+              <a class="link-flecha" href={mapa} target="_blank" rel="noopener">Ver en el mapa <span aria-hidden="true">↗</span><span class="visually-hidden">(se abre en otra pestaña)</span></a>
+              <Revisar nota={empresa.direccion.revisar} />
+            </dd>
+          </div>
+          <div class="dato">
+            <dt>Teléfono</dt>
+            <dd>
+              <a href={empresa.telefonoHref}>{empresa.telefono.valor}</a>
+              <Revisar nota={empresa.telefono.revisar} />
+            </dd>
+          </div>
+          <div class="dato">
+            <dt>Correo</dt>
+            <dd>
+              <a href={`mailto:${empresa.correo.valor}`}>{empresa.correo.valor}</a>
+              <Revisar nota={empresa.correo.revisar} />
+            </dd>
+          </div>
+          <div class="dato">
+            <dt>Horario de atención</dt>
+            <dd><Pendiente texto="días y horario" /></dd>
+          </div>
+        </dl>
+      </div>
+
+      <FormContacto privacidadHref={r('privacidad')} />
+    </div>
+  </section>
+</Base>
+

@@ -1,0 +1,17 @@
+---
+import { empresa } from '../../../data/empresa';
+import { r } from '../config';
+---
+<section class="cta-band" aria-labelledby="cta-t">
+  <div class="wrap cta-band__in">
+    <div>
+      <h2 id="cta-t">Conversemos su próximo proyecto.</h2>
+      <p class="cta-band__datos">
+        <a href={empresa.telefonoHref}>{empresa.telefono.valor}</a>
+        <span aria-hidden="true">·</span>
+        <a href={`mailto:${empresa.correo.valor}`}>{empresa.correo.valor}</a>
+      </p>
+    </div>
+    <a class="btn btn--dark" href={r('contacto')}>Ir a contacto <span aria-hidden="true">→</span></a>
+  </div>
+</section>

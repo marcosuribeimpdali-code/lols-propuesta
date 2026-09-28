@@ -1,0 +1,34 @@
+---
+// Aviso fijo de "propuesta en revisión" + selector para saltar a la misma página en otra
+// propuesta (de /plano/contacto/ a /panoramica/contacto/, por ejemplo).
+import { propuestas } from '../registro';
+import './marcas.css';
+
+interface Props {
+  /** slug de la propuesta que se está viendo */
+  actual: string;
+}
+const { actual } = Astro.props;
+const resto = Astro.url.pathname.replace(new RegExp(`^/${actual}/`), '');
+---
+<div class="barra-prop" role="region" aria-label="Aviso de propuesta">
+  <div class="barra-prop__in">
+    <p><strong>Propuesta de sitio para lols.cl</strong> · en revisión, no es el sitio oficial.</p>
+    <nav aria-label="Cambiar de propuesta">
+      <ul class="barra-prop__sel">
+        {propuestas.map((p) => (
+          <li>
+            <a href={`/${p.slug}/${resto}`} aria-current={p.slug === actual ? 'page' : undefined}>
+              <span class="n">{p.numero}</span> {p.nombre}
+            </a>
+          </li>
+        ))}
+        <li><a href="/">Todas</a></li>
+      </ul>
+    </nav>
+    <p class="barra-prop__leyenda">
+      <span class="pendiente">[PENDIENTE]</span> falta
+      <span class="revisar"><span aria-hidden="true">⚠</span> Por confirmar</span> validar dato
+    </p>
+  </div>
+</div>

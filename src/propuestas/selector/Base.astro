@@ -1,0 +1,28 @@
+---
+// Diseño neutro para la portada que lista las propuestas y el 404 general: no debe parecerse
+// a ninguna de ellas para no inclinar la comparación.
+import '@fontsource-variable/dm-sans';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '@fontsource/ibm-plex-mono/latin-500.css';
+import './selector.css';
+
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <main id="contenido">
+      <slot />
+    </main>
+  </body>
+</html>

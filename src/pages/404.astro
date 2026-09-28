@@ -1,15 +1,18 @@
 ---
-// Se compila como /404.html; el .htaccess lo usa como ErrorDocument.
-import Base from '../layouts/Base.astro';
+// Se compila como /404.html; el .htaccess lo usa como ErrorDocument para todo el sitio.
+import Base from '../propuestas/selector/Base.astro';
+import Logo from '../propuestas/comun/Logo.astro';
+import { propuestas } from '../propuestas/registro';
 ---
-<Base title="Página no encontrada">
-  <section class="wrap error-404">
-    <p class="error-404__code">Error 404</p>
+<Base title="Página no encontrada · LOLS Ingeniería">
+  <div class="sel">
+    <Logo class="sel__logo" />
+    <p class="sel__eyebrow">Error 404</p>
     <h1>Esta página no existe.</h1>
-    <p>Puede que la dirección esté mal escrita o que la página se haya movido.</p>
-    <div class="hero__ctas">
-      <a class="btn btn--primary" href="/">Ir al inicio <span aria-hidden="true">→</span></a>
-      <a class="btn btn--ghost" href="/contacto/">Contacto</a>
-    </div>
-  </section>
+    <p class="sel__lead">Puede que la dirección esté mal escrita o que la página se haya movido.</p>
+    <ul class="sel__links">
+      <li><a href="/">Ver las propuestas</a></li>
+      {propuestas.map((p) => <li><a href={`/${p.slug}/`}>{p.numero} · {p.nombre}</a></li>)}
+    </ul>
+  </div>
 </Base>

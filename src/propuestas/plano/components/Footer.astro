@@ -1,0 +1,43 @@
+---
+import Logo from '../../comun/Logo.astro';
+import { empresa } from '../../../data/empresa';
+import { r } from '../config';
+
+const anio = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-marca">
+      <a href={r('inicio')} class="footer-logo" aria-label="LOLS Ingeniería, ir al inicio"><Logo decorativo /></a>
+      <p class="footer-lema">{empresa.lema}.</p>
+    </div>
+
+    <div>
+      <h2 class="footer-h">Contacto</h2>
+      <ul class="footer-lista">
+        <li>{empresa.direccion.valor}</li>
+        <li><a href={empresa.telefonoHref}>{empresa.telefono.valor}</a></li>
+        <li><a href={`mailto:${empresa.correo.valor}`}>{empresa.correo.valor}</a></li>
+      </ul>
+      <p class="footer-nota"><span aria-hidden="true">⚠</span> Datos de contacto por confirmar</p>
+    </div>
+
+    <div>
+      <h2 class="footer-h">Sitio</h2>
+      <ul class="footer-lista">
+        <li><a href={r('quienes')}>Quiénes somos</a></li>
+        <li><a href={r('servicios')}>Servicios</a></li>
+        <li><a href={r('terminados')}>Proyectos terminados</a></li>
+        <li><a href={r('construccion')}>Proyectos en construcción</a></li>
+        <li><a href={r('contacto')}>Contacto</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="footer-legal">
+      <p>© {anio} {empresa.razonSocial}</p>
+      <p><a href={r('privacidad')}>Política de privacidad</a> · Propuesta de sitio en revisión</p>
+    </div>
+  </div>
+</footer>

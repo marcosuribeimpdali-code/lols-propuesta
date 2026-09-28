@@ -1,0 +1,55 @@
+---
+// Propuesta 2 · Panorámica. Colores del sitio lols.cl de 2018 (verde #168D3A, lima #81D742,
+// negro) y portada a pantalla completa con fotos que giran en cubo 3D.
+// Fuentes empaquetadas con el sitio: ninguna visita carga nada de terceros.
+import '@fontsource/barlow/latin-400.css';
+import '@fontsource/barlow/latin-500.css';
+import '@fontsource/barlow/latin-600.css';
+import '@fontsource/barlow-condensed/latin-600.css';
+import '@fontsource/barlow-condensed/latin-700.css';
+import '@fontsource/barlow-condensed/latin-800.css';
+import '@fontsource/ibm-plex-mono/latin-500.css';
+import '@fontsource-variable/dm-sans';
+import './estilos.css';
+import BarraPropuesta from '../comun/BarraPropuesta.astro';
+import Header from './components/Header.astro';
+import Footer from './components/Footer.astro';
+import { SLUG } from './config';
+
+interface Props {
+  /** undefined = página de inicio */
+  title?: string;
+  description?: string;
+}
+const {
+  title,
+  description = 'LOLS Ingeniería Limitada: construcción, montaje industrial, mantención, electricidad, voz y datos, y muebles.',
+} = Astro.props;
+const esPortada = !title;
+const fullTitle = title ? `${title} · LOLS Ingeniería` : 'LOLS Ingeniería · Sus proyectos en las mejores manos';
+---
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- propuesta en revisión: fuera de los buscadores (también lo dice robots.txt) -->
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#168D3A" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body class="pn">
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+    <BarraPropuesta actual={SLUG} />
+    <div class="pn-marco">
+      <Header sobreFoto={esPortada} />
+      <main id="contenido" tabindex="-1">
+        <slot />
+      </main>
+    </div>
+    <Footer />
+  </body>
+</html>

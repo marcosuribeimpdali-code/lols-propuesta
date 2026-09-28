@@ -1,0 +1,47 @@
+---
+import Logo from '../../comun/Logo.astro';
+import { empresa } from '../../../data/empresa';
+import { servicios } from '../../../data/servicios';
+import { r } from '../config';
+
+const anio = new Date().getFullYear();
+---
+<footer class="pn-footer">
+  <div class="wrap pn-footer__grid">
+    <div class="pn-footer__marca">
+      <a href={r('inicio')} class="pn-footer__logo" aria-label="LOLS Ingeniería, ir al inicio"><Logo decorativo /></a>
+      <p>{empresa.lema}.</p>
+      <p class="pn-footer__dir">{empresa.directrices}</p>
+    </div>
+    <div>
+      <h2 class="pn-footer__h">Servicios</h2>
+      <ul>
+        {servicios.map((s) => <li><a href={r('servicios', `#${s.slug}`)}>{s.nombre}</a></li>)}
+      </ul>
+    </div>
+    <div>
+      <h2 class="pn-footer__h">Menú</h2>
+      <ul>
+        <li><a href={r('quienes')}>Quiénes somos</a></li>
+        <li><a href={r('terminados')}>Proyectos terminados</a></li>
+        <li><a href={r('construccion')}>Proyectos en construcción</a></li>
+        <li><a href={r('contacto')}>Contacto</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="pn-footer__h">Contacto</h2>
+      <ul>
+        <li>{empresa.direccion.valor}</li>
+        <li><a href={empresa.telefonoHref}>{empresa.telefono.valor}</a></li>
+        <li><a href={`mailto:${empresa.correo.valor}`}>{empresa.correo.valor}</a></li>
+      </ul>
+      <p class="pn-footer__nota"><span aria-hidden="true">⚠</span> Datos de contacto por confirmar</p>
+    </div>
+  </div>
+  <div class="pn-footer__legal">
+    <div class="wrap pn-footer__legal-in">
+      <p>© {anio} {empresa.razonSocial}. Todos los derechos reservados.</p>
+      <p><a href={r('privacidad')}>Política de privacidad</a> · Propuesta de sitio en revisión</p>
+    </div>
+  </div>
+</footer>

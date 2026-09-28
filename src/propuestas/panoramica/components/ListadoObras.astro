@@ -1,0 +1,57 @@
+---
+// Cuerpo compartido de /proyectos-terminados/ y /proyectos-en-construccion/.
+import ObraCard from './ObraCard.astro';
+import Pendiente from '../../comun/Pendiente.astro';
+import Revisar from '../../comun/Revisar.astro';
+import { porEstado, type Estado } from '../../../data/proyectos';
+import { r } from '../config';
+
+interface Props {
+  estado: Estado;
+}
+const { estado } = Astro.props;
+const lista = porEstado(estado);
+const tabs = [
+  { href: r('terminados'), label: 'Terminados', n: porEstado('terminado').length, activo: estado === 'terminado' },
+  { href: r('construccion'), label: 'En construcción', n: porEstado('en-construccion').length, activo: estado === 'en-construccion' },
+];
+---
+<section class="pn-sec">
+  <div class="wrap">
+    <nav class="pn-tabs" aria-label="Tipo de proyecto">
+      {tabs.map((t) => (
+        <a href={t.href} aria-current={t.activo ? 'page' : undefined}>
+          {t.label} <span class="pn-tabs__n">{t.n}</span>
+        </a>
+      ))}
+    </nav>
+
+    <div class="pn-aviso">
+      <p>
+        Las imágenes vienen del sitio de 2018, que mostraba estas obras sin datos; son de baja
+        resolución y se reemplazan cuando lleguen fotos actuales.
+        {estado === 'en-construccion' && <> Las de esta sección son renders, no fotos. </>}
+      </p>
+      {estado === 'en-construccion' && <p><Revisar nota="son obras de 2018: confirmar si siguen en construcción" /></p>}
+      <Pendiente texto="listado actualizado de obras (lo está reuniendo la jefatura)" bloque />
+    </div>
+
+    <div class="pn-obras-grid">
+      {lista.map((p, i) => <ObraCard proyecto={p} numero={i + 1} nivel="h2" />)}
+    </div>
+
+    <aside class="pn-ficha-tipo" aria-labelledby="ficha-tipo-t">
+      <h2 id="ficha-tipo-t">Qué se necesita por cada obra</h2>
+      <ul>
+        <li>Nombre de la obra</li>
+        <li>Mandante</li>
+        <li>Comuna</li>
+        <li>Año</li>
+        <li>Servicios que hizo LOLS</li>
+        <li>Magnitud (m² o plazo)</li>
+        <li>Fotos (mín. 1600 × 1200 px)</li>
+        <li>Estado: terminada o en curso</li>
+      </ul>
+    </aside>
+  </div>
+</section>

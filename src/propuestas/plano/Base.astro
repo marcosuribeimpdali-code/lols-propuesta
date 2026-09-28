@@ -1,0 +1,47 @@
+---
+// Propuesta 1 · Plano técnico.
+// Fuentes empaquetadas con el sitio (no Google Fonts): así ninguna visita envía su IP a un
+// tercero, lo que simplifica la política de privacidad (Ley 21.719).
+import '@fontsource-variable/dm-sans';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '@fontsource/ibm-plex-mono/latin-500.css';
+import './estilos.css';
+import BarraPropuesta from '../comun/BarraPropuesta.astro';
+import Header from './components/Header.astro';
+import Footer from './components/Footer.astro';
+import { SLUG } from './config';
+
+interface Props {
+  /** undefined = página de inicio */
+  title?: string;
+  description?: string;
+}
+const {
+  title,
+  description = 'LOLS Ingeniería Limitada: construcción, montaje industrial, mantención, electricidad, voz y datos, y muebles.',
+} = Astro.props;
+const fullTitle = title ? `${title} · LOLS Ingeniería` : 'LOLS Ingeniería · Sus proyectos en las mejores manos';
+---
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- propuesta en revisión: fuera de los buscadores (también lo dice robots.txt) -->
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#0E1410" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+    <BarraPropuesta actual={SLUG} />
+    <Header />
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

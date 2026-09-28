@@ -1,0 +1,97 @@
+---
+import Base from '../../propuestas/plano/Base.astro';
+import { r } from '../../propuestas/plano/config';
+import FotoPendiente from '../../propuestas/plano/components/FotoPendiente.astro';
+import IconoServicio from '../../propuestas/comun/IconoServicio.astro';
+import Pendiente from '../../propuestas/comun/Pendiente.astro';
+import Revisar from '../../propuestas/comun/Revisar.astro';
+import SectionHead from '../../propuestas/plano/components/SectionHead.astro';
+import ProyectoCard from '../../propuestas/plano/components/ProyectoCard.astro';
+import CtaContacto from '../../propuestas/plano/components/CtaContacto.astro';
+import { empresa } from '../../data/empresa';
+import { servicios } from '../../data/servicios';
+import { porEstado } from '../../data/proyectos';
+
+const destacados = [...porEstado('terminado').slice(0, 2), porEstado('en-construccion')[0]];
+---
+<Base>
+  <section class="hero on-dark">
+    <div class="wrap">
+      <div class="hero__grid">
+        <div>
+          <p class="eyebrow"><span class="eyebrow__num">—</span> {empresa.razonSocial}</p>
+          <h1>Sus proyectos en las mejores manos<span class="punto">.</span></h1>
+          <p class="hero__lead">
+            <strong>Construcción, montaje industrial, mantención, electricidad, voz y datos, y muebles.</strong>
+            {' '}{empresa.directrices}
+          </p>
+          <div class="hero__ctas">
+            <a class="btn btn--brand" href={r('terminados')}>Ver proyectos <span aria-hidden="true">→</span></a>
+            <a class="btn btn--ghost" href={r('contacto')}>Contactar</a>
+          </div>
+        </div>
+        <div class="hero__foto">
+          <span class="hero__cota" aria-hidden="true"></span>
+          <FotoPendiente que="obra emblemática de LOLS" proporcion="4 / 5" medida="mín. 1600 × 2000 px" oscuro />
+        </div>
+      </div>
+
+      <div class="directrices">
+        <h2 class="visually-hidden">Nuestras directrices</h2>
+        <div class="directriz">
+          <h3><span>01</span> Experiencia</h3>
+          <p>{empresa.experiencia.valor}</p>
+          <Revisar nota={empresa.experiencia.revisar} />
+        </div>
+        <div class="directriz">
+          <h3><span>02</span> Seguridad</h3>
+          <p>{empresa.principios[1]}</p>
+        </div>
+        <div class="directriz">
+          <h3><span>03</span> Calidad</h3>
+          <p>{empresa.principios[0]}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="servicios-t">
+    <div class="wrap">
+      <SectionHead num="01" etiqueta="Servicios" titulo="Lo que hacemos." id="servicios-t">
+        <Pendiente texto="frase breve que presente los servicios en conjunto" />
+      </SectionHead>
+      <ul class="servicios-grid">
+        {servicios.map((s, i) => (
+          <li>
+            <a class="servicio" href={r('servicios', `#${s.slug}`)}>
+              <div class="servicio__top">
+                <IconoServicio nombre={s.icono} />
+                <span class="servicio__num">{String(i + 1).padStart(2, '0')}</span>
+              </div>
+              <h3>{s.nombre}</h3>
+              {s.descripcion ? <p>{s.descripcion}</p> : <Pendiente texto="descripción del servicio" />}
+              <span class="servicio__mas">Ver servicio <span aria-hidden="true">→</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="obras-t">
+    <div class="wrap">
+      <SectionHead num="02" etiqueta="Proyectos" titulo="Obras terminadas y en construcción." id="obras-t">
+        <Pendiente texto="elegir las 3 obras que se destacan en la portada" />
+      </SectionHead>
+      <div class="proyectos-grid">
+        {destacados.map((p, i) => <ProyectoCard proyecto={p} numero={i + 1} />)}
+      </div>
+      <div class="obras-links">
+        <a class="btn btn--primary" href={r('terminados')}>Proyectos terminados <span aria-hidden="true">→</span></a>
+        <a class="btn btn--ghost" href={r('construccion')}>En construcción</a>
+      </div>
+    </div>
+  </section>
+
+  <CtaContacto />
+</Base>

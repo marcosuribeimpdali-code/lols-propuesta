@@ -1,0 +1,54 @@
+---
+import Base from '../../propuestas/panoramica/Base.astro';
+import { r } from '../../propuestas/panoramica/config';
+import PageBanner from '../../propuestas/panoramica/components/PageBanner.astro';
+import TituloSeccion from '../../propuestas/panoramica/components/TituloSeccion.astro';
+import CtaFoto from '../../propuestas/panoramica/components/CtaFoto.astro';
+import IconoServicio from '../../propuestas/comun/IconoServicio.astro';
+import Pendiente from '../../propuestas/comun/Pendiente.astro';
+import { servicios } from '../../data/servicios';
+import { diapositivas } from '../../data/portada';
+
+const banner = diapositivas[1];
+---
+<Base title="Servicios" description="Construcción, montaje industrial, mantención, electricidad, voz y datos, y muebles.">
+  <PageBanner titulo="Nuestros servicios" img={banner.img} referencial={banner.credito ?? undefined}>
+    <p>Construcción, montaje industrial, mantención, electricidad, voz y datos, y muebles.</p>
+  </PageBanner>
+
+  <section class="pn-sec">
+    <div class="wrap">
+      <ul class="pn-chips" aria-label="Ir a un servicio">
+        {servicios.map((s) => (
+          <li><a href={`#${s.slug}`}><IconoServicio nombre={s.icono} />{s.nombre}</a></li>
+        ))}
+      </ul>
+
+      <div class="pn-serv-lista">
+        {servicios.map((s, i) => (
+          <article class="pn-serv-item" id={s.slug} aria-labelledby={`${s.slug}-t`}>
+            <div class="pn-serv-item__lado">
+              <span class="pn-serv-item__n">{String(i + 1).padStart(2, '0')}</span>
+              <span class="pn-serv__icono pn-serv__icono--xl"><IconoServicio nombre={s.icono} /></span>
+            </div>
+            <div class="pn-serv-item__cuerpo">
+              <h2 id={`${s.slug}-t`}>{s.nombre}</h2>
+              {s.descripcion ? (
+                <p>{s.descripcion}</p>
+              ) : (
+                <Pendiente texto="descripción: qué incluye el servicio, para qué tipo de cliente y un ejemplo de obra" bloque />
+              )}
+              <Pendiente texto={`foto de un trabajo de ${s.nombre.toLowerCase()}`} />
+              <div class="pn-serv-item__acciones">
+                <a class="btn btn--verde" href={r('contacto')}>Cotizar<span class="visually-hidden"> {s.nombre.toLowerCase()}</span> <span aria-hidden="true">→</span></a>
+                <a class="pn-link" href={r('terminados')}>Ver proyectos <span aria-hidden="true">→</span></a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaFoto />
+</Base>

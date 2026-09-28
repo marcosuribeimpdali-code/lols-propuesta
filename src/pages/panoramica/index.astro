@@ -1,0 +1,118 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../propuestas/panoramica/Base.astro';
+import { r } from '../../propuestas/panoramica/config';
+import PortadaCubo from '../../propuestas/panoramica/components/PortadaCubo.astro';
+import TituloSeccion from '../../propuestas/panoramica/components/TituloSeccion.astro';
+import CtaFoto from '../../propuestas/panoramica/components/CtaFoto.astro';
+import IconoServicio from '../../propuestas/comun/IconoServicio.astro';
+import Pendiente from '../../propuestas/comun/Pendiente.astro';
+import Revisar from '../../propuestas/comun/Revisar.astro';
+import { empresa } from '../../data/empresa';
+import { servicios } from '../../data/servicios';
+import { porEstado, altObra } from '../../data/proyectos';
+import { diapositivas } from '../../data/portada';
+
+const terminados = porEstado('terminado');
+const enConstruccion = porEstado('en-construccion');
+
+// accesos directos bajo la portada (como las 4 tarjetas con foto de la referencia)
+const accesos = [
+  { titulo: 'Servicios', bajada: 'Seis especialidades', href: r('servicios'), img: diapositivas[1].img, ref: diapositivas[1].credito },
+  { titulo: 'Proyectos terminados', bajada: 'Obras entregadas', href: r('terminados'), img: terminados[2]?.imagen?.src, ref: null },
+  { titulo: 'En construcción', bajada: 'Próximas entregas', href: r('construccion'), img: enConstruccion[3]?.imagen?.src, ref: null },
+  { titulo: 'Quiénes somos', bajada: 'Experiencia, seguridad y calidad', href: r('quienes'), img: diapositivas[2].img, ref: diapositivas[2].credito },
+];
+---
+<Base>
+  <PortadaCubo />
+
+  <section class="pn-accesos" aria-label="Accesos directos">
+    <div class="wrap">
+      <ul class="pn-accesos__grid">
+        {accesos.map((a) => (
+          <li>
+            <a class="pn-acceso" href={a.href}>
+              {a.img && <Image class="pn-acceso__img" src={a.img} alt="" widths={[400, 800]} sizes="(max-width: 700px) 100vw, 300px" />}
+              <span class="pn-acceso__velo" aria-hidden="true"></span>
+              <span class="pn-acceso__txt">
+                <span class="pn-acceso__bajada">{a.bajada}</span>
+                <span class="pn-acceso__titulo">{a.titulo}</span>
+                <span class="pn-acceso__ver" aria-hidden="true">Ver más →</span>
+              </span>
+              {a.ref && <span class="pn-acceso__ref">Imagen referencial</span>}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="pn-sec" aria-labelledby="serv-t">
+    <div class="wrap">
+      <TituloSeccion antetitulo="Lo que hacemos" titulo="Nuestros servicios" id="serv-t">
+        <Pendiente texto="frase breve que presente los servicios en conjunto" />
+      </TituloSeccion>
+      <ul class="pn-serv-grid">
+        {servicios.map((s) => (
+          <li class="pn-serv">
+            <span class="pn-serv__icono"><IconoServicio nombre={s.icono} /></span>
+            <h3>{s.nombre}</h3>
+            {s.descripcion ? <p>{s.descripcion}</p> : <Pendiente texto="descripción del servicio" />}
+            <a class="pn-link" href={r('servicios', `#${s.slug}`)}>Ver servicio<span class="visually-hidden">: {s.nombre}</span> <span aria-hidden="true">→</span></a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="pn-directrices" aria-labelledby="dir-t">
+    <div class="wrap">
+      <TituloSeccion antetitulo={empresa.nombreCorto} titulo="Nuestras directrices" id="dir-t" claro />
+      <ol class="pn-directrices__grid">
+        <li>
+          <span class="pn-directrices__n">01</span>
+          <h3>Experiencia</h3>
+          <p>{empresa.experiencia.valor}</p>
+          <Revisar nota={empresa.experiencia.revisar} />
+        </li>
+        <li>
+          <span class="pn-directrices__n">02</span>
+          <h3>Seguridad</h3>
+          <p>{empresa.principios[1]}</p>
+        </li>
+        <li>
+          <span class="pn-directrices__n">03</span>
+          <h3>Calidad</h3>
+          <p>{empresa.principios[0]}</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="pn-sec pn-sec--gris" aria-labelledby="obras-t">
+    <div class="wrap">
+      <TituloSeccion antetitulo="Proyectos" titulo="Obras entregadas" id="obras-t">
+        <p>Fotos del sitio de 2018. <Pendiente texto="nombres y datos de cada obra" /></p>
+      </TituloSeccion>
+      <ul class="pn-galeria">
+        {terminados.map((p, i) => p.imagen && (
+          <li>
+            <a class="pn-galeria__item" href={r('terminados')}>
+              <Image src={p.imagen.src} alt={altObra(p, i + 1)} widths={[300, 600]} sizes="(max-width: 640px) 50vw, 300px" />
+              <span class="pn-galeria__velo" aria-hidden="true">
+                <span class="pn-galeria__n">Obra {String(i + 1).padStart(2, '0')}</span>
+                <span>Ver proyectos →</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="pn-centro">
+        <a class="btn btn--verde" href={r('terminados')}>Ver todos los proyectos <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <CtaFoto />
+</Base>

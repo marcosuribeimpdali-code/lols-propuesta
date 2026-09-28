@@ -1,0 +1,85 @@
+---
+// Cabecera con barra de contacto arriba. En la portada va transparente sobre la foto y, al
+// bajar, se vuelve una barra blanca fija. En el resto de las páginas es blanca desde el inicio.
+import Logo from '../../comun/Logo.astro';
+import { empresa } from '../../../data/empresa';
+import { r } from '../config';
+
+interface Props {
+  sobreFoto?: boolean;
+}
+const { sobreFoto = false } = Astro.props;
+const path = Astro.url.pathname;
+const links = [
+  { href: r('inicio'), label: 'Inicio' },
+  { href: r('quienes'), label: 'Quiénes somos' },
+  { href: r('servicios'), label: 'Servicios' },
+  { href: r('terminados'), label: 'Proyectos', seccion: [r('terminados'), r('construccion')] },
+];
+const current = (href: string, seccion?: string[]) =>
+  path === href ? 'page' : seccion?.includes(path) ? 'true' : undefined;
+---
+<header class:list={['pn-header', { 'pn-header--sobre': sobreFoto }]} data-sobre={sobreFoto ? '' : undefined}>
+  <div class="pn-top">
+    <div class="wrap pn-top__in">
+      <p>
+        <a href={empresa.telefonoHref}><span aria-hidden="true">☎</span> {empresa.telefono.valor}</a>
+        <a href={`mailto:${empresa.correo.valor}`}><span aria-hidden="true">✉</span> {empresa.correo.valor}</a>
+      </p>
+      <p class="pn-top__lema">{empresa.razonSocial}</p>
+    </div>
+  </div>
+  <div class="pn-bar">
+    <div class="wrap pn-bar__in">
+      <a href={r('inicio')} class="pn-logo" aria-label="LOLS Ingeniería, ir al inicio"><Logo decorativo /></a>
+      <button class="pn-menu-btn" type="button" aria-expanded="false" aria-controls="pn-nav">
+        <span class="pn-menu-btn__icon" aria-hidden="true"></span>
+        <span class="pn-menu-btn__abrir">Menú</span>
+        <span class="pn-menu-btn__cerrar">Cerrar</span>
+      </button>
+      <nav id="pn-nav" class="pn-nav" aria-label="Principal">
+        <ul>
+          {links.map((l) => (
+            <li><a href={l.href} aria-current={current(l.href, l.seccion)}>{l.label}</a></li>
+          ))}
+          <li><a class="pn-nav__cta" href={r('contacto')} aria-current={current(r('contacto'))}>Contáctenos</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('.pn-header');
+  const btn = document.querySelector<HTMLButtonElement>('.pn-menu-btn');
+  const nav = document.getElementById('pn-nav');
+
+  const setOpen = (open: boolean) => {
+    btn?.setAttribute('aria-expanded', String(open));
+    nav?.classList.toggle('is-open', open);
+    header?.classList.toggle('is-menu', open);
+  };
+  btn?.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && btn?.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      btn.focus();
+    }
+  });
+  matchMedia('(min-width: 961px)').addEventListener('change', (e) => e.matches && setOpen(false));
+
+  // portada: al bajar más allá del alto de la cabecera, pasa a barra blanca fija
+  if (header?.hasAttribute('data-sobre')) {
+    const umbral = () => header.offsetHeight + 80;
+    let fijo = false;
+    const revisar = () => {
+      const debe = scrollY > umbral();
+      if (debe !== fijo) {
+        fijo = debe;
+        header.classList.toggle('is-fijo', fijo);
+      }
+    };
+    addEventListener('scroll', revisar, { passive: true });
+    revisar();
+  }
+</script>

@@ -1,0 +1,71 @@
+---
+// Formulario de contacto, igual en todas las propuestas (cada una lo estiliza con sus clases
+// .form, .campo, .consent…). Propuesta: NO envía ni guarda nada todavía.
+import Pendiente from './Pendiente.astro';
+import { empresa } from '../../data/empresa';
+
+interface Props {
+  privacidadHref: string;
+  titulo?: string;
+}
+const { privacidadHref, titulo = 'Escríbanos' } = Astro.props;
+---
+<form class="form" id="form-contacto" method="post" aria-labelledby="form-t" aria-describedby="form-req">
+  <h2 id="form-t" class="form__t">{titulo}</h2>
+  <p id="form-req" class="form__req">Todos los campos son obligatorios, salvo los marcados como opcionales.</p>
+
+  <div class="form__fila">
+    <div class="campo">
+      <label for="f-nombre">Nombre</label>
+      <input id="f-nombre" name="nombre" type="text" autocomplete="name" required />
+    </div>
+    <div class="campo">
+      <label for="f-empresa">Empresa <span class="campo__op">(opcional)</span></label>
+      <input id="f-empresa" name="empresa" type="text" autocomplete="organization" />
+    </div>
+  </div>
+  <div class="form__fila">
+    <div class="campo">
+      <label for="f-correo">Correo</label>
+      <input id="f-correo" name="correo" type="email" autocomplete="email" required />
+    </div>
+    <div class="campo">
+      <label for="f-telefono">Teléfono <span class="campo__op">(opcional)</span></label>
+      <input id="f-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" />
+    </div>
+  </div>
+  <div class="campo">
+    <label for="f-mensaje">Mensaje</label>
+    <textarea id="f-mensaje" name="mensaje" rows="6" required></textarea>
+  </div>
+
+  <!-- Ley 21.719: consentimiento explícito, casilla SIN marcar por defecto -->
+  <div class="consent">
+    <input id="f-consent" name="consentimiento" type="checkbox" required />
+    <label for="f-consent">
+      Acepto que {empresa.nombreCorto} use estos datos solo para responder mi consulta, según su{' '}
+      <a href={privacidadHref}>política de privacidad</a>.
+    </label>
+  </div>
+
+  <Pendiente texto="definir a qué correo llegan los mensajes y validar el texto legal" bloque />
+
+  <button class="btn btn--primary" type="submit">Enviar mensaje <span aria-hidden="true">→</span></button>
+
+  <p class="form__estado" id="form-estado" role="status" tabindex="-1" hidden></p>
+</form>
+
+<script>
+  // La validación (obligatorios, formato de correo, casilla) la hace el navegador; este envío
+  // solo muestra cómo respondería el sitio final.
+  const form = document.getElementById('form-contacto') as HTMLFormElement | null;
+  const estado = document.getElementById('form-estado');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!estado) return;
+    estado.textContent =
+      'Gracias. Esto es una propuesta: el formulario aún no envía mensajes. En el sitio final, aquí se confirmaría la recepción.';
+    estado.hidden = false;
+    estado.focus();
+  });
+</script>

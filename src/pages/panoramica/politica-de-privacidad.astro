@@ -1,0 +1,21 @@
+---
+import Base from '../../propuestas/panoramica/Base.astro';
+import PageBanner from '../../propuestas/panoramica/components/PageBanner.astro';
+import PoliticaTexto from '../../propuestas/comun/PoliticaTexto.astro';
+import { diapositivas } from '../../data/portada';
+
+const banner = diapositivas[4];
+---
+<Base title="Política de privacidad" description="Cómo LOLS Ingeniería trata los datos personales que recibe por este sitio.">
+  <PageBanner titulo="Política de privacidad" img={banner.img} referencial={banner.credito ?? undefined}>
+    <p>Cómo tratamos los datos personales que usted nos entrega a través de este sitio.</p>
+  </PageBanner>
+
+  <section class="pn-sec">
+    <div class="wrap">
+      <div class="prosa">
+        <PoliticaTexto />
+      </div>
+    </div>
+  </section>
+</Base>

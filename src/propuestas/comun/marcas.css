@@ -1,0 +1,141 @@
+/* ==========================================================================
+   Piezas comunes a todas las propuestas: barra de propuesta (con el selector) y marcas
+   de revisión. Usan sus propios colores (--rv-*) para verse igual en cualquier diseño.
+   ========================================================================== */
+
+:root {
+  --rv-bg: #fff3c4;
+  --rv-ink: #5e4500;
+  --rv-line: #d4a300;
+  --rv-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  --rv-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ---------- marcas ---------- */
+.pendiente {
+  font-family: var(--rv-mono);
+  font-size: 0.82em;
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0;
+  line-height: 1.55;
+  text-transform: none;
+  color: var(--rv-ink);
+  background: var(--rv-bg);
+  border: 1px dashed var(--rv-line);
+  padding: 0.1em 0.45em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.pendiente--bloque {
+  display: block;
+  padding: 0.8em 1em;
+}
+.pendiente--mini {
+  font-size: 0.72rem;
+  padding: 0.05em 0.4em;
+}
+.revisar {
+  display: inline-block;
+  font-family: var(--rv-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+  text-transform: none;
+  color: var(--rv-ink);
+  background: var(--rv-bg);
+  border: 1px solid var(--rv-line);
+  padding: 0.15em 0.6em;
+  border-radius: 999px;
+  vertical-align: 0.15em;
+}
+
+/* ---------- barra de propuesta ---------- */
+.barra-prop {
+  position: relative;
+  z-index: 60;
+  background: var(--rv-bg);
+  color: var(--rv-ink);
+  border-bottom: 1px solid var(--rv-line);
+  font-family: var(--rv-sans);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+.barra-prop__in {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 20px;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding: 7px clamp(16px, 4vw, 40px);
+}
+.barra-prop p {
+  margin: 0;
+}
+.barra-prop a {
+  color: inherit;
+}
+.barra-prop__sel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.barra-prop__sel a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 2px 10px;
+  border: 1px solid var(--rv-line);
+  background: #fff;
+  color: var(--rv-ink);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 999px;
+}
+.barra-prop__sel a:hover {
+  border-color: var(--rv-ink);
+}
+.barra-prop__sel a[aria-current='page'] {
+  background: var(--rv-ink);
+  border-color: var(--rv-ink);
+  color: #fff;
+}
+.barra-prop__sel .n {
+  font-family: var(--rv-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+.barra-prop__leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+.barra-prop__leyenda .pendiente {
+  background: #fff;
+}
+.barra-prop :focus-visible {
+  outline: 3px solid var(--rv-ink);
+  outline-offset: 2px;
+}
+@media (max-width: 760px) {
+  .barra-prop {
+    font-size: 0.78rem;
+  }
+  .barra-prop__in {
+    padding-block: 6px;
+    gap: 5px 12px;
+  }
+  .barra-prop__leyenda {
+    display: none;
+  }
+}

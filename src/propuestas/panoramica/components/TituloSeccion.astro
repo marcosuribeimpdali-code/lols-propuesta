@@ -1,0 +1,16 @@
+---
+interface Props {
+  antetitulo: string;
+  titulo: string;
+  id?: string;
+  centrado?: boolean;
+  claro?: boolean;
+}
+const { antetitulo, titulo, id, centrado = true, claro = false } = Astro.props;
+---
+<div class:list={['pn-tit', { 'pn-tit--centro': centrado, 'pn-tit--claro': claro }]}>
+  <p class="pn-tit__ante">{antetitulo}</p>
+  <h2 id={id}>{titulo}</h2>
+  <span class="pn-tit__raya" aria-hidden="true"></span>
+  {Astro.slots.has('default') && <div class="pn-tit__lead"><slot /></div>}
+</div>

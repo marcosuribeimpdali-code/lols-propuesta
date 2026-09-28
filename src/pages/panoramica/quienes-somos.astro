@@ -1,0 +1,73 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../propuestas/panoramica/Base.astro';
+import PageBanner from '../../propuestas/panoramica/components/PageBanner.astro';
+import TituloSeccion from '../../propuestas/panoramica/components/TituloSeccion.astro';
+import CtaFoto from '../../propuestas/panoramica/components/CtaFoto.astro';
+import Pendiente from '../../propuestas/comun/Pendiente.astro';
+import Revisar from '../../propuestas/comun/Revisar.astro';
+import { empresa } from '../../data/empresa';
+import { diapositivas } from '../../data/portada';
+
+const banner = diapositivas[2];
+const lateral = diapositivas[0];
+---
+<Base title="Quiénes somos" description="LOLS Ingeniería Limitada: experiencia, seguridad y calidad son nuestras directrices.">
+  <PageBanner titulo="Quiénes somos" img={banner.img} referencial={banner.credito ?? undefined} />
+
+  <section class="pn-sec">
+    <div class="wrap pn-dos">
+      <div class="pn-dos__txt">
+        <TituloSeccion antetitulo={empresa.razonSocial} titulo="Sus proyectos en las mejores manos" centrado={false} />
+        <p class="pn-grande">{empresa.experiencia.valor} <Revisar nota={empresa.experiencia.revisar} /></p>
+        <p>{empresa.principios[0]}</p>
+        <p>{empresa.principios[1]}</p>
+        <blockquote class="pn-cita">{empresa.directrices}</blockquote>
+      </div>
+      <figure class="pn-dos__img">
+        <Image src={lateral.img} alt={lateral.alt} widths={[600, 1200]} sizes="(max-width: 900px) 100vw, 560px" />
+        {lateral.referencial && <figcaption class="cubo__ref">Imagen referencial{lateral.credito && ` · ${lateral.credito}`}</figcaption>}
+      </figure>
+    </div>
+  </section>
+
+  <section class="pn-directrices" aria-labelledby="dir-t">
+    <div class="wrap">
+      <TituloSeccion antetitulo="Cómo trabajamos" titulo="Nuestras directrices" id="dir-t" claro />
+      <ol class="pn-directrices__grid">
+        <li>
+          <span class="pn-directrices__n">01</span>
+          <h3>Experiencia</h3>
+          <p>{empresa.experiencia.valor}</p>
+          <Revisar nota={empresa.experiencia.revisar} />
+        </li>
+        <li>
+          <span class="pn-directrices__n">02</span>
+          <h3>Seguridad</h3>
+          <p>{empresa.principios[1]}</p>
+        </li>
+        <li>
+          <span class="pn-directrices__n">03</span>
+          <h3>Calidad</h3>
+          <p>{empresa.principios[0]}</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="pn-sec" aria-labelledby="falta-t">
+    <div class="wrap">
+      <TituloSeccion antetitulo="Por completar" titulo="Lo que falta para esta página" id="falta-t">
+        <p>Secciones sugeridas. Cada una se muestra solo si la empresa tiene el contenido.</p>
+      </TituloSeccion>
+      <ul class="pn-pendientes">
+        <li><h3>Historia</h3><Pendiente texto="año de fundación, hitos y obras que marcaron la trayectoria" bloque /></li>
+        <li><h3>Equipo</h3><Pendiente texto="socios o jefaturas que se quieran presentar, con foto y cargo" bloque /></li>
+        <li><h3>Clientes y mandantes</h3><Pendiente texto="empresas para las que se ha trabajado (con su autorización para nombrarlas)" bloque /></li>
+        <li><h3>Certificaciones</h3><Pendiente texto="registros, certificaciones o afiliaciones vigentes, si las hay" bloque /></li>
+      </ul>
+    </div>
+  </section>
+
+  <CtaFoto />
+</Base>

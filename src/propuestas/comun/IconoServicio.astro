@@ -1,0 +1,39 @@
+---
+// Íconos de línea en grilla de 32 px, dibujados con rectas y ángulos rectos como el isotipo.
+import type { IconoServicio } from '../../data/servicios';
+
+interface Props {
+  nombre: IconoServicio;
+  class?: string;
+}
+const { nombre, class: cls } = Astro.props;
+
+const trazos: Record<IconoServicio, string> = {
+  // estructura en obra gruesa: marco, losas y pilares
+  construccion: 'M3 28h26M6 28V9h20v19M6 15.5h20M6 22h20M12.5 9v19M19.5 9v19',
+  // cercha metálica (Warren)
+  montaje: 'M3 9h26M3 23h26M3 9v14M29 9v14M3 23l6.5-14L16 23l6.5-14L29 23',
+  // engranaje
+  mantencion:
+    'M13.55 5.79 14 2.65h4l.45 3.14 3.04 1.26 2.54-1.9 2.82 2.82-1.9 2.54 1.26 3.04 3.14.45v4l-3.14.45-1.26 3.04 1.9 2.54-2.82 2.82-2.54-1.9-3.04 1.26-.45 3.14h-4l-.45-3.14-3.04-1.26-2.54 1.9-2.82-2.82 1.9-2.54-1.26-3.04-3.14-.45v-4l3.14-.45 1.26-3.04-1.9-2.54 2.82-2.82 2.54 1.9zM16 12a4 4 0 1 0 0 8a4 4 0 1 0 0-8z',
+  // rayo
+  electricidad: 'M18.5 3 7.5 18h7.5l-2 11 11.5-15.5H17L18.5 3z',
+  // topología de red
+  datos: 'M13 3h6v6h-6zM3 23h6v6H3zM23 23h6v6h-6zM16 9v7M6 23v-7h20v7',
+  // mueble de dos puertas
+  muebles: 'M4 7h24v18H4zM16 7v18M12 15v2M20 15v2M6 25v3M26 25v3',
+};
+---
+<svg
+  class:list={['icono', cls]}
+  viewBox="0 0 32 32"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="square"
+  stroke-linejoin="miter"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d={trazos[nombre]} />
+</svg>

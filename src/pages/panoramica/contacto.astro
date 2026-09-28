@@ -1,0 +1,62 @@
+---
+import Base from '../../propuestas/panoramica/Base.astro';
+import { r } from '../../propuestas/panoramica/config';
+import PageBanner from '../../propuestas/panoramica/components/PageBanner.astro';
+import FormContacto from '../../propuestas/comun/FormContacto.astro';
+import Pendiente from '../../propuestas/comun/Pendiente.astro';
+import Revisar from '../../propuestas/comun/Revisar.astro';
+import { empresa } from '../../data/empresa';
+import { diapositivas } from '../../data/portada';
+
+const banner = diapositivas[3];
+const mapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(empresa.direccion.valor)}`;
+---
+<Base title="Contacto" description="Contacte a LOLS Ingeniería: dirección, teléfono y correo.">
+  <PageBanner titulo="Contacto" img={banner.img} referencial={banner.credito ?? undefined}>
+    <p>Cuéntenos de su proyecto y le responderemos.</p>
+  </PageBanner>
+
+  <section class="pn-sec">
+    <div class="wrap">
+      <h2 class="visually-hidden">Datos de contacto</h2>
+      <ul class="pn-datos">
+        <li class="pn-dato">
+          <span class="pn-dato__icono" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
+          </span>
+          <h3>Dirección</h3>
+          <p>{empresa.direccion.valor}</p>
+          <a class="pn-link" href={mapa} target="_blank" rel="noopener">Ver en el mapa <span aria-hidden="true">↗</span><span class="visually-hidden">(se abre en otra pestaña)</span></a>
+          <Revisar nota={empresa.direccion.revisar} />
+        </li>
+        <li class="pn-dato">
+          <span class="pn-dato__icono" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M6.5 3h3l1.5 4.5-2 1.5a11 11 0 0 0 6 6l1.5-2 4.5 1.5v3A2 2 0 0 1 19 19.5 16.5 16.5 0 0 1 4.5 5 2 2 0 0 1 6.5 3Z" /></svg>
+          </span>
+          <h3>Teléfono</h3>
+          <p><a href={empresa.telefonoHref}>{empresa.telefono.valor}</a></p>
+          <Revisar nota={empresa.telefono.revisar} />
+        </li>
+        <li class="pn-dato">
+          <span class="pn-dato__icono" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1" /><path d="m3.5 6 8.5 7 8.5-7" /></svg>
+          </span>
+          <h3>Correo</h3>
+          <p><a href={`mailto:${empresa.correo.valor}`}>{empresa.correo.valor}</a></p>
+          <Revisar nota={empresa.correo.revisar} />
+        </li>
+        <li class="pn-dato">
+          <span class="pn-dato__icono" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+          </span>
+          <h3>Horario</h3>
+          <p><Pendiente texto="días y horario de atención" /></p>
+        </li>
+      </ul>
+
+      <div class="pn-form-caja">
+        <FormContacto privacidadHref={r('privacidad')} titulo="Envíenos su consulta" />
+      </div>
+    </div>
+  </section>
+</Base>

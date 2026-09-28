@@ -1,0 +1,28 @@
+---
+// Cabecera de páginas interiores: foto de fondo con velo, título en mayúsculas y migas.
+// El único <h1> de la página vive aquí.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { r } from '../config';
+
+interface Props {
+  titulo: string;
+  img: ImageMetadata;
+  /** crédito si la foto es de stock */
+  referencial?: string;
+}
+const { titulo, img, referencial } = Astro.props;
+---
+<section class="pn-banner">
+  <Image class="pn-banner__img" src={img} alt="" widths={[640, 1280, 2000]} sizes="100vw" loading="eager" />
+  <div class="pn-banner__velo" aria-hidden="true"></div>
+  <div class="wrap pn-banner__in">
+    <nav aria-label="Migas de pan" class="pn-migas">
+      <a href={r('inicio')}>Inicio</a> <span aria-hidden="true">›</span> <span aria-current="page">{titulo}</span>
+    </nav>
+    <h1>{titulo}</h1>
+    <span class="pn-banner__raya" aria-hidden="true"></span>
+    {Astro.slots.has('default') && <div class="pn-banner__lead"><slot /></div>}
+  </div>
+  {referencial && <p class="cubo__ref">Imagen referencial · {referencial}</p>}
+</section>

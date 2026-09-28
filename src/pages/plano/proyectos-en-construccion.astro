@@ -1,0 +1,11 @@
+---
+import Base from '../../propuestas/plano/Base.astro';
+import PageHero from '../../propuestas/plano/components/PageHero.astro';
+import ListadoProyectos from '../../propuestas/plano/components/ListadoProyectos.astro';
+import CtaContacto from '../../propuestas/plano/components/CtaContacto.astro';
+---
+<Base title="Proyectos en construcción" description="Obras que LOLS Ingeniería tiene en curso.">
+  <PageHero titulo="Proyectos en construcción" seccion="Proyectos" />
+  <ListadoProyectos estado="en-construccion" />
+  <CtaContacto />
+</Base>

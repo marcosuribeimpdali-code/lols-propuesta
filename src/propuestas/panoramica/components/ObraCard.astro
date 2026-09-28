@@ -1,0 +1,46 @@
+---
+import { Image } from 'astro:assets';
+import Pendiente from '../../comun/Pendiente.astro';
+import { altObra, type Proyecto } from '../../../data/proyectos';
+
+interface Props {
+  proyecto: Proyecto;
+  numero: number;
+  nivel?: 'h2' | 'h3';
+}
+const { proyecto: p, numero, nivel: H = 'h3' } = Astro.props;
+
+const n = String(numero).padStart(2, '0');
+// mismos rótulos que usaba el sitio de 2018 sobre cada obra
+const cinta = p.estado === 'terminado' ? 'Entregado' : 'Próxima entrega';
+const campos: [string, string | null][] = [
+  ['Mandante', p.mandante],
+  ['Comuna', p.comuna],
+  ['Año', p.anio],
+  ['Servicios', p.servicios?.join(' · ') ?? null],
+  ['Magnitud', p.magnitud],
+];
+---
+<article class="pn-obra">
+  <div class="pn-obra__media">
+    {p.imagen ? (
+      <Image class="pn-obra__img" src={p.imagen.src} alt={altObra(p, numero)} widths={[372, 744]} sizes="(max-width: 640px) 100vw, 372px" />
+    ) : (
+      <div class="pn-obra__vacia" role="img" aria-label={`Foto pendiente de la obra ${n}`}><Pendiente texto="foto de la obra" /></div>
+    )}
+    <span class:list={['pn-obra__cinta', `pn-obra__cinta--${p.estado}`]}>{cinta}</span>
+    {p.imagen && <span class="pn-obra__origen">{p.imagen.tipo === 'render' ? 'Render' : 'Foto'} · {p.imagen.origen}</span>}
+  </div>
+  <div class="pn-obra__cuerpo">
+    <span class="pn-obra__num">Obra {n}</span>
+    <H class="pn-obra__titulo">{p.nombre ?? <Pendiente texto="nombre de la obra" />}</H>
+    <dl class="pn-ficha">
+      {campos.map(([k, v]) => (
+        <div>
+          <dt>{k}</dt>
+          <dd>{v ?? <span class="pendiente pendiente--mini">pendiente</span>}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</article>
