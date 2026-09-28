@@ -1,0 +1,4 @@
+# El cron del servidor ejecuta el .sh: con finales de línea CRLF (Windows) falla con
+# "bad interpreter: /bin/bash^M".
+* text=auto
+*.sh text eol=lf

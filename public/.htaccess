@@ -1,0 +1,10 @@
+# El docroot del subdominio queda DENTRO de public_html (el hosting no deja sacarlo), y en
+# public_html vive un WordPress viejo con sus propias reglas de reescritura. Declarar
+# RewriteEngine aquí corta la herencia de esas reglas; sin esto, cualquier URL inexistente
+# devuelve error 500 en vez de 404.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+</IfModule>
+
+Options -Indexes
+ErrorDocument 404 /404.html

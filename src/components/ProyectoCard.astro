@@ -1,0 +1,42 @@
+---
+import FotoPendiente from './FotoPendiente.astro';
+import Pendiente from './Pendiente.astro';
+import type { Proyecto } from '../data/proyectos';
+
+interface Props {
+  proyecto: Proyecto;
+  numero: number;
+  /** nivel del título según dónde se use la tarjeta */
+  nivel?: 'h2' | 'h3';
+}
+const { proyecto: p, numero, nivel: H = 'h3' } = Astro.props;
+
+const estado = p.estado === 'terminado' ? 'Terminado' : 'En construcción';
+const campos: [string, string | null][] = [
+  ['Mandante', p.mandante],
+  ['Comuna', p.comuna],
+  ['Año', p.anio],
+  ['Servicios', p.servicios?.join(' · ') ?? null],
+  ['Magnitud', p.magnitud],
+];
+---
+<article class="proyecto">
+  {p.fotos[0] ? (
+    <img class="proyecto__foto" src={p.fotos[0]} alt={p.alt ?? ''} loading="lazy" width="800" height="600" />
+  ) : (
+    <FotoPendiente que={`obra ${String(numero).padStart(2, '0')}`} medida="mín. 1600 × 1200 px" />
+  )}
+  <div class="proyecto__cab">
+    <span class="proyecto__num">Obra {String(numero).padStart(2, '0')}</span>
+    <span class:list={['estado', `estado--${p.estado}`]}>{estado}</span>
+  </div>
+  <H class="proyecto__titulo">{p.nombre ?? <Pendiente texto="nombre de la obra" />}</H>
+  <dl class="ficha">
+    {campos.map(([k, v]) => (
+      <>
+        <dt>{k}</dt>
+        <dd>{v ?? <span class="pendiente pendiente--mini">pendiente</span>}</dd>
+      </>
+    ))}
+  </dl>
+</article>

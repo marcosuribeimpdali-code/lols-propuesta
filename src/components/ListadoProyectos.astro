@@ -1,0 +1,54 @@
+---
+// Cuerpo compartido de /proyectos-terminados/ y /proyectos-en-construccion/ (URLs heredadas
+// del sitio de 2018, se mantienen para no perder lo que Google ya tiene indexado).
+import ProyectoCard from './ProyectoCard.astro';
+import Pendiente from './Pendiente.astro';
+import { porEstado, type Estado } from '../data/proyectos';
+
+interface Props {
+  estado: Estado;
+}
+const { estado } = Astro.props;
+const lista = porEstado(estado);
+const tabs = [
+  { href: '/proyectos-terminados/', label: 'Terminados', n: porEstado('terminado').length, activo: estado === 'terminado' },
+  { href: '/proyectos-en-construccion/', label: 'En construcción', n: porEstado('en-construccion').length, activo: estado === 'en-construccion' },
+];
+---
+<section class="section section--tight">
+  <div class="wrap">
+    <nav class="tabs" aria-label="Tipo de proyecto">
+      {tabs.map((t) => (
+        <a href={t.href} aria-current={t.activo ? 'page' : undefined}>
+          {t.label}<span class="tabs__n">{String(t.n).padStart(2, '0')}</span>
+        </a>
+      ))}
+    </nav>
+
+    <div class="aviso-obras">
+      <p>
+        El sitio de 2018 mostraba estas obras solo como imágenes, sin datos. Las fichas de abajo
+        muestran cómo se verá cada una cuando llegue la información.
+      </p>
+      <Pendiente texto="listado actualizado de obras (lo está reuniendo la jefatura)" bloque />
+    </div>
+
+    <div class="proyectos-grid">
+      {lista.map((p, i) => <ProyectoCard proyecto={p} numero={i + 1} nivel="h2" />)}
+    </div>
+
+    <aside class="ficha-tipo" aria-labelledby="ficha-tipo-t">
+      <h2 id="ficha-tipo-t" class="ficha-tipo__t">Qué se necesita por cada obra</h2>
+      <ul>
+        <li>Nombre de la obra</li>
+        <li>Mandante</li>
+        <li>Comuna</li>
+        <li>Año</li>
+        <li>Servicios que hizo LOLS</li>
+        <li>Magnitud (m² o plazo)</li>
+        <li>Fotos (mín. 1600 × 1200 px)</li>
+        <li>Estado: terminada o en curso</li>
+      </ul>
+    </aside>
+  </div>
+</section>

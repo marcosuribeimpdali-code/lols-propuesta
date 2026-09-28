@@ -1,0 +1,15 @@
+---
+// Se compila como /404.html; el .htaccess lo usa como ErrorDocument.
+import Base from '../layouts/Base.astro';
+---
+<Base title="Página no encontrada">
+  <section class="wrap error-404">
+    <p class="error-404__code">Error 404</p>
+    <h1>Esta página no existe.</h1>
+    <p>Puede que la dirección esté mal escrita o que la página se haya movido.</p>
+    <div class="hero__ctas">
+      <a class="btn btn--primary" href="/">Ir al inicio <span aria-hidden="true">→</span></a>
+      <a class="btn btn--ghost" href="/contacto/">Contacto</a>
+    </div>
+  </section>
+</Base>

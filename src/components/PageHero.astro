@@ -1,0 +1,15 @@
+---
+// Cabecera de las páginas interiores: el único <h1> de la página vive aquí.
+interface Props {
+  titulo: string;
+  seccion: string;
+}
+const { titulo, seccion } = Astro.props;
+---
+<section class="page-hero">
+  <div class="wrap page-hero__in">
+    <p class="eyebrow"><span class="eyebrow__num">LOLS</span> / {seccion}</p>
+    <h1>{titulo}</h1>
+    {Astro.slots.has('default') && <div class="page-hero__lead"><slot /></div>}
+  </div>
+</section>

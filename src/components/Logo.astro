@@ -1,0 +1,30 @@
+---
+// Logo oficial (fuente: Bóveda LOLS), incrustado en el HTML para que el texto use DM Sans,
+// que la página ya carga. Dentro de un <img> el SVG no vería esa fuente.
+// El color sale de `currentColor`: verde en fondos claros, blanco en fondos oscuros.
+// viewBox recortado a 20 20 500 200 para quitar el margen interno del archivo original.
+interface Props {
+  class?: string;
+  /** true cuando el logo va dentro de un enlace que ya tiene su propio nombre accesible */
+  decorativo?: boolean;
+}
+const { class: cls, decorativo = false } = Astro.props;
+---
+<svg
+  class:list={['logo', cls]}
+  viewBox="20 20 500 200"
+  xmlns="http://www.w3.org/2000/svg"
+  {...decorativo ? { 'aria-hidden': 'true', focusable: 'false' } : { role: 'img', 'aria-label': 'LOLS Ingeniería' }}
+>
+  <g fill="currentColor">
+    <rect x="20" y="20" width="500" height="12" />
+    <rect x="20" y="208" width="500" height="12" />
+    <rect x="20" y="48" width="75" height="144" />
+    <rect x="119" y="52" width="77" height="32" fill="none" stroke="currentColor" stroke-width="8" />
+    <rect x="119" y="104" width="77" height="32" fill="none" stroke="currentColor" stroke-width="8" />
+    <rect x="115" y="152" width="85" height="40" />
+    <text x="220" y="134" font-family="'DM Sans Variable', 'DM Sans', sans-serif" font-weight="700" font-size="115" letter-spacing="-0.02em">LOLS</text>
+    <rect x="220" y="148" width="300" height="6" />
+    <text x="225" y="192" font-family="'DM Sans Variable', 'DM Sans', sans-serif" font-weight="700" font-size="42" letter-spacing="0.01em">INGENIERIA</text>
+  </g>
+</svg>

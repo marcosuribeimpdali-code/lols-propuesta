@@ -1,0 +1,8 @@
+---
+// Etiqueta para datos que se pueden usar pero están por confirmar con la jefatura.
+interface Props {
+  nota: string;
+}
+const { nota } = Astro.props;
+---
+<span class="revisar"><span aria-hidden="true">⚠</span> Por confirmar: {nota}</span>

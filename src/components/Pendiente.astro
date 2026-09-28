@@ -1,0 +1,11 @@
+---
+// Marcador visible de contenido que falta. El kit pide un hueco evidente en vez de relleno
+// inventado: esto se reemplaza cuando la jefatura entregue el texto, foto o dato.
+interface Props {
+  texto: string;
+  /** ocupa su propia línea (para párrafos que faltan) */
+  bloque?: boolean;
+}
+const { texto, bloque = false } = Astro.props;
+---
+<span class:list={['pendiente', { 'pendiente--bloque': bloque }]}>[PENDIENTE: {texto}]</span>

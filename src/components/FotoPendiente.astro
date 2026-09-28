@@ -1,0 +1,26 @@
+---
+// Espacio reservado para una foto real de obra. Se dibuja como en un plano: cuadrícula y una
+// X, la convención para un vano todavía vacío. No se usan fotos de stock a propósito.
+interface Props {
+  /** qué foto va aquí, ej. "obra emblemática" */
+  que: string;
+  proporcion?: string;
+  /** tamaño mínimo sugerido para la foto real */
+  medida?: string;
+  oscuro?: boolean;
+  class?: string;
+}
+const { que, proporcion = '4 / 3', medida, oscuro = false, class: cls } = Astro.props;
+---
+<div
+  class:list={['foto-pend', { 'foto-pend--oscuro': oscuro }, cls]}
+  style={`aspect-ratio: ${proporcion}`}
+  role="img"
+  aria-label={`Espacio reservado para una foto: ${que} (pendiente)`}
+>
+  <svg class="foto-pend__x" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 0 100 100M100 0 0 100" vector-effect="non-scaling-stroke" />
+  </svg>
+  {medida && <span class="foto-pend__medida" aria-hidden="true">{medida}</span>}
+  <span class="foto-pend__label" aria-hidden="true"><b>Foto pendiente</b>{que}</span>
+</div>

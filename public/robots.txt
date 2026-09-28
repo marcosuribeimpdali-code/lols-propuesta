@@ -1,0 +1,3 @@
+# Sitio de revisión (propuesta): que Google no lo indexe.
+User-agent: *
+Disallow: /

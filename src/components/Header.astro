@@ -1,0 +1,61 @@
+---
+import Logo from './Logo.astro';
+
+const path = Astro.url.pathname;
+const links = [
+  { href: '/quienes-somos/', label: 'Quiénes somos' },
+  { href: '/nuestros-servicios/', label: 'Servicios' },
+  {
+    href: '/proyectos-terminados/',
+    label: 'Proyectos',
+    seccion: ['/proyectos-terminados/', '/proyectos-en-construccion/'],
+  },
+  { href: '/contacto/', label: 'Contacto', cta: true },
+];
+
+const current = (href: string, seccion?: string[]) =>
+  path === href ? 'page' : seccion?.includes(path) ? 'true' : undefined;
+---
+<header class="site-header">
+  <div class="wrap site-header__bar">
+    <a href="/" class="site-header__logo" aria-label="LOLS Ingeniería, ir al inicio">
+      <Logo decorativo />
+    </a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav-principal">
+      <span class="menu-btn__icon" aria-hidden="true"></span>
+      <span class="menu-btn__abrir">Menú</span>
+      <span class="menu-btn__cerrar">Cerrar</span>
+    </button>
+    <nav id="nav-principal" class="site-nav" aria-label="Principal">
+      <ul>
+        {links.map((l) => (
+          <li>
+            <a href={l.href} aria-current={current(l.href, l.seccion)} class:list={{ 'is-cta': l.cta }}>
+              {l.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.menu-btn');
+  const nav = document.getElementById('nav-principal');
+
+  const setOpen = (open: boolean) => {
+    btn?.setAttribute('aria-expanded', String(open));
+    nav?.classList.toggle('is-open', open);
+  };
+
+  btn?.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && btn?.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      btn.focus();
+    }
+  });
+  // al volver a escritorio el menú móvil no debe quedar abierto por debajo
+  matchMedia('(min-width: 861px)').addEventListener('change', (e) => e.matches && setOpen(false));
+</script>

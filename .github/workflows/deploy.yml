@@ -1,0 +1,45 @@
+# Pull-side: el FTP del hosting bloquea las IPs de GitHub Actions. Este workflow solo
+# compila y publica el resultado (+ scripts/) en la rama `deploy`; un cron del servidor la
+# baja con git y la copia al docroot (scripts/cpanel-deploy.sh).
+#
+# Supone un proyecto Node con `npm run build` que genera `dist/`. Si el generador usa otra
+# carpeta, cambiarla aquí (git add -f <carpeta>) y en BUILD_DIR de cpanel-deploy.sh.
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Publicar rama deploy
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f dist
+          git commit -m "build: ${GITHUB_SHA::7} [skip ci]" || echo "sin cambios"
+          git push -f origin HEAD:deploy
