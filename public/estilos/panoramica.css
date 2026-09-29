@@ -2138,10 +2138,66 @@ main:focus {
   background: rgb(0 0 0 / 0.6);
   color: #fff;
 }
+.pn-galeria-obra__lupa {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.94);
+  color: var(--verde-osc);
+  box-shadow: 0 4px 14px -4px rgb(0 0 0 / 0.5);
+  transition:
+    transform 0.2s,
+    background-color 0.2s,
+    color 0.2s;
+}
+.pn-galeria-obra__lupa svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.3;
+  stroke-linecap: round;
+}
+.pn-galeria-obra__grande .pn-galeria-obra__lupa {
+  right: 14px;
+  bottom: 14px;
+  width: 48px;
+  height: 48px;
+}
+.pn-galeria-obra__grande .pn-galeria-obra__lupa svg {
+  width: 25px;
+  height: 25px;
+}
+.pn-galeria-obra__btn:hover .pn-galeria-obra__lupa,
+.pn-galeria-obra__btn:focus-visible .pn-galeria-obra__lupa {
+  transform: scale(1.1);
+  background: var(--lima);
+  color: var(--negro);
+}
 @media (max-width: 760px) {
   .pn-galeria-obra {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-auto-rows: 150px;
+  }
+  .pn-galeria-obra__lupa {
+    right: 8px;
+    bottom: 8px;
+    width: 34px;
+    height: 34px;
+  }
+  .pn-galeria-obra__lupa svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pn-galeria-obra__lupa {
+    transition: none;
   }
 }
 
