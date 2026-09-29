@@ -1,17 +1,17 @@
 ---
 import { Image } from 'astro:assets';
-import Base from '../../propuestas/panoramica/Base.astro';
-import { r } from '../../propuestas/panoramica/config';
-import PortadaCubo from '../../propuestas/panoramica/components/PortadaCubo.astro';
-import TituloSeccion from '../../propuestas/panoramica/components/TituloSeccion.astro';
-import CtaFoto from '../../propuestas/panoramica/components/CtaFoto.astro';
-import IconoServicio from '../../propuestas/comun/IconoServicio.astro';
-import Pendiente from '../../propuestas/comun/Pendiente.astro';
-import Revisar from '../../propuestas/comun/Revisar.astro';
-import { empresa } from '../../data/empresa';
-import { servicios } from '../../data/servicios';
-import { porEstado, altObra } from '../../data/proyectos';
-import { diapositivas } from '../../data/portada';
+import Base from '../Base.astro';
+import { r } from '../config';
+import PortadaCubo from '../components/PortadaCubo.astro';
+import TituloSeccion from '../components/TituloSeccion.astro';
+import CtaFoto from '../components/CtaFoto.astro';
+import IconoServicio from '../../comun/IconoServicio.astro';
+import Pendiente from '../../comun/Pendiente.astro';
+import Revisar from '../../comun/Revisar.astro';
+import { empresa } from '../../../data/empresa';
+import { servicios } from '../../../data/servicios';
+import { porEstado, altObra } from '../../../data/proyectos';
+import { diapositivas } from '../../../data/portada';
 
 const terminados = porEstado('terminado');
 const enConstruccion = porEstado('en-construccion');

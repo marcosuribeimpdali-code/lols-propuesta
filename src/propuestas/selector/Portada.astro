@@ -2,12 +2,12 @@
 // Portada de new.lols.cl: lista las propuestas para que la jefatura las compare.
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-import Base from '../propuestas/selector/Base.astro';
-import Logo from '../propuestas/comun/Logo.astro';
-import { propuestas } from '../propuestas/registro';
+import Base from './Base.astro';
+import Logo from '../comun/Logo.astro';
+import { propuestas } from '../registro';
 
 // capturas opcionales: src/assets/capturas/<slug>.jpg
-const capturas = import.meta.glob<ImageMetadata>('../assets/capturas/*.{jpg,png,webp}', { eager: true, import: 'default' });
+const capturas = import.meta.glob<ImageMetadata>('../../assets/capturas/*.{jpg,png,webp}', { eager: true, import: 'default' });
 const captura = (slug: string) => Object.entries(capturas).find(([k]) => k.includes(`/${slug}.`))?.[1];
 ---
 <Base title="Propuestas de sitio web · LOLS Ingeniería">

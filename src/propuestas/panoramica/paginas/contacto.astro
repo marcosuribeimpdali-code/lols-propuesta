@@ -1,12 +1,12 @@
 ---
-import Base from '../../propuestas/panoramica/Base.astro';
-import { r } from '../../propuestas/panoramica/config';
-import PageBanner from '../../propuestas/panoramica/components/PageBanner.astro';
-import FormContacto from '../../propuestas/comun/FormContacto.astro';
-import Pendiente from '../../propuestas/comun/Pendiente.astro';
-import Revisar from '../../propuestas/comun/Revisar.astro';
-import { empresa } from '../../data/empresa';
-import { diapositivas } from '../../data/portada';
+import Base from '../Base.astro';
+import { r } from '../config';
+import PageBanner from '../components/PageBanner.astro';
+import FormContacto from '../../comun/FormContacto.astro';
+import Pendiente from '../../comun/Pendiente.astro';
+import Revisar from '../../comun/Revisar.astro';
+import { empresa } from '../../../data/empresa';
+import { diapositivas } from '../../../data/portada';
 
 const banner = diapositivas[3];
 const mapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(empresa.direccion.valor)}`;

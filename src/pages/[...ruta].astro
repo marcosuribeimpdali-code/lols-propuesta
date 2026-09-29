@@ -1,0 +1,29 @@
+---
+// Ruta única del sitio: arma todas las páginas según `principal` (src/propuestas/registro.ts).
+//   principal = 'panoramica' → /, /quienes-somos/, /contacto/… con esa propuesta
+//   principal = null         → / (portada para elegir) + /plano/…, /panoramica/…
+import type { GetStaticPaths } from 'astro';
+import Portada from '../propuestas/selector/Portada.astro';
+import { principal, propuestas } from '../propuestas/registro';
+import { paginasDe } from '../propuestas/paginas';
+import { paginas, type Pagina } from '../data/rutas';
+
+export const getStaticPaths = (() => {
+  const claves = Object.keys(paginas) as Pagina[];
+  const ruta = (...partes: string[]) => partes.join('/').replace(/\/+$/, '') || undefined;
+
+  if (principal) {
+    return claves.map((clave) => ({ params: { ruta: ruta(paginas[clave]) }, props: { slug: principal, clave } }));
+  }
+  return [
+    { params: { ruta: undefined }, props: { slug: null, clave: null } },
+    ...propuestas.flatMap((p) =>
+      claves.map((clave) => ({ params: { ruta: ruta(p.slug, paginas[clave]) }, props: { slug: p.slug, clave } })),
+    ),
+  ];
+}) satisfies GetStaticPaths;
+
+const { slug, clave } = Astro.props as { slug: string | null; clave: Pagina | null };
+const Pagina = slug && clave ? paginasDe[slug][clave] : null;
+---
+{Pagina ? <Pagina /> : <Portada />}

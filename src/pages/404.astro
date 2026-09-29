@@ -2,7 +2,7 @@
 // Se compila como /404.html; el .htaccess lo usa como ErrorDocument para todo el sitio.
 import Base from '../propuestas/selector/Base.astro';
 import Logo from '../propuestas/comun/Logo.astro';
-import { propuestas } from '../propuestas/registro';
+import { principal, propuestas } from '../propuestas/registro';
 ---
 <Base title="Página no encontrada · LOLS Ingeniería">
   <div class="sel">
@@ -11,8 +11,17 @@ import { propuestas } from '../propuestas/registro';
     <h1>Esta página no existe.</h1>
     <p class="sel__lead">Puede que la dirección esté mal escrita o que la página se haya movido.</p>
     <ul class="sel__links">
-      <li><a href="/">Ver las propuestas</a></li>
-      {propuestas.map((p) => <li><a href={`/${p.slug}/`}>{p.numero} · {p.nombre}</a></li>)}
+      {principal ? (
+        <>
+          <li><a href="/">Ir al inicio</a></li>
+          <li><a href="/contacto/">Contacto</a></li>
+        </>
+      ) : (
+        <>
+          <li><a href="/">Ver las propuestas</a></li>
+          {propuestas.map((p) => <li><a href={`/${p.slug}/`}>{p.numero} · {p.nombre}</a></li>)}
+        </>
+      )}
     </ul>
   </div>
 </Base>

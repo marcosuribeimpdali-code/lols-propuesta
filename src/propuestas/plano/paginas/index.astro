@@ -1,16 +1,16 @@
 ---
-import Base from '../../propuestas/plano/Base.astro';
-import { r } from '../../propuestas/plano/config';
-import FotoPendiente from '../../propuestas/plano/components/FotoPendiente.astro';
-import IconoServicio from '../../propuestas/comun/IconoServicio.astro';
-import Pendiente from '../../propuestas/comun/Pendiente.astro';
-import Revisar from '../../propuestas/comun/Revisar.astro';
-import SectionHead from '../../propuestas/plano/components/SectionHead.astro';
-import ProyectoCard from '../../propuestas/plano/components/ProyectoCard.astro';
-import CtaContacto from '../../propuestas/plano/components/CtaContacto.astro';
-import { empresa } from '../../data/empresa';
-import { servicios } from '../../data/servicios';
-import { porEstado } from '../../data/proyectos';
+import Base from '../Base.astro';
+import { r } from '../config';
+import FotoPendiente from '../components/FotoPendiente.astro';
+import IconoServicio from '../../comun/IconoServicio.astro';
+import Pendiente from '../../comun/Pendiente.astro';
+import Revisar from '../../comun/Revisar.astro';
+import SectionHead from '../components/SectionHead.astro';
+import ProyectoCard from '../components/ProyectoCard.astro';
+import CtaContacto from '../components/CtaContacto.astro';
+import { empresa } from '../../../data/empresa';
+import { servicios } from '../../../data/servicios';
+import { porEstado } from '../../../data/proyectos';
 
 const destacados = [...porEstado('terminado').slice(0, 2), porEstado('en-construccion')[0]];
 ---

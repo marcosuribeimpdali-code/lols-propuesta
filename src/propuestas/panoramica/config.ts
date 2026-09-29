@@ -1,6 +1,7 @@
 import { enlazador } from '../../data/rutas';
+import { principal } from '../registro';
 
-/** prefijo de esta propuesta en el sitio; '' si pasa a ser el sitio principal */
-export const BASE = '/panoramica';
 export const SLUG = 'panoramica';
+/** prefijo de esta propuesta en el sitio: '' cuando es la principal (ver registro.ts) */
+export const BASE = principal === SLUG ? '' : `/${SLUG}`;
 export const r = enlazador(BASE);

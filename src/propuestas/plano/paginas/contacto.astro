@@ -1,11 +1,11 @@
 ---
-import Base from '../../propuestas/plano/Base.astro';
-import { r } from '../../propuestas/plano/config';
-import PageHero from '../../propuestas/plano/components/PageHero.astro';
-import Pendiente from '../../propuestas/comun/Pendiente.astro';
-import Revisar from '../../propuestas/comun/Revisar.astro';
-import FormContacto from '../../propuestas/comun/FormContacto.astro';
-import { empresa } from '../../data/empresa';
+import Base from '../Base.astro';
+import { r } from '../config';
+import PageHero from '../components/PageHero.astro';
+import Pendiente from '../../comun/Pendiente.astro';
+import Revisar from '../../comun/Revisar.astro';
+import FormContacto from '../../comun/FormContacto.astro';
+import { empresa } from '../../../data/empresa';
 
 const mapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(empresa.direccion.valor)}`;
 ---

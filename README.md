@@ -1,6 +1,6 @@
-# Propuestas de sitio web — LOLS Ingeniería
+# Sitio web propuesto — LOLS Ingeniería
 
-Propuestas de rediseño de [lols.cl](https://lols.cl), publicadas para revisión en
+Propuesta de rediseño de [lols.cl](https://lols.cl), publicada para revisión en
 **https://new.lols.cl**. No es el sitio oficial: está fuera de los buscadores (`robots.txt` +
 `<meta name="robots" content="noindex">`) y muestra marcas amarillas donde falta contenido.
 
@@ -8,40 +8,45 @@ Propuestas de rediseño de [lols.cl](https://lols.cl), publicadas para revisión
   mejor que un relleno que parece real.
 - `⚠ Por confirmar` → dato que se puede usar pero hay que validar con la jefatura.
 
-## Varias propuestas en un mismo sitio
+## Propuestas
 
-`new.lols.cl` abre una portada que lista las propuestas. Cada una es un sitio completo bajo su
-prefijo, con las mismas páginas y el mismo contenido; cambia solo el diseño. La barra amarilla de
-arriba permite saltar a la misma página en otra propuesta.
+El proyecto guarda varias propuestas de diseño, con las mismas páginas y el mismo contenido; cambia
+solo el diseño. **Hoy se publica solo Panorámica**, en la raíz de `new.lols.cl`.
 
-| # | Propuesta | URL | Idea |
-|---|---|---|---|
-| 1 | Plano técnico | `/plano/` | Sobria y oscura: grilla de plano, rótulos técnicos, verde de marca |
-| 2 | Panorámica | `/panoramica/` | Fotográfica: portada que gira en cubo 3D, colores del sitio 2018 |
+| # | Propuesta | Idea |
+|---|---|---|
+| 1 | Plano técnico | Sobria y oscura: grilla de plano, rótulos técnicos, verde de marca |
+| 2 | Panorámica ✅ | Fotográfica: portada que gira en cubo 3D, colores del sitio 2018 |
+
+**Qué se publica** lo decide una línea en `src/propuestas/registro.ts`:
+
+```ts
+export const principal: string | null = 'panoramica';
+```
+
+- `'panoramica'` (o el slug de otra) → esa propuesta es el sitio, en la raíz (`/quienes-somos/`,
+  `/contacto/`…). Las demás no se publican, pero su código sigue en el repo.
+- `null` → se publican todas bajo su prefijo (`/plano/`, `/panoramica/`) y la raíz muestra una
+  portada para elegir; la barra amarilla permite saltar a la misma página en otra propuesta.
 
 ```
 src/
-  data/             contenido COMPARTIDO por todas las propuestas (empresa, servicios, obras…)
-  assets/           fotos (portada/, obras/2018/) y capturas/ para la portada selectora
+  data/                contenido COMPARTIDO (empresa, servicios, obras, portada, rutas)
+  assets/              fotos (portada/, obras/2018/) y capturas/ para la portada de elegir
   propuestas/
-    registro.ts     lista de propuestas (la usan la portada y la barra de cambio)
-    comun/          logo, marcas de revisión, formulario, política de privacidad
-    plano/          diseño de la propuesta 1 (Base, components/, estilos.css, config.ts)
-    panoramica/     diseño de la propuesta 2
-    selector/       diseño neutro de la portada y del 404
+    registro.ts        lista de propuestas + `principal`
+    paginas.ts         qué componente dibuja cada página en cada propuesta
+    comun/             logo, marcas de revisión, formulario, política de privacidad
+    plano/             propuesta 1: Base, components/, paginas/, estilos.css, config.ts
+    panoramica/        propuesta 2
+    selector/          portada para elegir y diseño neutro del 404
   pages/
-    index.astro     portada que lista las propuestas
-    plano/…         páginas de la propuesta 1
-    panoramica/…    páginas de la propuesta 2
+    [...ruta].astro    ruta única: arma todas las páginas según `principal`
+    404.astro
 ```
 
-**Agregar una propuesta:** copiar `src/propuestas/plano/` y `src/pages/plano/` con un nombre
-nuevo, cambiar `BASE` y `SLUG` en su `config.ts` y sumarla a `src/propuestas/registro.ts`.
-Nada de las otras se toca.
-
-**Cuando la jefatura elija una:** en su `config.ts` dejar `BASE = ''`, mover sus páginas de
-`src/pages/<slug>/` a `src/pages/` y borrar las demás. Los enlaces internos se arman con esa
-`BASE`, así que no hay que editarlos uno por uno.
+**Agregar una propuesta:** copiar `src/propuestas/plano/` con otro nombre, cambiar `SLUG` en su
+`config.ts` y sumarla a `registro.ts` y `paginas.ts`. Nada de las otras se toca.
 
 Las URLs internas son las mismas que el sitio actual tiene indexadas en Google (`/quienes-somos/`,
 `/nuestros-servicios/`, `/proyectos-terminados/`, `/proyectos-en-construccion/`, `/contacto/`), así
@@ -69,6 +74,7 @@ npm run build    # genera dist/
 | Obras (ficha por proyecto + imagen) | `src/data/proyectos.ts` (imágenes en `src/assets/obras/`) |
 | Diapositivas de la portada giratoria | `src/data/portada.ts` (fotos en `src/assets/portada/`) |
 | Colores y tipografía de cada propuesta | `src/propuestas/<slug>/estilos.css` |
+| Qué propuesta se publica | `principal` en `src/propuestas/registro.ts` |
 
 Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completarlo.
 

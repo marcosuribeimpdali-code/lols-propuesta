@@ -1,6 +1,15 @@
-// Propuestas publicadas. La portada (/) las lista y la barra superior permite saltar de una a
-// otra en la misma página. Para agregar una propuesta nueva: copiar una carpeta de
-// src/propuestas/ y de src/pages/, cambiarle el slug y sumarla aquí.
+// Propuestas del sitio.
+//
+// `principal` decide qué se publica:
+//   - el slug de una propuesta → esa propuesta ES el sitio: sus páginas quedan en la raíz
+//     (/quienes-somos/, /contacto/…) y las demás no se publican (su código sigue aquí).
+//   - null → se publican todas bajo su prefijo (/plano/, /panoramica/…) y la raíz muestra la
+//     portada para elegir entre ellas.
+//
+// Para agregar una propuesta nueva: copiar una carpeta de src/propuestas/, cambiarle el slug en
+// su config.ts, sumarla aquí y en src/propuestas/paginas.ts.
+
+export const principal: string | null = 'panoramica';
 
 export interface Propuesta {
   slug: string;
