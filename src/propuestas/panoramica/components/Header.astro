@@ -17,8 +17,9 @@ const links = [
   { href: r('maquinaria'), label: 'Maquinaria' },
   { href: r('terminados'), label: 'Proyectos', seccion: [r('terminados'), r('construccion')] },
 ];
+// la sección queda marcada también en sus subpáginas (la ficha de una obra marca "Proyectos")
 const current = (href: string, seccion?: string[]) =>
-  path === href ? 'page' : seccion?.includes(path) ? 'true' : undefined;
+  path === href ? 'page' : seccion?.some((s) => path.startsWith(s)) ? 'true' : undefined;
 ---
 <header class:list={['pn-header', { 'pn-header--sobre': sobreFoto }]} data-sobre={sobreFoto ? '' : undefined}>
   <div class="pn-top">
@@ -47,7 +48,7 @@ const current = (href: string, seccion?: string[]) =>
           {links.map((l) => (
             <li><a href={l.href} aria-current={current(l.href, l.seccion)}>{l.label}</a></li>
           ))}
-          <li><a class="pn-nav__cta" href={r('contacto')} aria-current={current(r('contacto'))}>Cotizar proyecto</a></li>
+          <li class="pn-nav__cta-li"><a class="pn-nav__cta" href={r('contacto')} aria-current={current(r('contacto'))}>Cotizar proyecto</a></li>
         </ul>
       </nav>
     </div>

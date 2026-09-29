@@ -384,6 +384,16 @@ main:focus {
   .pn-header--sobre:not(.is-fijo) .pn-menu-btn {
     color: #fff;
   }
+  /* portada: al abrir el menú, la cabecera se vuelve blanca como el menú */
+  .pn-header--sobre.is-menu {
+    background: #fff;
+  }
+  .pn-header--sobre.is-menu .pn-logo {
+    color: var(--marca);
+  }
+  .pn-header--sobre.is-menu .pn-menu-btn {
+    color: var(--tinta);
+  }
   .pn-menu-btn__icon {
     position: relative;
     width: 18px;
@@ -427,8 +437,9 @@ main:focus {
     top: 100%;
     left: 0;
     right: 0;
-    background: var(--verde-osc);
-    box-shadow: 0 20px 30px -20px rgb(0 0 0 / 0.5);
+    background: #fff;
+    border-top: 1px solid var(--linea);
+    box-shadow: 0 24px 30px -18px rgb(0 0 0 / 0.3);
   }
   .js .pn-nav.is-open {
     display: block;
@@ -442,22 +453,28 @@ main:focus {
   .pn-header--sobre .pn-nav a,
   .pn-header--sobre.is-fijo .pn-nav a {
     padding: 0.9em 0.6em;
-    border-bottom: 1px solid rgb(255 255 255 / 0.14);
-    color: #fff;
+    border-bottom: 1px solid var(--linea);
+    color: var(--tinta);
     font-size: 1.2rem;
   }
+  /* página actual: texto verde y una marca lima a la izquierda (sin caja de color) */
   .pn-nav a[aria-current],
   .pn-header--sobre .pn-nav a[aria-current],
   .pn-header--sobre.is-fijo .pn-nav a[aria-current] {
-    color: var(--negro);
+    padding-left: 0.9em;
+    background: transparent;
+    box-shadow: inset 4px 0 0 var(--lima);
+    color: var(--verde-osc);
   }
+  /* en tablet (sin barra de abajo) el botón queda en el menú, en contorno */
   .pn-nav a.pn-nav__cta,
   .pn-header--sobre .pn-nav a.pn-nav__cta,
   .pn-header--sobre.is-fijo .pn-nav a.pn-nav__cta {
     margin: 16px 0 0;
-    border: 0;
-    background: var(--lima);
-    color: var(--negro);
+    border: 2px solid var(--verde-osc);
+    background: #fff;
+    box-shadow: none;
+    color: var(--verde-osc);
     text-align: center;
   }
   html:not(.js) .pn-bar__in {
@@ -2966,6 +2983,10 @@ html:not(.js) .form__siguiente {
   .pn-barra-movil__cotizar {
     background: var(--lima);
     color: var(--negro);
+  }
+  /* "Cotizar" ya está en la barra: el menú queda solo para navegar */
+  .pn-nav__cta-li {
+    display: none;
   }
   /* que el pie no quede tapado por la barra */
   body.pn {
