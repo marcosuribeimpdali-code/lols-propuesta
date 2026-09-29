@@ -1,4 +1,4 @@
-// Historia (línea de tiempo) y certificaciones de "Quiénes somos".
+// Historia (línea de tiempo) de "Quiénes somos". Sin certificaciones: la empresa no tiene (2026).
 // `ejemplo: true` = contenido de muestra para que la jefatura vea cómo queda: el sitio lo marca
 // como "Ejemplo" y se reemplaza por el real (o se borra) cuando la empresa lo entregue.
 // `revisar` = dato real pero por confirmar.
@@ -35,23 +35,7 @@ export const hitos: Hito[] = [
   },
   {
     anio: '2026',
-    titulo: `${empresa.anios} años`,
-    texto: `Tres décadas de obras. ${empresa.directrices}`,
-  },
-];
-
-export interface Certificacion {
-  nombre: string;
-  area: string;
-  texto: string;
-  ejemplo?: boolean;
-}
-
-export const certificaciones: Certificacion[] = [
-  {
-    nombre: 'ISO 9001',
-    area: 'Gestión de calidad',
-    texto: 'Procesos de obra documentados y auditados cada año por un organismo certificador externo.',
-    ejemplo: true,
+    titulo: 'Hoy',
+    texto: `Más de ${empresa.cifras.obras} obras realizadas y más de ${empresa.cifras.trabajadores} trabajadores.`,
   },
 ];

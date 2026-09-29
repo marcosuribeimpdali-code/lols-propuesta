@@ -28,6 +28,7 @@ const current = (href: string, seccion?: string[]) =>
       </p>
       <p class="pn-top__der">
         <a href={r('trabaja')}>Trabaja con nosotros</a>
+        <a href={r('denuncias')}>Canal de denuncias</a>
         <span class="pn-top__lema">{empresa.razonSocial}</span>
       </p>
     </div>
@@ -45,7 +46,7 @@ const current = (href: string, seccion?: string[]) =>
           {links.map((l) => (
             <li><a href={l.href} aria-current={current(l.href, l.seccion)}>{l.label}</a></li>
           ))}
-          <li><a class="pn-nav__cta" href={r('contacto')} aria-current={current(r('contacto'))}>Contáctenos</a></li>
+          <li><a class="pn-nav__cta" href={r('contacto')} aria-current={current(r('contacto'))}>Cotizar proyecto</a></li>
         </ul>
       </nav>
     </div>

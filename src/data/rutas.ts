@@ -14,6 +14,7 @@ export const paginas = {
   contacto: 'contacto/',
   privacidad: 'politica-de-privacidad/',
   trabaja: 'trabaja-con-nosotros/',
+  denuncias: 'canal-de-denuncias/',
 } as const;
 
 export type Pagina = keyof typeof paginas;

@@ -1,16 +1,25 @@
 ---
+// Servicios: aquí va todo lo que la portada no cuenta (la portada muestra solo el nombre y una
+// línea). Cada servicio: descripción, cómo se trabaja, qué incluye, foto y obras de ese tipo.
+import { Image } from 'astro:assets';
 import Base from '../Base.astro';
 import { r } from '../config';
 import PageBanner from '../components/PageBanner.astro';
-import TituloSeccion from '../components/TituloSeccion.astro';
 import CtaFoto from '../components/CtaFoto.astro';
 import IconoServicio from '../../comun/IconoServicio.astro';
 import Pendiente from '../../comun/Pendiente.astro';
-import { servicios, listaServicios, revisarDescripciones } from '../../../data/servicios';
 import Revisar from '../../comun/Revisar.astro';
+import { servicios, listaServicios, revisarDescripciones } from '../../../data/servicios';
 import { diapositivas } from '../../../data/portada';
 
 const banner = diapositivas[1];
+
+// fotos de stock que ya usa el sitio, por servicio (las que faltan quedan marcadas)
+const fotoDe: Record<string, (typeof diapositivas)[number] | undefined> = {
+  construccion: diapositivas[2],
+  'montaje-industrial': diapositivas[1],
+  electricidad: diapositivas[3],
+};
 ---
 <Base title="Servicios" description={listaServicios}>
   <PageBanner titulo="Nuestros servicios" img={banner.img} referencial={banner.credito ?? undefined}>
@@ -27,27 +36,55 @@ const banner = diapositivas[1];
       <p class="pn-serv-nota"><Revisar nota={revisarDescripciones} /></p>
 
       <div class="pn-serv-lista">
-        {servicios.map((s, i) => (
-          <article class="pn-serv-item" id={s.slug} aria-labelledby={`${s.slug}-t`}>
-            <div class="pn-serv-item__lado">
-              <span class="pn-serv-item__n">{String(i + 1).padStart(2, '0')}</span>
-              <span class="pn-serv__icono pn-serv__icono--xl"><IconoServicio nombre={s.icono} /></span>
-            </div>
-            <div class="pn-serv-item__cuerpo">
-              <h2 id={`${s.slug}-t`}>{s.nombre}</h2>
-              {s.descripcion ? (
-                <p>{s.descripcion} <Revisar nota={s.revisar} /></p>
-              ) : (
-                <Pendiente texto="descripción: qué incluye el servicio, para qué tipo de cliente y un ejemplo de obra" bloque />
-              )}
-              <Pendiente texto={`foto de un trabajo de ${s.nombre.toLowerCase()}`} />
-              <div class="pn-serv-item__acciones">
-                <a class="btn btn--verde" href={r('contacto')}>Cotizar<span class="visually-hidden"> {s.nombre.toLowerCase()}</span> <span aria-hidden="true">→</span></a>
-                <a class="pn-link" href={r('terminados')}>Ver proyectos <span aria-hidden="true">→</span></a>
+        {servicios.map((s, i) => {
+          const foto = fotoDe[s.slug];
+          return (
+            <article class="pn-serv-item" id={s.slug} aria-labelledby={`${s.slug}-t`}>
+              <div class="pn-serv-item__lado">
+                <span class="pn-serv-item__n">{String(i + 1).padStart(2, '0')}</span>
+                <span class="pn-serv__icono pn-serv__icono--xl"><IconoServicio nombre={s.icono} /></span>
               </div>
-            </div>
-          </article>
-        ))}
+              <div class="pn-serv-item__cuerpo">
+                <h2 id={`${s.slug}-t`}>{s.nombre}</h2>
+                {s.descripcion ? (
+                  <p class="pn-serv-item__desc">{s.descripcion} <Revisar nota={s.revisar} /></p>
+                ) : (
+                  <Pendiente texto="descripción: qué incluye el servicio, para qué tipo de cliente y un ejemplo de obra" bloque />
+                )}
+                <p>{s.detalle}</p>
+
+                <div class="pn-serv-item__cols">
+                  <div>
+                    <h3 class="pn-serv-item__h">Qué incluye</h3>
+                    <ul class="pn-incluye">
+                      {s.incluye.map((x) => <li>{x}</li>)}
+                    </ul>
+                  </div>
+                  <figure class="pn-serv-item__foto">
+                    {foto ? (
+                      <>
+                        <Image src={foto.img} alt={foto.alt} widths={[480, 960]} sizes="(max-width: 900px) 100vw, 480px" />
+                        {foto.referencial && <figcaption class="cubo__ref">Imagen referencial</figcaption>}
+                      </>
+                    ) : (
+                      <Pendiente texto={`foto de un trabajo de ${s.nombre.toLowerCase()}`} bloque />
+                    )}
+                  </figure>
+                </div>
+
+                <div class="pn-serv-item__obras">
+                  <h3 class="pn-serv-item__h">Obras con este servicio</h3>
+                  <Pendiente texto={`qué obras del listado incluyeron ${s.nombre.toLowerCase()}`} />
+                </div>
+
+                <div class="pn-serv-item__acciones">
+                  <a class="btn btn--verde" href={r('contacto')}>Cotizar<span class="visually-hidden"> {s.nombre.toLowerCase()}</span> <span aria-hidden="true">→</span></a>
+                  <a class="pn-link" href={r('terminados')}>Ver proyectos <span aria-hidden="true">→</span></a>
+                </div>
+              </div>
+            </article>
+          );
+        })}
       </div>
     </div>
   </section>

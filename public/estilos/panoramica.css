@@ -87,7 +87,6 @@ a {
 .pn-directrices :focus-visible,
 .pn-cta :focus-visible,
 .pn-footer :focus-visible,
-.pn-accesos :focus-visible,
 .pn-top :focus-visible,
 .pn-header--sobre:not(.is-fijo) :focus-visible {
   outline-color: var(--lima);
@@ -751,102 +750,52 @@ main:focus {
   }
 }
 
-/* ---------- accesos bajo la portada ---------- */
-.pn-accesos .wrap {
-  max-width: none;
-  padding: 0;
+/* ---------- cifras bajo la portada ---------- */
+.pn-cifras {
+  background: #fff;
+  border-bottom: 1px solid var(--linea);
 }
-.pn-accesos__grid {
+.pn-cifras__grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  list-style: none;
-  padding: 0;
+  margin: 0;
 }
-.pn-acceso {
-  position: relative;
-  display: block;
-  height: clamp(230px, 22vw, 320px);
-  overflow: hidden;
-  color: #fff;
-  text-decoration: none;
-  border-right: 1px solid rgb(255 255 255 / 0.18);
-  background: var(--verde-noche);
+.pn-cifras__item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(26px, 3.5vw, 44px) clamp(16px, 2.5vw, 32px);
 }
-.pn-acceso__img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+.pn-cifras__item + .pn-cifras__item {
+  border-left: 1px solid var(--linea);
 }
-.pn-acceso__velo {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(0deg, rgb(8 30 15 / 0.92) 0%, rgb(8 30 15 / 0.35) 60%, rgb(8 30 15 / 0.2));
-  transition: background-color 0.3s;
+/* el número va arriba aunque en el HTML la etiqueta venga primero (dt antes que dd) */
+.pn-cifras dd {
+  order: 1;
+  margin: 0;
+  font: 800 clamp(3rem, 2rem + 3vw, 4.6rem) / 0.9 var(--cond);
+  color: var(--verde);
 }
-.pn-acceso:hover .pn-acceso__img {
-  transform: scale(1.07);
-}
-.pn-acceso:hover .pn-acceso__velo {
-  background-color: rgb(15 107 43 / 0.35);
-}
-.pn-acceso__txt {
-  position: absolute;
-  left: 26px;
-  right: 26px;
-  bottom: 24px;
-  display: grid;
-  gap: 4px;
-}
-.pn-acceso__bajada {
-  font: 600 0.85rem var(--cond);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--lima);
-}
-.pn-acceso__titulo {
-  font: 800 clamp(1.5rem, 1.1rem + 1vw, 2rem) / 1 var(--cond);
-  text-transform: uppercase;
-}
-.pn-acceso__ver {
-  margin-top: 8px;
-  font: 600 0.95rem var(--cond);
+.pn-cifras dt {
+  order: 2;
+  font: 600 1.05rem/1.2 var(--cond);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgb(255 255 255 / 0.85);
-  transition: transform 0.25s;
+  color: var(--tinta);
 }
-.pn-acceso:hover .pn-acceso__ver {
-  transform: translateX(6px);
-  color: #fff;
+.pn-cifras dd.pn-cifras__rev {
+  order: 3;
+  font: 400 1rem var(--font);
 }
-.pn-acceso__ref {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 1px 6px;
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  background: rgb(0 0 0 / 0.55);
-  color: rgb(255 255 255 / 0.92);
-}
-@media (max-width: 960px) {
-  .pn-accesos__grid {
+@media (max-width: 760px) {
+  .pn-cifras__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .pn-acceso {
-    border-bottom: 1px solid rgb(255 255 255 / 0.18);
+  .pn-cifras__item:nth-child(3) {
+    border-left: 0;
   }
-}
-@media (max-width: 520px) {
-  .pn-accesos__grid {
-    grid-template-columns: 1fr;
-  }
-  .pn-acceso {
-    height: 190px;
-    border-right: 0;
+  .pn-cifras__item:nth-child(n + 3) {
+    border-top: 1px solid var(--linea);
   }
 }
 
@@ -1837,7 +1786,6 @@ main:focus {
 @media (prefers-reduced-motion: reduce) {
   .pn-serv,
   .pn-obra,
-  .pn-acceso__img,
   .pn-galeria__item img,
   .pn-obra__img {
     transition: none;
@@ -2934,74 +2882,6 @@ html:not(.js) .form__siguiente {
   }
 }
 
-/* ---------- certificaciones (Quiénes somos) ---------- */
-.pn-certs {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
-  gap: 24px;
-  max-width: 920px;
-  margin-inline: auto;
-  list-style: none;
-  padding: 0;
-}
-.pn-cert {
-  display: flex;
-  align-items: flex-start;
-  gap: 22px;
-  padding: 28px;
-  background: #fff;
-  border-top: 5px solid var(--lima);
-  box-shadow: 0 1px 3px rgb(0 0 0 / 0.07);
-}
-.pn-cert__sello {
-  flex: none;
-  width: 72px;
-  height: 72px;
-}
-.pn-cert__sello polygon {
-  fill: var(--verde-osc);
-}
-.pn-cert__sello path {
-  fill: none;
-  stroke: var(--lima);
-  stroke-width: 3.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.pn-cert h3 {
-  font: 800 1.9rem/1 var(--cond);
-  text-transform: uppercase;
-}
-.pn-cert__area {
-  margin-top: 4px;
-  font: 700 0.95rem/1.2 var(--cond);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--verde-osc);
-}
-.pn-cert__area + p {
-  margin-top: 12px;
-  color: var(--tinta-2);
-}
-.pn-cert .pn-ej {
-  margin-top: 14px;
-}
-.pn-cert--vacio {
-  align-items: center;
-  border: 2px dashed #c3cac2;
-  background: transparent;
-  box-shadow: none;
-}
-.pn-cert--vacio .pendiente {
-  width: 100%;
-}
-@media (max-width: 480px) {
-  .pn-cert {
-    flex-direction: column;
-    gap: 16px;
-    padding: 24px 20px;
-  }
-}
 
 /* ---------- grillas de 3 columnas con 5 servicios: la última fila se reparte el ancho ---------- */
 @media (min-width: 961px) {
@@ -3050,4 +2930,295 @@ html:not(.js) .form__siguiente {
 }
 .pn-tit__lead .pn-serv-nota {
   margin-top: 12px;
+}
+
+/* ---------- servicios con más contenido ---------- */
+.pn-frase {
+  max-width: 700px;
+  margin-inline: auto;
+  font-size: clamp(1.15rem, 1rem + 0.5vw, 1.35rem);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--tinta);
+}
+.pn-serv-item__desc {
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.pn-serv-item__cols {
+  justify-self: stretch;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 28px;
+  margin-top: 6px;
+}
+.pn-serv-item__h {
+  margin-bottom: 12px;
+  font: 800 1.35rem/1 var(--cond);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.pn-incluye {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+}
+.pn-incluye li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 6px 14px;
+  border: 1px solid var(--linea);
+  font-weight: 600;
+}
+.pn-incluye li::before {
+  content: '';
+  flex: none;
+  width: 20px;
+  height: 20px;
+  background: var(--verde-osc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7.5l3 3 6-6.5' fill='none' stroke='%2381d742' stroke-width='2.2'/%3E%3C/svg%3E") center / 14px no-repeat;
+}
+.pn-serv-item__foto {
+  position: relative;
+  margin: 0;
+}
+.pn-serv-item__foto img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.pn-serv-item__obras {
+  justify-self: stretch;
+}
+@media (max-width: 900px) {
+  .pn-serv-item__cols {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- barra fija de contacto en el celular ---------- */
+.pn-barra-movil {
+  display: none;
+}
+@media (max-width: 760px) {
+  .pn-barra-movil {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 45;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: #fff;
+    box-shadow: 0 -10px 24px -14px rgb(0 0 0 / 0.35);
+  }
+  .pn-barra-movil a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    font: 700 1.05rem var(--cond);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .pn-barra-movil__llamar {
+    border: 2px solid var(--verde-osc);
+    color: var(--verde-osc);
+  }
+  .pn-barra-movil__cotizar {
+    background: var(--lima);
+    color: var(--negro);
+  }
+  /* que el pie no quede tapado por la barra */
+  body.pn {
+    padding-bottom: calc(68px + env(safe-area-inset-bottom));
+  }
+}
+
+/* grupo de opciones con su pregunta (fieldset + legend) */
+fieldset.campo--grupo {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+fieldset.campo--grupo > legend {
+  margin-bottom: 7px;
+  padding: 0;
+}
+
+/* ---------- canal de denuncias ---------- */
+.den-garantias {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+}
+.den-garantias li {
+  padding: 24px 24px 26px;
+  background: var(--gris);
+  border-top: 5px solid var(--lima);
+}
+.den-garantias h3 {
+  font: 800 1.45rem/1 var(--cond);
+  text-transform: uppercase;
+}
+.den-garantias p {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: var(--tinta-2);
+}
+.den-aviso {
+  margin-top: 28px;
+  padding: 16px 20px;
+  border: 1px solid var(--linea);
+  background: #fff;
+}
+.den-h2 {
+  margin: 56px 0 20px;
+  font: 800 clamp(1.7rem, 1.2rem + 1.5vw, 2.4rem) / 1 var(--cond);
+  text-transform: uppercase;
+}
+.den-vias {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+}
+.den-via {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  padding: 30px;
+  border: 1px solid var(--linea);
+  border-top: 6px solid var(--verde-osc);
+  background: #fff;
+  color: var(--tinta);
+  text-decoration: none;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.den-via:hover {
+  box-shadow: 0 20px 40px -24px rgb(0 0 0 / 0.35);
+  transform: translateY(-2px);
+}
+.den-via__t {
+  font: 800 1.9rem/1 var(--cond);
+  text-transform: uppercase;
+}
+.den-via__p {
+  color: var(--tinta-2);
+}
+.den-via__nota {
+  align-self: flex-start;
+  padding: 3px 12px;
+  background: var(--lima);
+  color: var(--negro);
+  font: 700 0.95rem var(--cond);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.den-via__ir {
+  margin-top: auto;
+  color: var(--verde-osc);
+  font: 700 1rem var(--cond);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.den-pasos {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px;
+  list-style: none;
+  padding: 0;
+}
+.den-pasos li {
+  padding-top: 18px;
+  border-top: 4px solid var(--verde-osc);
+}
+.den-pasos__n {
+  font: 800 2.6rem/1 var(--cond);
+  color: var(--verde);
+}
+.den-pasos h3 {
+  margin-top: 8px;
+  font: 700 1.35rem/1.05 var(--cond);
+  text-transform: uppercase;
+}
+.den-pasos p {
+  margin-top: 8px;
+  font-size: 1rem;
+  color: var(--tinta-2);
+}
+.den-pend {
+  margin-top: 32px;
+}
+.den-forms {
+  display: grid;
+  gap: 40px;
+  max-width: 900px;
+  margin-inline: auto;
+}
+.den-otras {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 56px;
+}
+.den-otras .den-h2 {
+  margin-top: 0;
+}
+.den-consulta {
+  padding: 28px;
+  background: #fff;
+  border-top: 6px solid var(--verde-osc);
+}
+.den-lista {
+  display: grid;
+  gap: 14px;
+  padding-left: 20px;
+}
+.den-legal {
+  margin-top: 24px;
+  font-size: 0.95rem;
+  color: var(--tinta-2);
+}
+@media (max-width: 960px) {
+  .den-garantias,
+  .den-pasos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .den-otras {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .den-garantias,
+  .den-vias,
+  .den-pasos {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .den-via {
+    transition: none;
+  }
+  .den-via:hover {
+    transform: none;
+  }
+}
+
+/* en una fila de dos campos, cada uno arriba: si el vecino es más alto (un textarea, una ayuda),
+   el campo no se estira ni baja su casilla */
+.form__fila > .campo {
+  align-content: start;
 }

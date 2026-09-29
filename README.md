@@ -101,7 +101,13 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
 
 ## Pendientes antes de salir de propuesta
 
-- Contenido: descripciones de servicios, nombres y datos de las obras, historia, horario.
+- Contenido: validar los textos propuestos de los servicios, nombres y datos de las obras, hitos
+  de la historia, horario, m² construidos. Cifras confirmadas (2026): 30 años, más de 50 obras;
+  "300 y algo" se leyó como trabajadores (por confirmar). La empresa no tiene premios ni
+  certificaciones: no se muestran.
+- Canal de denuncias (`/canal-de-denuncias/`): dos vías (delitos y ética, que admite anonimato;
+  Ley Karin, con nombre), consulta con folio y contraseña. No envía nada. Definir quién recibe y
+  revisa las denuncias, el correo, los plazos y los documentos; el texto lo revisa lo legal.
 - Fotos reales de LOLS para la portada y los servicios.
 - Validar dirección, teléfono (el prefijo 65 es de Osorno) y correo.
 - Confirmar si las obras "en construcción" de 2018 ya se entregaron.

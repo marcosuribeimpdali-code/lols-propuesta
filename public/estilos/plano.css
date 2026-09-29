@@ -1661,3 +1661,21 @@ html:not(.js) .form__siguiente {
     grid-column: 1 / -1;
   }
 }
+
+/* grupo de opciones con su pregunta (fieldset + legend) */
+fieldset.campo--grupo {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+fieldset.campo--grupo > legend {
+  margin-bottom: 7px;
+  padding: 0;
+}
+
+/* en una fila de dos campos, cada uno arriba: si el vecino es más alto (un textarea, una ayuda),
+   el campo no se estira ni baja su casilla */
+.form__fila > .campo {
+  align-content: start;
+}

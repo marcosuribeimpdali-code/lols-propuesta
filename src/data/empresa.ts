@@ -12,6 +12,10 @@ const anios = 30;
 
 export const empresa = {
   anios,
+  /** cifras de la empresa (2026). No hay registro exacto de las obras de los 30 años: "más de 50" es
+   *  lo seguro. Los m² construidos no se saben todavía. */
+  cifras: { obras: 50, trabajadores: 300 },
+  cifrasRevisar: 'que «300 y algo» sea la cantidad de trabajadores actual',
   razonSocial: 'LOLS Ingeniería Limitada',
   nombreCorto: 'LOLS Ingeniería',
   lema: 'Sus proyectos en las mejores manos',

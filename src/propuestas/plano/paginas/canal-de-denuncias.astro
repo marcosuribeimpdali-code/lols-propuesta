@@ -1,0 +1,39 @@
+---
+// Canal de denuncias en la propuesta Plano: los mismos formularios y textos que Panorámica.
+import Base from '../Base.astro';
+import { r } from '../config';
+import PageHero from '../components/PageHero.astro';
+import Pendiente from '../../comun/Pendiente.astro';
+import FormDenunciaEtica from '../../comun/FormDenunciaEtica.astro';
+import FormDenunciaKarin from '../../comun/FormDenunciaKarin.astro';
+import { quienesPueden, garantias } from '../../../data/denuncias';
+
+const privacidad = r('privacidad');
+---
+<Base title="Canal de denuncias" description="Canal para informar, con reserva y sin represalias, conductas que van contra la ley o contra las normas de LOLS Ingeniería.">
+  <PageHero titulo="Canal de denuncias" seccion="Denuncias">
+    <p>Un espacio seguro para informar conductas que van contra la ley o contra nuestras normas.</p>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap">
+      <p>{quienesPueden}</p>
+      <ul>
+        {garantias.map((g) => <li><strong>{g.titulo}.</strong> {g.texto}</li>)}
+      </ul>
+      <p><strong>Este canal no atiende emergencias.</strong> Si hay riesgo para alguien, llame al 133 (Carabineros) o al 131 (SAMU).</p>
+      <p>
+        Las denuncias de acoso laboral, acoso sexual o violencia en el trabajo también se pueden presentar en la
+        Inspección del Trabajo (<a href="https://www.dt.gob.cl/" rel="noopener" target="_blank">dt.gob.cl<span class="visually-hidden"> (abre en otra pestaña)</span></a>).
+      </p>
+      <Pendiente texto="quién recibe y revisa las denuncias, a qué correo llegan, en qué plazo se responde y qué documentos se enlazan" bloque />
+    </div>
+  </section>
+
+  <section class="section" aria-label="Formularios">
+    <div class="wrap contacto-grid">
+      <div id="etica"><FormDenunciaEtica privacidadHref={privacidad} /></div>
+      <div id="karin"><FormDenunciaKarin privacidadHref={privacidad} /></div>
+    </div>
+  </section>
+</Base>

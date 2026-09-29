@@ -9,14 +9,10 @@ import IconoServicio from '../../comun/IconoServicio.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import Revisar from '../../comun/Revisar.astro';
 import { empresa } from '../../../data/empresa';
-import { servicios, revisarDescripciones } from '../../../data/servicios';
-
-const cuantasEspecialidades = ['Una', 'Dos', 'Tres', 'Cuatro', 'Cinco', 'Seis', 'Siete', 'Ocho'][servicios.length - 1] ?? servicios.length;
+import { servicios, revisarDescripciones, fraseServicios } from '../../../data/servicios';
 import { porEstado, altObra } from '../../../data/proyectos';
-import { diapositivas } from '../../../data/portada';
 
 const terminados = porEstado('terminado');
-const enConstruccion = porEstado('en-construccion');
 
 // "Cómo trabajamos": los mismos pasos que promete la página de contacto
 const proceso = [
@@ -26,35 +22,29 @@ const proceso = [
   { titulo: 'Ejecución y entrega', texto: 'Construimos, coordinamos cada etapa y entregamos la obra terminada.' },
 ];
 
-// accesos directos bajo la portada (como las 4 tarjetas con foto de la referencia)
-const accesos = [
-  { titulo: 'Servicios', bajada: `${cuantasEspecialidades} especialidades`, href: r('servicios'), img: diapositivas[1].img, ref: diapositivas[1].credito },
-  { titulo: 'Proyectos finalizados', bajada: 'Obras entregadas', href: r('terminados'), img: terminados[2]?.imagen?.src, ref: null },
-  { titulo: 'En ejecución', bajada: 'Próximas entregas', href: r('construccion'), img: enConstruccion[3]?.imagen?.src, ref: null },
-  { titulo: 'Quiénes somos', bajada: 'Experiencia, seguridad y calidad', href: r('quienes'), img: diapositivas[2].img, ref: diapositivas[2].credito },
+// cifras bajo la portada: reemplazan los accesos directos, que repetían el menú. "+50" y "+300"
+// son lo seguro (no hay registro exacto de las obras de los 30 años); los m² no se saben aún.
+const cifras = [
+  { valor: String(empresa.anios), leido: String(empresa.anios), texto: 'años en la construcción' },
+  { valor: `+${empresa.cifras.obras}`, leido: `más de ${empresa.cifras.obras}`, texto: 'obras realizadas' },
+  { valor: `+${empresa.cifras.trabajadores}`, leido: `más de ${empresa.cifras.trabajadores}`, texto: 'trabajadores', revisar: empresa.cifrasRevisar },
+  { valor: String(servicios.length), leido: String(servicios.length), texto: 'especialidades' },
 ];
 ---
 <Base>
   <PortadaCubo />
 
-  <section class="pn-accesos" aria-label="Accesos directos">
+  <section class="pn-cifras" aria-label={`${empresa.nombreCorto} en cifras`}>
     <div class="wrap">
-      <ul class="pn-accesos__grid">
-        {accesos.map((a) => (
-          <li>
-            <a class="pn-acceso" href={a.href}>
-              {a.img && <Image class="pn-acceso__img" src={a.img} alt="" widths={[400, 800]} sizes="(max-width: 700px) 100vw, 300px" />}
-              <span class="pn-acceso__velo" aria-hidden="true"></span>
-              <span class="pn-acceso__txt">
-                <span class="pn-acceso__bajada">{a.bajada}</span>
-                <span class="pn-acceso__titulo">{a.titulo}</span>
-                <span class="pn-acceso__ver" aria-hidden="true">Ver más →</span>
-              </span>
-              {a.ref && <span class="pn-acceso__ref">Imagen referencial</span>}
-            </a>
-          </li>
+      <dl class="pn-cifras__grid">
+        {cifras.map((c) => (
+          <div class="pn-cifras__item">
+            <dt>{c.texto}</dt>
+            <dd><span aria-hidden="true">{c.valor}</span><span class="visually-hidden">{c.leido}</span></dd>
+            {c.revisar && <dd class="pn-cifras__rev"><Revisar nota="cantidad de trabajadores" /></dd>}
+          </div>
         ))}
-      </ul>
+      </dl>
     </div>
   </section>
 
@@ -64,14 +54,14 @@ const accesos = [
       <ul class="pn-respaldo__logos" aria-label="Logos de mandantes (pendientes)">
         {Array.from({ length: 6 }, () => <li class="pn-respaldo__logo" aria-hidden="true">Logo</li>)}
       </ul>
-      <p class="pn-respaldo__pend"><Pendiente texto="logos de mandantes (con su autorización) y certificaciones o registros vigentes, si los hay" /></p>
+      <p class="pn-respaldo__pend"><Pendiente texto="logos de mandantes (con su autorización para mostrarlos)" /></p>
     </div>
   </section>
 
   <section class="pn-sec" aria-labelledby="serv-t">
     <div class="wrap">
       <TituloSeccion antetitulo="Lo que hacemos" titulo="Nuestros servicios" id="serv-t">
-        <Pendiente texto="frase breve que presente los servicios en conjunto" />
+        <p class="pn-frase">{fraseServicios}</p>
         <p class="pn-serv-nota"><Revisar nota={revisarDescripciones} /></p>
       </TituloSeccion>
       <ul class="pn-serv-grid">
@@ -79,7 +69,7 @@ const accesos = [
           <li class="pn-serv">
             <span class="pn-serv__icono"><IconoServicio nombre={s.icono} /></span>
             <h3>{s.nombre}</h3>
-            {s.descripcion ? <p>{s.descripcion} <Revisar nota={s.revisar} /></p> : <Pendiente texto="descripción del servicio" />}
+            <p>{s.corto} <Revisar nota={s.revisar} /></p>
             <a class="pn-link" href={r('servicios', `#${s.slug}`)}>Ver servicio<span class="visually-hidden">: {s.nombre}</span> <span aria-hidden="true">→</span></a>
           </li>
         ))}
@@ -101,9 +91,6 @@ const accesos = [
           </li>
         ))}
       </ol>
-      <div class="pn-centro">
-        <a class="btn btn--lima" href={r('contacto')}>Cuéntenos su proyecto <span aria-hidden="true">→</span></a>
-      </div>
     </div>
   </section>
 

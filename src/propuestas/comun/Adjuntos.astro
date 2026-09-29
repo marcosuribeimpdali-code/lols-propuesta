@@ -22,6 +22,7 @@ const { id, name, label, limites, opcional = false } = Astro.props;
   data-max-archivos={limites.maxArchivos}
   data-max-total={limites.maxTotal}
   data-achicar={limites.achicarFotos ? '1' : undefined}
+  data-limpiar={limites.limpiarFotos ? '1' : undefined}
 >
   <label for={id}>{label} {opcional && <span class="campo__op">(opcional)</span>}</label>
   <input
@@ -43,21 +44,23 @@ const { id, name, label, limites, opcional = false } = Astro.props;
   const MB = 1024 * 1024;
   const fmt = (b: number) => `${(b / MB).toFixed(1).replace('.', ',')} MB`;
 
-  // foto JPEG → lado mayor 2000 px, calidad 82 %; si no conviene, se deja la original
-  const achicar = async (f: File): Promise<{ file: File; antes: number | null }> => {
+  // foto JPEG → lado mayor 2000 px, calidad 82 %; si no conviene, se deja la original.
+  // `limpiar`: se vuelve a guardar siempre (el lienzo no copia los metadatos de la foto).
+  const achicar = async (f: File, limpiar = false): Promise<{ file: File; antes: number | null }> => {
     if (f.type !== 'image/jpeg') return { file: f, antes: null };
     try {
       const bmp = await createImageBitmap(f, { imageOrientation: 'from-image' });
       const escala = Math.min(1, 2000 / Math.max(bmp.width, bmp.height));
-      if (escala === 1 && f.size < 1.5 * MB) return { file: f, antes: null };
+      if (!limpiar && escala === 1 && f.size < 1.5 * MB) return { file: f, antes: null };
       const lienzo = document.createElement('canvas');
       lienzo.width = Math.round(bmp.width * escala);
       lienzo.height = Math.round(bmp.height * escala);
       lienzo.getContext('2d')!.drawImage(bmp, 0, 0, lienzo.width, lienzo.height);
       const blob = await new Promise<Blob | null>((r) => lienzo.toBlob(r, 'image/jpeg', 0.82));
-      if (!blob || blob.size >= f.size) return { file: f, antes: null };
+      if (!blob || (!limpiar && blob.size >= f.size)) return { file: f, antes: null };
       const nombre = f.name.replace(/\.jpe?g$/i, '') + '.jpg';
-      return { file: new File([blob], nombre, { type: 'image/jpeg', lastModified: f.lastModified }), antes: f.size };
+      const limpio = new File([blob], nombre, { type: 'image/jpeg', lastModified: limpiar ? Date.now() : f.lastModified });
+      return { file: limpio, antes: blob.size < f.size ? f.size : null };
     } catch {
       return { file: f, antes: null };
     }
@@ -71,6 +74,7 @@ const { id, name, label, limites, opcional = false } = Astro.props;
     const maxArchivos = Number(campo.dataset.maxArchivos);
     const maxTotal = Number(campo.dataset.maxTotal);
     const conAchicar = campo.dataset.achicar === '1';
+    const conLimpiar = campo.dataset.limpiar === '1';
 
     const avisar = (msg: string) => {
       input.setCustomValidity(msg);
@@ -112,8 +116,8 @@ const { id, name, label, limites, opcional = false } = Astro.props;
       input.setCustomValidity('Espere un momento: estamos preparando sus archivos.');
       lista.replaceChildren(Object.assign(document.createElement('li'), { textContent: 'Preparando archivos…' }));
       const items = [];
-      for (const f of originales) items.push(conAchicar ? await achicar(f) : { file: f, antes: null });
-      if (items.some((i) => i.antes)) {
+      for (const f of originales) items.push(conAchicar ? await achicar(f, conLimpiar) : { file: f, antes: null });
+      if (items.some((i, k) => i.file !== originales[k])) {
         const dt = new DataTransfer();
         items.forEach((i) => dt.items.add(i.file));
         input.files = dt.files;

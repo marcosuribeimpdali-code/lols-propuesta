@@ -16,6 +16,9 @@ export interface LimitesAdjuntos {
   tipos: string;
   /** achicar las fotos JPEG en el navegador antes de enviarlas */
   achicarFotos: boolean;
+  /** volver a guardar TODA foto JPEG, aunque sea chica: así pierde sus metadatos (ubicación GPS,
+   *  modelo del teléfono, fecha), que podrían delatar a quien denuncia de forma anónima */
+  limpiarFotos?: boolean;
 }
 
 /** planos y fotos en "Cuéntenos su proyecto" */
@@ -34,6 +37,16 @@ export const adjuntoCv: LimitesAdjuntos = {
   maxTotal: 5 * MB,
   tipos: '.pdf,.doc,.docx',
   achicarFotos: false,
+};
+
+/** evidencia en el canal de denuncias */
+export const adjuntosDenuncia: LimitesAdjuntos = {
+  maxArchivo: 10 * MB,
+  maxArchivos: 5,
+  maxTotal: 20 * MB,
+  tipos: '.pdf,.jpg,.jpeg,.png,.heic,.doc,.docx,.mp3,.m4a,.mp4',
+  achicarFotos: true,
+  limpiarFotos: true,
 };
 
 /** "10 MB" */

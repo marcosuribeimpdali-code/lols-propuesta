@@ -1,6 +1,7 @@
 ---
 // Pie: sin repetir lo que ya muestra cada página (la lista de servicios está en el menú y en
-// Servicios; la invitación a cotizar, en la franja verde de arriba).
+// Servicios; la invitación a cotizar, en la franja verde de arriba; el lema, en la portada).
+// En el celular, abajo queda fija una barra con Llamar y Cotizar.
 import Logo from '../../comun/Logo.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import { empresa } from '../../../data/empresa';
@@ -12,7 +13,7 @@ const anio = new Date().getFullYear();
   <div class="wrap pn-footer__grid">
     <div class="pn-footer__marca">
       <a href={r('inicio')} class="pn-footer__logo" aria-label="LOLS Ingeniería, ir al inicio"><Logo decorativo /></a>
-      <p>{empresa.lema}.</p>
+      <p>{empresa.razonSocial}. Santiago, Chile.</p>
     </div>
     <div>
       <h2 class="pn-footer__h">Empresa</h2>
@@ -43,8 +44,13 @@ const anio = new Date().getFullYear();
   </div>
   <div class="pn-footer__legal">
     <div class="wrap pn-footer__legal-in">
-      <p>© {anio} {empresa.razonSocial}. Todos los derechos reservados.</p>
-      <p><a href={r('privacidad')}>Política de privacidad</a> · Propuesta de sitio en revisión</p>
+      <p>© {anio} {empresa.razonSocial} · RUT <Pendiente texto="RUT" /></p>
+      <p><a href={r('privacidad')}>Política de privacidad</a> · <a href={r('denuncias')}>Canal de denuncias</a> · Propuesta de sitio en revisión</p>
     </div>
   </div>
 </footer>
+
+<nav class="pn-barra-movil" aria-label="Contacto rápido">
+  <a class="pn-barra-movil__llamar" href={empresa.telefonoHref}>Llamar</a>
+  <a class="pn-barra-movil__cotizar" href={r('contacto')}>Cotizar</a>
+</nav>

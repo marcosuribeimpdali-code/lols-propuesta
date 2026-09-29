@@ -1,0 +1,153 @@
+---
+// Canal de denuncias, vía 1: delitos (Ley 20.393) y faltas a la ética o a las normas internas.
+// Admite denuncia anónima (marcada de entrada, como en Echeverría Izquierdo): sin nombre ni
+// correo, el caso se sigue con el folio y la contraseña que elige quien denuncia.
+// Propuesta: NO envía ni guarda nada todavía.
+import Pendiente from './Pendiente.astro';
+import Adjuntos from './Adjuntos.astro';
+import { adjuntosDenuncia as lim, mb } from '../../data/adjuntos';
+import { categoriasEtica, relaciones, comoSupo } from '../../data/denuncias';
+
+interface Props {
+  privacidadHref: string;
+}
+const { privacidadHref } = Astro.props;
+---
+<form class="form" id="form-etica" method="post" enctype="multipart/form-data" aria-labelledby="etica-t" aria-describedby="etica-req">
+  <h3 id="etica-t" class="form__t">Denunciar un delito o una falta a la ética</h3>
+  <p id="etica-req" class="form__req">Todo es obligatorio, salvo lo marcado como opcional.</p>
+
+  <fieldset class="campo campo--grupo">
+    <legend class="campo__label">¿Quiere dar su nombre?</legend>
+    <div class="chips">
+      <label class="chip">
+        <input type="radio" name="identidad" value="anonima" checked />
+        <span>No, que sea anónima</span>
+      </label>
+      <label class="chip">
+        <input type="radio" name="identidad" value="identificada" />
+        <span>Sí, con mis datos</span>
+      </label>
+    </div>
+    <p class="campo__ayuda">Si nos deja un medio de contacto, podremos investigar mejor. No es obligatorio.</p>
+  </fieldset>
+
+  <div class="den-identidad" data-identidad>
+    <div class="form__fila">
+      <div class="campo">
+        <label for="etica-nombre">Nombre</label>
+        <input id="etica-nombre" name="nombre" type="text" autocomplete="name" data-si-identificada />
+      </div>
+      <div class="campo">
+        <label for="etica-correo">Correo</label>
+        <input id="etica-correo" name="correo" type="email" autocomplete="email" data-si-identificada />
+      </div>
+    </div>
+    <div class="campo">
+      <label for="etica-telefono">Teléfono <span class="campo__op">(opcional)</span></label>
+      <input id="etica-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" />
+    </div>
+  </div>
+
+  <div class="form__fila">
+    <div class="campo">
+      <label for="etica-relacion">Su relación con LOLS</label>
+      <select id="etica-relacion" name="relacion" required>
+        <option value="">Elegir…</option>
+        {relaciones.map((x) => <option>{x}</option>)}
+      </select>
+    </div>
+    <div class="campo">
+      <label for="etica-categoria">¿Qué quiere denunciar?</label>
+      <select id="etica-categoria" name="categoria" required>
+        <option value="">Elegir…</option>
+        {categoriasEtica.map((c) => <option>{c}</option>)}
+      </select>
+    </div>
+  </div>
+
+  <div class="form__fila">
+    <div class="campo">
+      <label for="etica-lugar">¿Dónde ocurrió?</label>
+      <input id="etica-lugar" name="lugar" type="text" required aria-describedby="etica-lugar-ayuda" />
+      <p id="etica-lugar-ayuda" class="campo__ayuda">Nombre de la obra, oficina o lugar.</p>
+    </div>
+    <div class="campo">
+      <label for="etica-fecha">¿Cuándo? <span class="campo__op">(opcional, aproximado)</span></label>
+      <input id="etica-fecha" name="fecha" type="date" />
+    </div>
+  </div>
+
+  <div class="campo">
+    <label for="etica-relato">Cuéntenos qué pasó</label>
+    <textarea id="etica-relato" name="relato" rows="6" required aria-describedby="etica-relato-ayuda"></textarea>
+    <p id="etica-relato-ayuda" class="campo__ayuda">Qué ocurrió, cómo y si sigue pasando. Mientras más detalle, mejor se puede revisar.</p>
+  </div>
+
+  <div class="form__fila">
+    <div class="campo">
+      <label for="etica-personas">Personas involucradas o testigos <span class="campo__op">(opcional)</span></label>
+      <textarea id="etica-personas" name="personas" rows="3"></textarea>
+    </div>
+    <div class="campo">
+      <label for="etica-supo">¿Cómo se enteró? <span class="campo__op">(opcional)</span></label>
+      <select id="etica-supo" name="como-supo">
+        <option value="">Elegir…</option>
+        {comoSupo.map((x) => <option>{x}</option>)}
+      </select>
+    </div>
+  </div>
+
+  <Adjuntos id="etica-archivos" name="evidencia" label="Evidencia" limites={lim} opcional>
+    Fotos, documentos, audios o videos: hasta {lim.maxArchivos} archivos de {mb(lim.maxArchivo)} cada uno
+    ({mb(lim.maxTotal)} en total). Las fotos JPG se vuelven a guardar sin sus datos internos, como la
+    ubicación del teléfono.
+  </Adjuntos>
+
+  <div class="campo">
+    <label for="etica-clave">Elija una contraseña</label>
+    <input id="etica-clave" name="clave" type="password" minlength="6" required autocomplete="new-password" aria-describedby="etica-clave-ayuda" />
+    <p id="etica-clave-ayuda" class="campo__ayuda">Mínimo 6 caracteres. La necesitará junto al folio para consultar su denuncia.</p>
+  </div>
+
+  <div class="consent">
+    <input id="etica-veraz" name="veraz" type="checkbox" required />
+    <label for="etica-veraz">
+      Declaro que lo que informo es verdadero según lo que sé, y que leí cómo se tratan estos datos en la{' '}
+      <a href={privacidadHref}>política de privacidad</a>.
+    </label>
+  </div>
+
+  <button class="btn btn--primary" type="submit">Enviar denuncia <span aria-hidden="true">→</span></button>
+
+  <p class="form__estado" id="etica-estado" role="status" tabindex="-1" hidden></p>
+</form>
+
+<script>
+  const form = document.getElementById('form-etica') as HTMLFormElement | null;
+  if (form) {
+    const bloque = form.querySelector<HTMLElement>('[data-identidad]')!;
+    const datos = [...bloque.querySelectorAll<HTMLInputElement>('input')];
+    const estado = document.getElementById('etica-estado')!;
+
+    // anónima: se esconden y se vacían los datos personales; con datos: nombre y correo obligatorios
+    const aplicar = () => {
+      const anonima = form.querySelector<HTMLInputElement>('input[name="identidad"]:checked')?.value !== 'identificada';
+      bloque.hidden = anonima;
+      datos.forEach((c) => {
+        if (c.hasAttribute('data-si-identificada')) c.required = !anonima;
+        if (anonima) c.value = '';
+      });
+    };
+    form.querySelectorAll('input[name="identidad"]').forEach((r) => r.addEventListener('change', aplicar));
+    aplicar();
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      estado.textContent =
+        'Gracias. Esto es una propuesta: el canal aún no recibe denuncias. En el sitio final, aquí aparecería su folio (por ejemplo, D-2026-0001) para consultar el caso con su contraseña.';
+      estado.hidden = false;
+      estado.focus();
+    });
+  }
+</script>

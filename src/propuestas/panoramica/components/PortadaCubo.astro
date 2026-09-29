@@ -10,12 +10,13 @@ import { diapositivas } from '../../../data/portada';
 import { empresa } from '../../../data/empresa';
 import { r } from '../config';
 
-const total = diapositivas.length;
+const caras = diapositivas.filter((d) => d.enCubo !== false);
+const total = caras.length;
 ---
 <section class="cubo" aria-roledescription="carrusel" aria-label="Portada">
   <h1 class="visually-hidden">{empresa.nombreCorto}: {empresa.lema}</h1>
   <div class="cubo__escena" aria-live="off">
-    {diapositivas.map((d, i) => (
+    {caras.map((d, i) => (
       <div
         class:list={['cubo__cara', { 'is-activa': i === 0 }]}
         role="group"
@@ -38,7 +39,7 @@ const total = diapositivas.length;
           <p class="cubo__titulo">{d.titulo}</p>
           <p class="cubo__bajada">{d.texto}</p>
           {d.revisar && <p><Revisar nota={d.revisar} /></p>}
-          <a class="btn btn--lima" href={r(d.cta.pagina)}>{d.cta.label} <span aria-hidden="true">→</span></a>
+          <a class="btn btn--lima" href={r(d.cta.pagina, d.cta.ancla)}>{d.cta.label}{d.cta.ancla && <span class="visually-hidden">: {d.titulo}</span>} <span aria-hidden="true">→</span></a>
         </div>
         {d.referencial && <p class="cubo__ref">Imagen referencial{d.credito && ` · ${d.credito}`}</p>}
       </div>
@@ -50,7 +51,7 @@ const total = diapositivas.length;
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 7 12l8 8" /></svg>
     </button>
     <div class="cubo__puntos" role="group" aria-label="Elegir diapositiva">
-      {diapositivas.map((d, i) => (
+      {caras.map((d, i) => (
         <button type="button" class="cubo__punto" aria-label={`Ir a la diapositiva ${i + 1}: ${d.titulo}`} aria-current={i === 0 ? 'true' : undefined} data-i={i}></button>
       ))}
     </div>
