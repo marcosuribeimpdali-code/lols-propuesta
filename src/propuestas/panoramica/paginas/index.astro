@@ -10,6 +10,8 @@ import Pendiente from '../../comun/Pendiente.astro';
 import Revisar from '../../comun/Revisar.astro';
 import { empresa } from '../../../data/empresa';
 import { servicios, revisarDescripciones } from '../../../data/servicios';
+
+const cuantasEspecialidades = ['Una', 'Dos', 'Tres', 'Cuatro', 'Cinco', 'Seis', 'Siete', 'Ocho'][servicios.length - 1] ?? servicios.length;
 import { porEstado, altObra } from '../../../data/proyectos';
 import { diapositivas } from '../../../data/portada';
 
@@ -26,7 +28,7 @@ const proceso = [
 
 // accesos directos bajo la portada (como las 4 tarjetas con foto de la referencia)
 const accesos = [
-  { titulo: 'Servicios', bajada: 'Seis especialidades', href: r('servicios'), img: diapositivas[1].img, ref: diapositivas[1].credito },
+  { titulo: 'Servicios', bajada: `${cuantasEspecialidades} especialidades`, href: r('servicios'), img: diapositivas[1].img, ref: diapositivas[1].credito },
   { titulo: 'Proyectos finalizados', bajada: 'Obras entregadas', href: r('terminados'), img: terminados[2]?.imagen?.src, ref: null },
   { titulo: 'En ejecución', bajada: 'Próximas entregas', href: r('construccion'), img: enConstruccion[3]?.imagen?.src, ref: null },
   { titulo: 'Quiénes somos', bajada: 'Experiencia, seguridad y calidad', href: r('quienes'), img: diapositivas[2].img, ref: diapositivas[2].credito },
