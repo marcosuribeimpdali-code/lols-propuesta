@@ -3385,3 +3385,72 @@ fieldset.campo--grupo > legend {
     gap: 20px 12px;
   }
 }
+
+/* catálogo de equipos por familias */
+.eq-indice {
+  margin-top: clamp(28px, 4vw, 44px);
+}
+.eq-familias {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: 30px 20px;
+  list-style: none;
+  padding: 0;
+}
+.eq-familia h3 {
+  margin-top: 12px;
+  font: 700 1.25rem/1.1 var(--cond);
+  text-transform: uppercase;
+}
+.eq-familia__n {
+  margin-top: 4px;
+  font: 700 1.05rem/1.2 var(--cond);
+  letter-spacing: 0.04em;
+  color: var(--verde-osc);
+}
+.eq-familia__medidas {
+  margin-top: 2px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--tinta);
+}
+.eq-familia__txt {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--tinta-2);
+}
+.eq-nota {
+  margin-top: 28px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  text-align: center;
+  color: var(--tinta-2);
+}
+.eq-faena {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: clamp(28px, 5vw, 64px);
+}
+.eq-faena .pn-tit {
+  margin-bottom: 16px;
+}
+.eq-faena__txt {
+  margin-top: 10px;
+  font-size: 1.1rem;
+}
+@media (max-width: 900px) {
+  .eq-faena {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .eq-familias {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 12px;
+  }
+  .eq-familia h3 {
+    font-size: 1.08rem;
+  }
+}
