@@ -1,7 +1,7 @@
 ---
 // Propuesta 2 · Panorámica. Colores del sitio lols.cl de 2018 (verde #168D3A, lima #81D742,
 // negro) y portada a pantalla completa con fotos que giran en cubo 3D.
-// Fuentes empaquetadas con el sitio: ninguna visita carga nada de terceros.
+// Fuentes empaquetadas con el sitio (no Google Fonts): no envían la IP de las visitas a terceros.
 import '@fontsource/barlow/latin-400.css';
 import '@fontsource/barlow/latin-500.css';
 import '@fontsource/barlow/latin-600.css';
@@ -10,7 +10,7 @@ import '@fontsource/barlow-condensed/latin-700.css';
 import '@fontsource/barlow-condensed/latin-800.css';
 import '@fontsource/ibm-plex-mono/latin-500.css';
 import '@fontsource-variable/dm-sans';
-import './estilos.css';
+import { VERSION } from '../../data/version';
 import BarraPropuesta from '../comun/BarraPropuesta.astro';
 import Header from './components/Header.astro';
 import Footer from './components/Footer.astro';
@@ -38,6 +38,9 @@ const fullTitle = title ? `${title} · LOLS Ingeniería` : 'LOLS Ingeniería · 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- hoja propia de esta propuesta como <link>, no como import: la ruta única del sitio
+         importa los componentes de todas y los estilos se mezclarían -->
+    <link rel="stylesheet" href={`/estilos/panoramica.css?v=${VERSION}`} />
     <meta name="theme-color" content="#168D3A" />
     <script is:inline>document.documentElement.classList.add('js');</script>
   </head>

@@ -4,7 +4,7 @@
 import '@fontsource-variable/dm-sans';
 import '@fontsource/ibm-plex-mono/latin-400.css';
 import '@fontsource/ibm-plex-mono/latin-500.css';
-import './selector.css';
+import { VERSION } from '../../data/version';
 
 interface Props {
   title: string;
@@ -19,6 +19,9 @@ const { title } = Astro.props;
     <meta name="robots" content="noindex, nofollow" />
     <title>{title}</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- hoja propia de esta propuesta como <link>, no como import: la ruta única del sitio
+         importa los componentes de todas y los estilos se mezclarían -->
+    <link rel="stylesheet" href={`/estilos/selector.css?v=${VERSION}`} />
   </head>
   <body>
     <main id="contenido">

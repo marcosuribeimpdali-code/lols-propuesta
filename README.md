@@ -37,7 +37,7 @@ src/
     registro.ts        lista de propuestas + `principal`
     paginas.ts         qué componente dibuja cada página en cada propuesta
     comun/             logo, marcas de revisión, formulario, política de privacidad
-    plano/             propuesta 1: Base, components/, paginas/, estilos.css, config.ts
+    plano/             propuesta 1: Base, components/, paginas/, config.ts (estilos en public/estilos/plano.css)
     panoramica/        propuesta 2
     selector/          portada para elegir y diseño neutro del 404
   pages/
@@ -56,8 +56,8 @@ que al pasar a lols.cl no hace falta redirigirlas. Las subpáginas de cada proye
 ## Stack
 
 [Astro](https://astro.build) → sitio 100% estático. Las fotos se optimizan al compilar (WebP en
-varios tamaños, con `sharp`). Las fuentes van empaquetadas con el sitio: ninguna visita carga
-nada de terceros.
+varios tamaños, con `sharp`). Las fuentes van empaquetadas con el sitio; lo único que se carga desde
+un tercero es el mapa de Google de la página de contacto (declarado en la política de privacidad).
 
 ```bash
 npm install
@@ -73,7 +73,7 @@ npm run build    # genera dist/
 | Servicios y sus descripciones | `src/data/servicios.ts` |
 | Obras (ficha por proyecto + imagen) | `src/data/proyectos.ts` (imágenes en `src/assets/obras/`) |
 | Diapositivas de la portada giratoria | `src/data/portada.ts` (fotos en `src/assets/portada/`) |
-| Colores y tipografía de cada propuesta | `src/propuestas/<slug>/estilos.css` |
+| Colores y tipografía de cada propuesta | `public/estilos/<slug>.css` |
 | Qué propuesta se publica | `principal` en `src/propuestas/registro.ts` |
 
 Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completarlo.

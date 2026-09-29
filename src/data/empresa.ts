@@ -34,3 +34,14 @@ export const empresa = {
     'Compromiso con las normas de seguridad y el respeto por el medio ambiente.',
   ],
 };
+
+// Google Maps a partir de la dirección (sin API key). Si la dirección cambia, el mapa la sigue.
+const q = encodeURIComponent(empresa.direccion.valor);
+export const mapas = {
+  /** abre la ubicación en Google Maps */
+  ver: `https://www.google.com/maps/search/?api=1&query=${q}`,
+  /** abre la ruta hasta la empresa (en el celular, en la app de Maps) */
+  llegar: `https://www.google.com/maps/dir/?api=1&destination=${q}`,
+  /** mapa incrustado en la página de contacto */
+  embed: `https://maps.google.com/maps?q=${q}&z=16&hl=es&output=embed`,
+};

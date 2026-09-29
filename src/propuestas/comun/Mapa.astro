@@ -1,0 +1,19 @@
+---
+// Mapa de Google con la dirección de la empresa. Es lo único del sitio que se carga desde un
+// tercero (Google recibe la IP de quien lo ve): está declarado en la política de privacidad.
+// Se carga recién cuando el mapa entra en pantalla (loading="lazy").
+import { empresa, mapas } from '../../data/empresa';
+
+interface Props {
+  class?: string;
+}
+const { class: cls } = Astro.props;
+---
+<iframe
+  class:list={['mapa', cls]}
+  src={mapas.embed}
+  title={`Mapa: ubicación de ${empresa.nombreCorto}, ${empresa.direccion.valor}`}
+  loading="lazy"
+  referrerpolicy="no-referrer-when-downgrade"
+  allowfullscreen
+></iframe>

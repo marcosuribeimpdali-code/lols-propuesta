@@ -1195,6 +1195,15 @@ main:focus {
 .dato dd a:hover {
   color: var(--green-ink);
 }
+.plano-mapa {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  min-height: 260px;
+  margin-top: 28px;
+  border: 1px solid var(--ink);
+  background: var(--paper-2);
+}
 .dato .link-flecha {
   font-size: 0.95rem;
   color: var(--green-ink);
