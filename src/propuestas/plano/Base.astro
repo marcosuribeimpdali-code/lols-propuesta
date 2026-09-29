@@ -10,6 +10,7 @@ import BarraPropuesta from '../comun/BarraPropuesta.astro';
 import Header from './components/Header.astro';
 import Footer from './components/Footer.astro';
 import { SLUG } from './config';
+import { listaServicios } from '../../data/servicios';
 
 interface Props {
   /** undefined = página de inicio */
@@ -18,7 +19,7 @@ interface Props {
 }
 const {
   title,
-  description = 'LOLS Ingeniería Limitada: construcción, montaje industrial, mantención, electricidad, voz y datos, y muebles.',
+  description = `LOLS Ingeniería Limitada: ${listaServicios.charAt(0).toLowerCase() + listaServicios.slice(1)}`,
 } = Astro.props;
 const fullTitle = title ? `${title} · LOLS Ingeniería` : 'LOLS Ingeniería · Sus proyectos en las mejores manos';
 ---

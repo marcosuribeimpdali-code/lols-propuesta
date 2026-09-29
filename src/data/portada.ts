@@ -7,6 +7,7 @@
 import type { ImageMetadata } from 'astro';
 import type { Pagina } from './rutas';
 import { empresa } from './empresa';
+import { listaServicios } from './servicios';
 import gruas from '../assets/portada/01-gruas-edificio.jpg';
 import soldador from '../assets/portada/02-soldador-estructura.jpg';
 import losa from '../assets/portada/03-trabajadores-losa.jpg';
@@ -32,7 +33,7 @@ export const diapositivas: Diapositiva[] = [
     alt: 'Grúas torre junto a un edificio en construcción',
     antetitulo: empresa.razonSocial,
     titulo: 'Sus proyectos en las mejores manos',
-    texto: 'Construcción, montaje industrial, mantención, electricidad, voz y datos, y muebles.',
+    texto: listaServicios,
     cta: { label: 'Ver proyectos', pagina: 'terminados' },
     referencial: true,
     credito: 'Frames For Your Heart / Unsplash',

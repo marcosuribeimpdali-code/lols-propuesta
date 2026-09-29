@@ -9,7 +9,7 @@ import IconoServicio from '../../comun/IconoServicio.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import Revisar from '../../comun/Revisar.astro';
 import { empresa } from '../../../data/empresa';
-import { servicios } from '../../../data/servicios';
+import { servicios, revisarDescripciones } from '../../../data/servicios';
 import { porEstado, altObra } from '../../../data/proyectos';
 import { diapositivas } from '../../../data/portada';
 
@@ -70,13 +70,14 @@ const accesos = [
     <div class="wrap">
       <TituloSeccion antetitulo="Lo que hacemos" titulo="Nuestros servicios" id="serv-t">
         <Pendiente texto="frase breve que presente los servicios en conjunto" />
+        <p class="pn-serv-nota"><Revisar nota={revisarDescripciones} /></p>
       </TituloSeccion>
       <ul class="pn-serv-grid">
         {servicios.map((s) => (
           <li class="pn-serv">
             <span class="pn-serv__icono"><IconoServicio nombre={s.icono} /></span>
             <h3>{s.nombre}</h3>
-            {s.descripcion ? <p>{s.descripcion}</p> : <Pendiente texto="descripción del servicio" />}
+            {s.descripcion ? <p>{s.descripcion} <Revisar nota={s.revisar} /></p> : <Pendiente texto="descripción del servicio" />}
             <a class="pn-link" href={r('servicios', `#${s.slug}`)}>Ver servicio<span class="visually-hidden">: {s.nombre}</span> <span aria-hidden="true">→</span></a>
           </li>
         ))}

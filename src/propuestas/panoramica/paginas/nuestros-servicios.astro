@@ -6,14 +6,15 @@ import TituloSeccion from '../components/TituloSeccion.astro';
 import CtaFoto from '../components/CtaFoto.astro';
 import IconoServicio from '../../comun/IconoServicio.astro';
 import Pendiente from '../../comun/Pendiente.astro';
-import { servicios } from '../../../data/servicios';
+import { servicios, listaServicios, revisarDescripciones } from '../../../data/servicios';
+import Revisar from '../../comun/Revisar.astro';
 import { diapositivas } from '../../../data/portada';
 
 const banner = diapositivas[1];
 ---
-<Base title="Servicios" description="Construcción, montaje industrial, mantención, electricidad, voz y datos, y muebles.">
+<Base title="Servicios" description={listaServicios}>
   <PageBanner titulo="Nuestros servicios" img={banner.img} referencial={banner.credito ?? undefined}>
-    <p>Construcción, montaje industrial, mantención, electricidad, voz y datos, y muebles.</p>
+    <p>{listaServicios}</p>
   </PageBanner>
 
   <section class="pn-sec">
@@ -23,6 +24,7 @@ const banner = diapositivas[1];
           <li><a href={`#${s.slug}`}><IconoServicio nombre={s.icono} />{s.nombre}</a></li>
         ))}
       </ul>
+      <p class="pn-serv-nota"><Revisar nota={revisarDescripciones} /></p>
 
       <div class="pn-serv-lista">
         {servicios.map((s, i) => (
@@ -34,7 +36,7 @@ const banner = diapositivas[1];
             <div class="pn-serv-item__cuerpo">
               <h2 id={`${s.slug}-t`}>{s.nombre}</h2>
               {s.descripcion ? (
-                <p>{s.descripcion}</p>
+                <p>{s.descripcion} <Revisar nota={s.revisar} /></p>
               ) : (
                 <Pendiente texto="descripción: qué incluye el servicio, para qué tipo de cliente y un ejemplo de obra" bloque />
               )}

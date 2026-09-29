@@ -9,7 +9,7 @@ import SectionHead from '../components/SectionHead.astro';
 import ProyectoCard from '../components/ProyectoCard.astro';
 import CtaContacto from '../components/CtaContacto.astro';
 import { empresa } from '../../../data/empresa';
-import { servicios } from '../../../data/servicios';
+import { servicios, listaServicios } from '../../../data/servicios';
 import { porEstado } from '../../../data/proyectos';
 
 const destacados = [...porEstado('terminado').slice(0, 2), porEstado('en-construccion')[0]];
@@ -22,7 +22,7 @@ const destacados = [...porEstado('terminado').slice(0, 2), porEstado('en-constru
           <p class="eyebrow"><span class="eyebrow__num">—</span> {empresa.razonSocial}</p>
           <h1>Sus proyectos en las mejores manos<span class="punto">.</span></h1>
           <p class="hero__lead">
-            <strong>Construcción, montaje industrial, mantención, electricidad, voz y datos, y muebles.</strong>
+            <strong>{listaServicios}</strong>
             {' '}{empresa.directrices}
           </p>
           <div class="hero__ctas">
@@ -69,7 +69,7 @@ const destacados = [...porEstado('terminado').slice(0, 2), porEstado('en-constru
                 <span class="servicio__num">{String(i + 1).padStart(2, '0')}</span>
               </div>
               <h3>{s.nombre}</h3>
-              {s.descripcion ? <p>{s.descripcion}</p> : <Pendiente texto="descripción del servicio" />}
+              {s.descripcion ? <p>{s.descripcion} <Revisar nota={s.revisar} /></p> : <Pendiente texto="descripción del servicio" />}
               <span class="servicio__mas">Ver servicio <span aria-hidden="true">→</span></span>
             </a>
           </li>

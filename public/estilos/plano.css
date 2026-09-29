@@ -1619,3 +1619,45 @@ html:not(.js) .form__siguiente {
   font-weight: 600;
   color: #b42318;
 }
+
+/* ---------- grillas de 3 columnas con 5 servicios: la última fila se reparte el ancho ---------- */
+@media (min-width: 961px) {
+  .servicios-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .servicios-grid > * {
+    grid-column: span 2;
+  }
+  .servicios-grid > :nth-child(3n + 1):nth-last-child(2),
+  .servicios-grid > :nth-child(3n + 1):nth-last-child(2) + * {
+    grid-column: span 3;
+  }
+  .servicios-grid > :nth-child(3n + 1):last-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (min-width: 561px) and (max-width: 960px) {
+  .servicios-grid > :nth-child(odd):last-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (min-width: 641px) {
+  .opciones {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .opciones > * {
+    grid-column: span 2;
+  }
+  .opciones > :nth-child(3n + 1):nth-last-child(2),
+  .opciones > :nth-child(3n + 1):nth-last-child(2) + * {
+    grid-column: span 3;
+  }
+  .opciones > :nth-child(3n + 1):last-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 640px) {
+  .opciones > :nth-child(odd):last-child {
+    grid-column: 1 / -1;
+  }
+}
