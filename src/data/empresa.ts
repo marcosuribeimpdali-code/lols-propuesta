@@ -7,7 +7,11 @@ export interface Dato {
   revisar?: string;
 }
 
+/** años en la construcción (dato de la empresa, 2026) */
+const anios = 30;
+
 export const empresa = {
+  anios,
   razonSocial: 'LOLS Ingeniería Limitada',
   nombreCorto: 'LOLS Ingeniería',
   lema: 'Sus proyectos en las mejores manos',
@@ -26,8 +30,7 @@ export const empresa = {
     revisar: 'que la casilla siga activa',
   } satisfies Dato,
   experiencia: {
-    valor: 'Más de 20 años de experiencia en el área de la construcción.',
-    revisar: 'la cifra es del sitio de 2018: recalcular',
+    valor: `${anios} años de experiencia en el área de la construcción.`,
   } satisfies Dato,
   principios: [
     'Un esquema de trabajo basado en el esfuerzo, la creatividad y la responsabilidad.',

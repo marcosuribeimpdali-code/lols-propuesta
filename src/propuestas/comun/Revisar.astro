@@ -1,8 +1,9 @@
 ---
 // Etiqueta para datos que se pueden usar pero están por confirmar con la jefatura.
+// Sin nota no muestra nada: así, cuando un dato se confirma, basta con quitar su `revisar`.
 interface Props {
-  nota: string;
+  nota?: string;
 }
 const { nota } = Astro.props;
 ---
-<span class="revisar"><span aria-hidden="true">⚠</span> Por confirmar: {nota}</span>
+{nota && <span class="revisar"><span aria-hidden="true">⚠</span> Por confirmar: {nota}</span>}

@@ -8,9 +8,17 @@ import Pendiente from '../../comun/Pendiente.astro';
 import Revisar from '../../comun/Revisar.astro';
 import { empresa } from '../../../data/empresa';
 import { diapositivas } from '../../../data/portada';
+import { hitos, certificaciones } from '../../../data/historia';
 
 const banner = diapositivas[2];
 const lateral = diapositivas[0];
+
+// sello de 16 puntas para las certificaciones
+const sello = Array.from({ length: 32 }, (_, i) => {
+  const r = i % 2 ? 19.5 : 23;
+  const a = (Math.PI * i) / 16;
+  return `${(24 + r * Math.sin(a)).toFixed(2)},${(24 - r * Math.cos(a)).toFixed(2)}`;
+}).join(' ');
 ---
 <Base title="Quiénes somos" description="LOLS Ingeniería Limitada: experiencia, seguridad y calidad son nuestras directrices.">
   <PageBanner titulo="Quiénes somos" img={banner.img} referencial={banner.credito ?? undefined} />
@@ -55,16 +63,50 @@ const lateral = diapositivas[0];
     </div>
   </section>
 
-  <section class="pn-sec" aria-labelledby="falta-t">
+  <section class="pn-sec" aria-labelledby="hist-t">
     <div class="wrap">
-      <TituloSeccion antetitulo="Por completar" titulo="Lo que falta para esta página" id="falta-t">
-        <p>Secciones sugeridas. Cada una se muestra solo si la empresa tiene el contenido.</p>
-      </TituloSeccion>
-      <ul class="pn-pendientes">
-        <li><h3>Historia</h3><Pendiente texto="año de fundación, hitos y obras que marcaron la trayectoria" bloque /></li>
-        <li><h3>Equipo</h3><Pendiente texto="socios o jefaturas que se quieran presentar, con foto y cargo" bloque /></li>
-        <li><h3>Clientes y mandantes</h3><Pendiente texto="empresas para las que se ha trabajado (con su autorización para nombrarlas)" bloque /></li>
-        <li><h3>Certificaciones</h3><Pendiente texto="registros, certificaciones o afiliaciones vigentes, si las hay" bloque /></li>
+      <TituloSeccion antetitulo={`${empresa.anios} años en la construcción`} titulo="Nuestra historia" id="hist-t" />
+      <ol class="pn-linea">
+        {hitos.map((h) => (
+          <li class:list={['pn-linea__hito', { 'is-ejemplo': h.ejemplo }]}>
+            <span class="pn-linea__anio">{h.anio}</span>
+            <h3>{h.titulo}</h3>
+            <p>{h.texto}</p>
+            {h.ejemplo && <span class="pn-ej">Ejemplo</span>}
+            <Revisar nota={h.revisar} />
+          </li>
+        ))}
+      </ol>
+      <p class="pn-linea__pend">
+        <Pendiente texto="los hitos reales: obras, mandantes o cambios que marcaron la trayectoria. Los marcados como Ejemplo son de muestra" bloque />
+      </p>
+    </div>
+  </section>
+
+  <section class="pn-sec pn-sec--gris" aria-labelledby="cert-t">
+    <div class="wrap">
+      <TituloSeccion antetitulo="Respaldo" titulo="Certificaciones" id="cert-t" />
+      <ul class="pn-certs">
+        {certificaciones.map((c) => (
+          <li class="pn-cert">
+            <svg class="pn-cert__sello" viewBox="0 0 48 48" aria-hidden="true">
+              <polygon points={sello} />
+              <path d="M16 24.5l5.5 5.5L32.5 19" />
+            </svg>
+            <div>
+              <h3>{c.nombre}</h3>
+              <p class="pn-cert__area">{c.area}</p>
+              <p>{c.texto}</p>
+              {c.ejemplo && <span class="pn-ej">Ejemplo</span>}
+            </div>
+          </li>
+        ))}
+        <li class="pn-cert pn-cert--vacio">
+          <Pendiente
+            texto="qué registros, certificaciones o afiliaciones tiene la empresa. Por ejemplo: Registro de Contratistas del MOP o del MINVU, instalador autorizado SEC, socio de la Cámara Chilena de la Construcción"
+            bloque
+          />
+        </li>
       </ul>
     </div>
   </section>
