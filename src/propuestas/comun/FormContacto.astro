@@ -1,71 +1,212 @@
 ---
-// Formulario de contacto, igual en todas las propuestas (cada una lo estiliza con sus clases
-// .form, .campo, .consent…). Propuesta: NO envía ni guarda nada todavía.
+// "Cuéntenos su proyecto": formulario en 3 pasos (servicio → su proyecto → sus datos), igual en
+// todas las propuestas (cada una lo estiliza con sus clases .form, .campo, .opcion…).
+// Sin JS se ve completo, un paso bajo otro; con JS, un paso a la vez con Atrás / Siguiente y se
+// valida cada paso antes de avanzar.
+// Propuesta: NO envía ni guarda nada todavía (tampoco los archivos adjuntos).
 import Pendiente from './Pendiente.astro';
+import IconoServicio from './IconoServicio.astro';
 import { empresa } from '../../data/empresa';
+import { servicios } from '../../data/servicios';
 
 interface Props {
   privacidadHref: string;
   titulo?: string;
 }
-const { privacidadHref, titulo = 'Escríbanos' } = Astro.props;
+const { privacidadHref, titulo = 'Cuéntenos su proyecto' } = Astro.props;
+
+const pasos = ['Servicio', 'Su proyecto', 'Sus datos'];
+const etapas = [
+  { valor: 'idea', texto: 'Solo es una idea' },
+  { valor: 'planos', texto: 'Tiene planos' },
+  { valor: 'permisos', texto: 'Tiene permisos' },
+  { valor: 'licitacion', texto: 'Es una licitación' },
+];
+const plazos = ['Lo antes posible', 'En 1 a 3 meses', 'En 3 a 6 meses', 'En más de 6 meses', 'Aún no lo sé'];
 ---
-<form class="form" id="form-contacto" method="post" aria-labelledby="form-t" aria-describedby="form-req">
+<form class="form" id="form-contacto" method="post" enctype="multipart/form-data" aria-labelledby="form-t" aria-describedby="form-req">
   <h2 id="form-t" class="form__t">{titulo}</h2>
-  <p id="form-req" class="form__req">Todos los campos son obligatorios, salvo los marcados como opcionales.</p>
+  <p id="form-req" class="form__req">Tres pasos cortos. Todo es obligatorio, salvo lo marcado como opcional.</p>
 
-  <div class="form__fila">
-    <div class="campo">
-      <label for="f-nombre">Nombre</label>
-      <input id="f-nombre" name="nombre" type="text" autocomplete="name" required />
-    </div>
-    <div class="campo">
-      <label for="f-empresa">Empresa <span class="campo__op">(opcional)</span></label>
-      <input id="f-empresa" name="empresa" type="text" autocomplete="organization" />
-    </div>
-  </div>
-  <div class="form__fila">
-    <div class="campo">
-      <label for="f-correo">Correo</label>
-      <input id="f-correo" name="correo" type="email" autocomplete="email" required />
-    </div>
-    <div class="campo">
-      <label for="f-telefono">Teléfono <span class="campo__op">(opcional)</span></label>
-      <input id="f-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" />
-    </div>
-  </div>
-  <div class="campo">
-    <label for="f-mensaje">Mensaje</label>
-    <textarea id="f-mensaje" name="mensaje" rows="6" required></textarea>
-  </div>
+  <ol class="pasos" aria-label="Pasos del formulario">
+    {pasos.map((p, i) => (
+      <li class:list={['pasos__item', { 'is-actual': i === 0 }]} aria-current={i === 0 ? 'step' : undefined}>
+        <span class="pasos__n">{i + 1}</span> {p}
+      </li>
+    ))}
+  </ol>
 
-  <!-- Ley 21.719: consentimiento explícito, casilla SIN marcar por defecto -->
-  <div class="consent">
-    <input id="f-consent" name="consentimiento" type="checkbox" required />
-    <label for="f-consent">
-      Acepto que {empresa.nombreCorto} use estos datos solo para responder mi consulta, según su{' '}
-      <a href={privacidadHref}>política de privacidad</a>.
-    </label>
+  <fieldset class="paso" data-paso="0">
+    <legend class="paso__t" tabindex="-1"><span class="paso__n">Paso 1 de 3</span> ¿Qué necesita?</legend>
+    <div class="opciones">
+      {servicios.map((s, i) => (
+        <label class="opcion">
+          <input type="radio" name="servicio" value={s.slug} required={i === 0} />
+          <span class="opcion__caja">
+            <IconoServicio nombre={s.icono} />
+            <span>{s.nombre}</span>
+          </span>
+        </label>
+      ))}
+    </div>
+  </fieldset>
+
+  <fieldset class="paso" data-paso="1">
+    <legend class="paso__t" tabindex="-1"><span class="paso__n">Paso 2 de 3</span> Cuéntenos del proyecto</legend>
+    <div class="form__fila">
+      <div class="campo">
+        <label for="f-comuna">Comuna de la obra</label>
+        <input id="f-comuna" name="comuna" type="text" autocomplete="address-level2" required />
+      </div>
+      <div class="campo">
+        <label for="f-superficie">Superficie aproximada <span class="campo__op">(opcional, en m²)</span></label>
+        <input id="f-superficie" name="superficie" type="number" min="1" step="1" inputmode="numeric" />
+      </div>
+    </div>
+
+    <div class="campo" role="radiogroup" aria-labelledby="f-etapa-t">
+      <span class="campo__label" id="f-etapa-t">¿En qué etapa está su proyecto?</span>
+      <div class="chips">
+        {etapas.map((e, i) => (
+          <label class="chip">
+            <input type="radio" name="etapa" value={e.valor} required={i === 0} />
+            <span>{e.texto}</span>
+          </label>
+        ))}
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="f-plazo">¿Cuándo le gustaría empezar? <span class="campo__op">(opcional)</span></label>
+      <select id="f-plazo" name="plazo">
+        <option value="">Elegir…</option>
+        {plazos.map((p) => <option>{p}</option>)}
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="f-mensaje">Descríbanos brevemente lo que necesita</label>
+      <textarea id="f-mensaje" name="mensaje" rows="5" required></textarea>
+    </div>
+
+    <div class="campo">
+      <label for="f-archivos">Planos o fotos <span class="campo__op">(opcional)</span></label>
+      <input id="f-archivos" class="adjuntos" name="archivos" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.dwg,.zip" aria-describedby="f-archivos-ayuda" />
+      <p id="f-archivos-ayuda" class="campo__ayuda">PDF, imágenes, DWG o ZIP. <Pendiente texto="tamaño máximo que aceptará el servidor" /></p>
+      <ul class="adjuntos__lista" data-adjuntos aria-live="polite"></ul>
+    </div>
+  </fieldset>
+
+  <fieldset class="paso" data-paso="2">
+    <legend class="paso__t" tabindex="-1"><span class="paso__n">Paso 3 de 3</span> Sus datos</legend>
+    <div class="form__fila">
+      <div class="campo">
+        <label for="f-nombre">Nombre</label>
+        <input id="f-nombre" name="nombre" type="text" autocomplete="name" required />
+      </div>
+      <div class="campo">
+        <label for="f-empresa">Empresa <span class="campo__op">(opcional)</span></label>
+        <input id="f-empresa" name="empresa" type="text" autocomplete="organization" />
+      </div>
+    </div>
+    <div class="form__fila">
+      <div class="campo">
+        <label for="f-correo">Correo</label>
+        <input id="f-correo" name="correo" type="email" autocomplete="email" required />
+      </div>
+      <div class="campo">
+        <label for="f-telefono">Teléfono <span class="campo__op">(opcional)</span></label>
+        <input id="f-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" />
+      </div>
+    </div>
+
+    <!-- Ley 21.719: consentimiento explícito, casilla SIN marcar por defecto -->
+    <div class="consent">
+      <input id="f-consent" name="consentimiento" type="checkbox" required />
+      <label for="f-consent">
+        Acepto que {empresa.nombreCorto} use estos datos solo para responder mi consulta, según su{' '}
+        <a href={privacidadHref}>política de privacidad</a>.
+      </label>
+    </div>
+
+    <Pendiente texto="definir a qué correo llegan las solicitudes y validar el texto legal" bloque />
+  </fieldset>
+
+  <div class="form__nav">
+    <button class="btn btn--linea form__atras" type="button" data-atras>← Atrás</button>
+    <button class="btn btn--primary form__siguiente" type="button" data-siguiente>Siguiente <span aria-hidden="true">→</span></button>
+    <button class="btn btn--primary form__enviar" type="submit" data-enviar>Enviar solicitud <span aria-hidden="true">→</span></button>
   </div>
-
-  <Pendiente texto="definir a qué correo llegan los mensajes y validar el texto legal" bloque />
-
-  <button class="btn btn--primary" type="submit">Enviar mensaje <span aria-hidden="true">→</span></button>
 
   <p class="form__estado" id="form-estado" role="status" tabindex="-1" hidden></p>
 </form>
 
 <script>
-  // La validación (obligatorios, formato de correo, casilla) la hace el navegador; este envío
-  // solo muestra cómo respondería el sitio final.
   const form = document.getElementById('form-contacto') as HTMLFormElement | null;
-  const estado = document.getElementById('form-estado');
-  form?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (!estado) return;
-    estado.textContent =
-      'Gracias. Esto es una propuesta: el formulario aún no envía mensajes. En el sitio final, aquí se confirmaría la recepción.';
-    estado.hidden = false;
-    estado.focus();
-  });
+  if (form) {
+    const pasos = [...form.querySelectorAll<HTMLFieldSetElement>('[data-paso]')];
+    const items = [...form.querySelectorAll<HTMLElement>('.pasos__item')];
+    const atras = form.querySelector<HTMLButtonElement>('[data-atras]')!;
+    const siguiente = form.querySelector<HTMLButtonElement>('[data-siguiente]')!;
+    const enviar = form.querySelector<HTMLButtonElement>('[data-enviar]')!;
+    const estado = document.getElementById('form-estado')!;
+    let actual = 0;
+
+    const mostrar = (i: number, foco = true) => {
+      actual = i;
+      pasos.forEach((p, k) => (p.hidden = k !== i));
+      items.forEach((it, k) => {
+        it.classList.toggle('is-actual', k === i);
+        it.classList.toggle('is-hecho', k < i);
+        k === i ? it.setAttribute('aria-current', 'step') : it.removeAttribute('aria-current');
+      });
+      atras.hidden = i === 0;
+      siguiente.hidden = i === pasos.length - 1;
+      enviar.hidden = i !== pasos.length - 1;
+      if (foco) pasos[i].querySelector<HTMLElement>('.paso__t')?.focus();
+    };
+
+    // valida solo los campos del paso visible; el navegador muestra el mensaje del primero que falle
+    const pasoValido = () => {
+      const campos = [...pasos[actual].querySelectorAll<HTMLInputElement>('input, select, textarea')];
+      const malo = campos.find((c) => !c.checkValidity());
+      if (malo) {
+        malo.reportValidity();
+        return false;
+      }
+      return true;
+    };
+
+    form.classList.add('form--pasos');
+    mostrar(0, false);
+    siguiente.addEventListener('click', () => pasoValido() && mostrar(actual + 1));
+    atras.addEventListener('click', () => mostrar(actual - 1));
+
+    // Enter dentro de un paso avanza en vez de enviar
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (actual < pasos.length - 1) {
+        if (pasoValido()) mostrar(actual + 1);
+        return;
+      }
+      estado.textContent =
+        'Gracias. Esto es una propuesta: el formulario aún no envía la solicitud. En el sitio final, aquí se confirmaría la recepción y los próximos pasos.';
+      estado.hidden = false;
+      estado.focus();
+    });
+
+    // nombres de los archivos elegidos
+    const archivos = form.querySelector<HTMLInputElement>('#f-archivos');
+    const lista = form.querySelector<HTMLUListElement>('[data-adjuntos]');
+    archivos?.addEventListener('change', () => {
+      if (!lista) return;
+      lista.replaceChildren(
+        ...[...(archivos.files ?? [])].map((f) => {
+          const li = document.createElement('li');
+          li.textContent = `${f.name} · ${(f.size / 1024 / 1024).toFixed(1).replace('.', ',')} MB`;
+          return li;
+        }),
+      );
+    });
+  }
 </script>

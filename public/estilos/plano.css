@@ -1361,3 +1361,253 @@ main:focus {
   max-width: 34em;
   color: var(--ink-2);
 }
+
+/* ==========================================================================
+   "Cuéntenos su proyecto": formulario en 3 pasos
+   ========================================================================== */
+[hidden] {
+  display: none !important;
+}
+.pasos {
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.form:not(.form--pasos) .pasos {
+  display: none;
+}
+.pasos__item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 4px 12px;
+  border-bottom: 4px solid var(--line);
+  font: 700 1rem/1.1 var(--font);
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: var(--ink-2);
+}
+.pasos__n {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--line);
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+.pasos__item.is-actual {
+  color: var(--ink);
+  border-color: var(--green-ink);
+}
+.pasos__item.is-actual .pasos__n {
+  background: var(--green-ink);
+  color: #fff;
+}
+.pasos__item.is-hecho {
+  border-color: var(--green);
+}
+.pasos__item.is-hecho .pasos__n {
+  background: var(--green);
+  color: var(--ink);
+}
+.paso {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.form:not(.form--pasos) .paso + .paso {
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.paso__t {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0;
+  font: 800 1.6rem/1 var(--font);
+  text-transform: none;
+}
+.paso__t:focus {
+  outline: none;
+}
+.paso__n {
+  font: 700 0.9rem/1 var(--font);
+  letter-spacing: 0.14em;
+  color: var(--green-ink);
+}
+.opciones {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.opcion {
+  position: relative;
+  cursor: pointer;
+}
+.opcion input,
+.chip input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.opcion__caja {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  height: 100%;
+  min-height: 116px;
+  box-sizing: border-box;
+  padding: 18px;
+  border: 2px solid var(--line);
+  background: #fff;
+  font: 700 1.12rem/1.1 var(--font);
+  letter-spacing: 0.02em;
+  text-transform: none;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s,
+    color 0.2s;
+}
+.opcion__caja .icono {
+  width: 36px;
+  height: 36px;
+  color: var(--green-ink);
+}
+.opcion:hover .opcion__caja {
+  border-color: var(--green-ink);
+}
+.opcion input:checked + .opcion__caja {
+  border-color: var(--green-ink);
+  background: var(--green-ink);
+  color: #fff;
+}
+.opcion input:checked + .opcion__caja .icono {
+  color: var(--green);
+}
+.opcion input:focus-visible + .opcion__caja,
+.chip input:focus-visible + span {
+  outline: 3px solid var(--green-ink);
+  outline-offset: 3px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  position: relative;
+}
+.chip span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 18px;
+  border: 2px solid var(--line);
+  background: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s,
+    color 0.2s;
+}
+.chip:hover span {
+  border-color: var(--green-ink);
+}
+.chip input:checked + span {
+  border-color: var(--green-ink);
+  background: var(--green-ink);
+  color: #fff;
+}
+.campo__label {
+  font: 700 1.02rem var(--font);
+  letter-spacing: 0.05em;
+  text-transform: none;
+}
+.campo select {
+  width: 100%;
+  min-height: 50px;
+  padding: 0.6em 0.85em;
+  border: 1px solid var(--field);
+  border-radius: 0;
+  background: var(--paper-2);
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+}
+.campo select:focus-visible {
+  outline: 3px solid var(--green-ink);
+  outline-offset: 0;
+  background: #fff;
+}
+.campo__ayuda {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ink-2);
+}
+.adjuntos {
+  padding: 12px;
+  border: 1px dashed var(--field);
+  background: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+}
+.adjuntos__lista {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0 0 0 1.1em;
+  font-size: 0.92rem;
+}
+.form__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.form__siguiente,
+.form__enviar {
+  margin-left: auto;
+}
+.btn--linea {
+  border-color: var(--green-ink);
+  background: #fff;
+  color: var(--green-ink);
+}
+.btn--linea:hover {
+  background: var(--paper-2);
+  color: var(--green-ink);
+}
+html:not(.js) .form__atras,
+html:not(.js) .form__siguiente {
+  display: none;
+}
+@media (max-width: 640px) {
+  .opciones {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .pasos__item {
+    font-size: 0.85rem;
+    gap: 6px;
+  }
+  .form__nav .btn {
+    flex: 1;
+  }
+}
+
+/* el <legend> no es parte de la grilla del fieldset: su separación va aparte */
+.paso__t {
+  margin-bottom: 18px;
+}
