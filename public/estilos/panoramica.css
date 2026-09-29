@@ -1847,25 +1847,29 @@ main:focus {
   margin-top: 8px;
 }
 
-/* cabecera de la ficha: datos a la izquierda, foto real a la derecha */
-.pn-obra-hero {
-  color: #fff;
-  background:
-    repeating-linear-gradient(135deg, rgb(255 255 255 / 0.035) 0 2px, transparent 2px 16px),
-    linear-gradient(120deg, var(--verde-noche), var(--verde-osc));
+/* ficha de la obra: título corto y, de inmediato, el antes / durante / después con sus datos
+   al pie. La foto se limita al alto de la pantalla para que se vea entera sin bajar. */
+.pn-obra-top {
+  padding-block: 22px clamp(48px, 6vw, 80px);
 }
-.pn-obra-hero__in {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+.pn-obra-top .pn-migas {
+  color: var(--tinta-2);
+}
+.pn-obra-top .pn-migas a {
+  color: var(--verde-osc);
+}
+.pn-obra-top__cab {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: clamp(32px, 6vw, 88px);
-  padding-block: clamp(48px, 6vw, 84px);
+  gap: 8px 16px;
+  margin: 10px 0 18px;
 }
-.pn-obra-hero__estado {
-  margin-top: 22px;
+.pn-obra-top__cab h1 {
+  font: 800 clamp(2.1rem, 1.5rem + 2vw, 3.2rem) / 0.95 var(--cond);
+  text-transform: uppercase;
 }
-.pn-obra-hero__estado span {
-  display: inline-block;
+.pn-obra-top__estado {
   padding: 0.3em 0.8em;
   background: var(--lima);
   color: var(--negro);
@@ -1873,52 +1877,58 @@ main:focus {
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-.pn-obra-hero h1 {
-  margin-top: 12px;
-  font: 800 clamp(3rem, 2rem + 4vw, 5.6rem) / 0.92 var(--cond);
-  text-transform: uppercase;
+.pn-obra-top .pap__tabs {
+  margin: 0 0 14px;
 }
-.pn-obra-hero__txt > p:not(.pn-obra-hero__estado) {
-  margin-top: 12px;
+.pn-obra-top .pap__media {
+  aspect-ratio: auto;
+  height: clamp(260px, calc(100vh - 390px), 620px);
 }
-.pn-obra-datos {
+.pn-obra-ficha {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: 32px;
-  border-top: 1px solid rgb(255 255 255 / 0.22);
+  grid-template-columns: repeat(6, minmax(0, 1fr)) minmax(0, 2fr);
+  gap: 16px 28px;
+  margin: 22px 0 0;
+  padding: 20px 24px;
+  background: var(--gris);
+  border-top: 5px solid var(--lima);
 }
-.pn-obra-datos div {
-  padding: 14px 16px 14px 0;
-  border-bottom: 1px solid rgb(255 255 255 / 0.22);
-}
-.pn-obra-datos dt {
+.pn-obra-ficha dt {
   font: 600 0.88rem/1.2 var(--cond);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgb(255 255 255 / 0.78);
+  color: var(--tinta-2);
 }
-.pn-obra-datos dd {
+.pn-obra-ficha dd {
   margin: 4px 0 0;
   font-weight: 600;
 }
-.pn-obra-hero__foto {
-  position: relative;
-  width: 372px;
-  box-shadow: 18px 18px 0 var(--lima);
+.pn-obra-top__notas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 14px;
 }
-.pn-obra-hero__foto img {
-  width: 100%;
-  height: auto;
+@media (max-width: 1100px) {
+  .pn-obra-ficha {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  /* servicios (el último dato, el más largo) completa la fila */
+  .pn-obra-ficha > div:last-child {
+    grid-column: span 2;
+  }
 }
-@media (max-width: 900px) {
-  .pn-obra-hero__in {
-    grid-template-columns: 1fr;
+@media (max-width: 640px) {
+  .pn-obra-top .pap__media {
+    height: auto;
+    aspect-ratio: 4 / 3;
   }
-  .pn-obra-hero__foto {
-    width: min(100% - 18px, 372px);
-  }
-  .pn-obra-datos {
+  .pn-obra-ficha {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 18px;
+  }
+  .pn-obra-ficha > div:last-child {
+    grid-column: 1 / -1;
   }
 }
 .pn-aviso--centro {
@@ -3221,4 +3231,10 @@ fieldset.campo--grupo > legend {
    el campo no se estira ni baja su casilla */
 .form__fila > .campo {
   align-content: start;
+}
+
+/* etiqueta "Datos de ejemplo" junto al número de la obra */
+.pn-obra__num .pn-ej {
+  margin-left: 10px;
+  vertical-align: 1px;
 }

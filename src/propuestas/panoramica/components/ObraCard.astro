@@ -36,7 +36,7 @@ const campos: [string, string | null][] = [
     {p.imagen && <span class="pn-obra__origen">{p.imagen.tipo === 'render' ? 'Render' : 'Foto'} · {p.imagen.origen}</span>}
   </div>
   <div class="pn-obra__cuerpo">
-    <span class="pn-obra__num">Obra {n}</span>
+    <span class="pn-obra__num">Obra {n}{p.datosEjemplo && <span class="pn-ej">Datos de ejemplo</span>}</span>
     <H class="pn-obra__titulo">
       {href ? (
         <a class="pn-obra__link" href={href}>{p.nombre ?? <><span class="visually-hidden">Obra {n}: </span><Pendiente texto="nombre de la obra" /></>}</a>

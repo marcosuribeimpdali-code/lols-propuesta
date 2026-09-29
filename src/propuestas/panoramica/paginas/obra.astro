@@ -23,57 +23,47 @@ const anterior = lista[(indice - 1 + lista.length) % lista.length];
 const siguiente = lista[(indice + 1) % lista.length];
 const numero = (o: typeof p) => String(lista.indexOf(o) + 1).padStart(2, '0');
 
+// ficha de la obra, al pie de las fotos
 const datos: [string, string | null][] = [
+  ['Obra', p.nombre],
   ['Mandante', p.mandante],
-  ['Comuna', p.comuna],
   ['Año de entrega', p.anio],
-  ['Superficie', p.superficie],
   ['Plazo', p.plazo],
+  ['Comuna', p.comuna],
+  ['Superficie', p.superficie],
   ['Servicios', p.servicios?.join(' · ') ?? null],
 ];
 const hayEjemplos = p.etapas.some((e) => e.ejemplo);
 ---
-<Base title={`${titulo} · Proyectos finalizados`} description={`Ficha de la ${titulo.toLowerCase()} de LOLS Ingeniería: antes, durante y después.`}>
-  <section class="pn-obra-hero">
-    <div class="wrap pn-obra-hero__in">
-      <div class="pn-obra-hero__txt">
-        <nav aria-label="Migas de pan" class="pn-migas">
-          <a href={r('inicio')}>Inicio</a> <span aria-hidden="true">›</span>
-          <a href={r('terminados')}>Proyectos finalizados</a> <span aria-hidden="true">›</span>
-          <span aria-current="page">{titulo}</span>
-        </nav>
-        <p class="pn-obra-hero__estado"><span>Finalizado</span></p>
-        <h1>{titulo}</h1>
-        {!p.nombre && <p><Pendiente texto="nombre de la obra" /></p>}
-        <dl class="pn-obra-datos">
-          {datos.map(([k, v]) => (
-            <div>
-              <dt>{k}</dt>
-              <dd>{v ?? <span class="pendiente pendiente--mini">pendiente</span>}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-      {p.imagen && (
-        <figure class="pn-obra-hero__foto">
-          <Image src={p.imagen.src} alt={`${titulo} terminada`} widths={[372, 744]} sizes="372px" loading="eager" />
-          <figcaption class="cubo__ref">Foto real · {p.imagen.origen}</figcaption>
-        </figure>
-      )}
-    </div>
-  </section>
-
-  <section class="pn-sec" aria-labelledby="pap-t">
+<Base title={`${titulo} · Proyectos finalizados`} description={`Ficha de la obra ${titulo} de LOLS Ingeniería: antes, durante y después.`}>
+  <!-- al entrar se ve de inmediato el antes, durante y después; los datos van justo debajo -->
+  <section class="pn-obra-top" aria-labelledby="obra-t">
     <div class="wrap">
-      <TituloSeccion antetitulo="La transformación" titulo="Antes, durante y después" id="pap-t">
-        <p>Toque cada etapa para ver cómo avanzó la obra.</p>
-      </TituloSeccion>
-      {hayEjemplos && (
-        <div class="pn-aviso pn-aviso--centro">
-          <Pendiente texto="fotos reales de esta obra para Antes y Durante: las de ahora son de ejemplo" bloque />
-        </div>
-      )}
+      <nav aria-label="Migas de pan" class="pn-migas">
+        <a href={r('inicio')}>Inicio</a> <span aria-hidden="true">›</span>
+        <a href={r('terminados')}>Proyectos finalizados</a> <span aria-hidden="true">›</span>
+        <span aria-current="page">{titulo}</span>
+      </nav>
+      <div class="pn-obra-top__cab">
+        <h1 id="obra-t">{titulo}</h1>
+        <span class="pn-obra-top__estado">Finalizado</span>
+        {p.datosEjemplo && <span class="pn-ej">Datos de ejemplo</span>}
+      </div>
+
       <PasoAPaso etapas={p.etapas} id={`obra-${n}`} />
+
+      <dl class="pn-obra-ficha">
+        {datos.map(([k, v]) => (
+          <div>
+            <dt>{k}</dt>
+            <dd>{v ?? <span class="pendiente pendiente--mini">pendiente</span>}</dd>
+          </div>
+        ))}
+      </dl>
+      <div class="pn-obra-top__notas">
+        {p.datosEjemplo && <Pendiente texto="los datos reales de esta obra: los de ahora son de ejemplo" />}
+        {hayEjemplos && <Pendiente texto="fotos reales de Antes y Durante: las de ahora son de ejemplo" />}
+      </div>
     </div>
   </section>
 
