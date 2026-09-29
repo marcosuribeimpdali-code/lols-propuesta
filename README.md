@@ -130,6 +130,9 @@ muestra sus marcas siempre (es un borrador legal con huecos a mitad de frase). D
   revisa las denuncias, el correo, los plazos y los documentos; el texto lo revisa lo legal.
 - Fotos reales de LOLS para la portada y los servicios.
 - Validar dirección, teléfono (el prefijo 65 es de Osorno) y correo.
+- WhatsApp: los botones (barra de arriba, barra del celular, contacto y pie) abren un chat con un
+  saludo ya escrito, pero hoy usan el mismo teléfono, que es fijo. Poner el número que tiene
+  WhatsApp en `whatsapp.valor` de `src/data/empresa.ts`.
 - Confirmar si las obras "en construcción" de 2018 ya se entregaron.
 - Versión vigente del isotipo (tercer rectángulo relleno o en contorno).
 - Formulario de contacto: hoy **no envía nada** (solo muestra un aviso). Definir a qué correo

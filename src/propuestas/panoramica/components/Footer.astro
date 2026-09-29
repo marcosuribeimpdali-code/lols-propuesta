@@ -5,7 +5,8 @@
 import Logo from '../../comun/Logo.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import InterruptorMarcas from '../../comun/InterruptorMarcas.astro';
-import { empresa } from '../../../data/empresa';
+import IconoWhatsapp from '../../comun/IconoWhatsapp.astro';
+import { empresa, whatsappHref } from '../../../data/empresa';
 import { r } from '../config';
 
 const anio = new Date().getFullYear();
@@ -39,6 +40,7 @@ const anio = new Date().getFullYear();
       <ul>
         <li>{empresa.direccion.valor}</li>
         <li><a href={empresa.telefonoHref}>{empresa.telefono.valor}</a></li>
+        <li><a href={whatsappHref} target="_blank" rel="noopener">WhatsApp<span class="visually-hidden"> (se abre en otra pestaña)</span></a></li>
         <li><a href={`mailto:${empresa.correo.valor}`}>{empresa.correo.valor}</a></li>
       </ul>
       <p class="pn-footer__nota solo-marca"><span aria-hidden="true">⚠</span> Datos de contacto por confirmar</p>
@@ -54,5 +56,6 @@ const anio = new Date().getFullYear();
 
 <nav class="pn-barra-movil" aria-label="Contacto rápido">
   <a class="pn-barra-movil__llamar" href={empresa.telefonoHref}>Llamar</a>
+  <a class="pn-barra-movil__wa" href={whatsappHref} target="_blank" rel="noopener"><IconoWhatsapp /> WhatsApp<span class="visually-hidden"> (se abre en otra pestaña)</span></a>
   <a class="pn-barra-movil__cotizar" href={r('contacto')}>Cotizar</a>
 </nav>

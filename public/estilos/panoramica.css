@@ -218,6 +218,21 @@ main:focus {
 .pn-top a:hover {
   color: var(--lima);
 }
+/* WhatsApp: ícono del tamaño del texto, junto al teléfono */
+.ico-wa {
+  flex: none;
+  width: 1.15em;
+  height: 1.15em;
+}
+.pn-top a.pn-top__wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.pn-link--wa {
+  align-items: center;
+  margin-top: 10px;
+}
 .pn-top__lema {
   font-family: var(--cond);
   font-weight: 600;
@@ -3032,8 +3047,8 @@ html:not(.js) .form__siguiente {
     bottom: 0;
     z-index: 45;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 8px;
     padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
     background: #fff;
     box-shadow: 0 -10px 24px -14px rgb(0 0 0 / 0.35);
@@ -3042,15 +3057,26 @@ html:not(.js) .form__siguiente {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
     min-height: 48px;
-    font: 700 1.05rem var(--cond);
-    letter-spacing: 0.08em;
+    font: 700 1.02rem var(--cond);
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     text-decoration: none;
   }
   .pn-barra-movil__llamar {
     border: 2px solid var(--verde-osc);
     color: var(--verde-osc);
+  }
+  /* mismo borde que "Llamar": el verde de WhatsApp va solo en el ícono (sin más verde en la barra) */
+  .pn-barra-movil__wa {
+    border: 2px solid var(--verde-osc);
+    color: var(--verde-osc);
+  }
+  .pn-barra-movil__wa .ico-wa {
+    width: 1.3em;
+    height: 1.3em;
+    color: #128c7e;
   }
   .pn-barra-movil__cotizar {
     background: var(--lima);

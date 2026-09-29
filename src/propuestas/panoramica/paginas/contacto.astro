@@ -6,7 +6,8 @@ import FormContacto from '../../comun/FormContacto.astro';
 import Mapa from '../../comun/Mapa.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import Revisar from '../../comun/Revisar.astro';
-import { empresa, mapas } from '../../../data/empresa';
+import IconoWhatsapp from '../../comun/IconoWhatsapp.astro';
+import { empresa, mapas, whatsappHref } from '../../../data/empresa';
 import { diapositivas } from '../../../data/portada';
 
 const banner = diapositivas[3];
@@ -35,7 +36,9 @@ const banner = diapositivas[3];
           </span>
           <h3>Teléfono</h3>
           <p><a href={empresa.telefonoHref}>{empresa.telefono.valor}</a></p>
+          <a class="pn-link pn-link--wa" href={whatsappHref} target="_blank" rel="noopener"><IconoWhatsapp /> Escribir por WhatsApp<span class="visually-hidden"> (se abre en otra pestaña)</span></a>
           <Revisar nota={empresa.telefono.revisar} />
+          <Revisar nota={empresa.whatsapp.revisar} />
         </li>
         <li class="pn-dato">
           <span class="pn-dato__icono" aria-hidden="true">

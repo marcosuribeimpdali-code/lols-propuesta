@@ -29,6 +29,12 @@ export const empresa = {
     revisar: 'el prefijo 65 es de Osorno, no de Santiago',
   } satisfies Dato,
   telefonoHref: 'tel:+56652710609',
+  /** PROVISORIO: el mismo número del teléfono hasta que la empresa diga cuál tiene WhatsApp (un
+   *  número fijo solo sirve si tiene WhatsApp Business). Cambiar `valor` y listo. */
+  whatsapp: {
+    valor: '+56 652 710 609',
+    revisar: 'qué número tiene WhatsApp: hoy se usa el mismo teléfono, que es fijo',
+  } satisfies Dato,
   correo: {
     valor: 'lols@lols.cl',
     revisar: 'que la casilla siga activa',
@@ -41,6 +47,11 @@ export const empresa = {
     'Compromiso con las normas de seguridad y el respeto por el medio ambiente.',
   ],
 };
+
+/** abre un chat de WhatsApp con la empresa y un saludo ya escrito (el visitante lo puede cambiar) */
+export const whatsappHref = `https://wa.me/${empresa.whatsapp.valor.replace(/\D/g, '')}?text=${encodeURIComponent(
+  'Hola, les escribo desde el sitio web de LOLS Ingeniería.',
+)}`;
 
 // Google Maps a partir de la dirección (sin API key). Si la dirección cambia, el mapa la sigue.
 const q = encodeURIComponent(empresa.direccion.valor);

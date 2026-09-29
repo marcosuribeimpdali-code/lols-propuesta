@@ -2,7 +2,8 @@
 // Cabecera con barra de contacto arriba. En la portada va transparente sobre la foto y, al
 // bajar, se vuelve una barra blanca fija. En el resto de las páginas es blanca desde el inicio.
 import Logo from '../../comun/Logo.astro';
-import { empresa } from '../../../data/empresa';
+import IconoWhatsapp from '../../comun/IconoWhatsapp.astro';
+import { empresa, whatsappHref } from '../../../data/empresa';
 import { r } from '../config';
 
 interface Props {
@@ -26,6 +27,7 @@ const current = (href: string, seccion?: string[]) =>
     <div class="wrap pn-top__in">
       <p>
         <a href={empresa.telefonoHref}><span aria-hidden="true">☎</span> {empresa.telefono.valor}</a>
+        <a class="pn-top__wa" href={whatsappHref} target="_blank" rel="noopener"><IconoWhatsapp /> WhatsApp<span class="visually-hidden"> (se abre en otra pestaña)</span></a>
         <a href={`mailto:${empresa.correo.valor}`}><span aria-hidden="true">✉</span> {empresa.correo.valor}</a>
       </p>
       <p class="pn-top__der">
