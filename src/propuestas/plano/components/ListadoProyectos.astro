@@ -14,7 +14,7 @@ const { estado } = Astro.props;
 const lista = porEstado(estado);
 const tabs = [
   { href: r('terminados'), label: 'Terminados', n: porEstado('terminado').length, activo: estado === 'terminado' },
-  { href: r('construccion'), label: 'En construcción', n: porEstado('en-construccion').length, activo: estado === 'en-construccion' },
+  { href: r('construccion'), label: 'En ejecución', n: porEstado('en-construccion').length, activo: estado === 'en-construccion' },
 ];
 ---
 <section class="section section--tight">
@@ -33,7 +33,7 @@ const tabs = [
         resolución y se reemplazan cuando lleguen fotos actuales.
         {estado === 'en-construccion' && <> Las de esta sección son renders, no fotos. </>}
       </p>
-      {estado === 'en-construccion' && <p><Revisar nota="son obras de 2018: confirmar si siguen en construcción" /></p>}
+      {estado === 'en-construccion' && <p><Revisar nota="son obras de 2018: confirmar si siguen en ejecución" /></p>}
       <Pendiente texto="listado actualizado de obras (lo está reuniendo la jefatura)" bloque />
     </div>
 
