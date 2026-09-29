@@ -80,14 +80,14 @@ const destacados = [...porEstado('terminado').slice(0, 2), porEstado('en-constru
 
   <section class="section section--alt" aria-labelledby="obras-t">
     <div class="wrap">
-      <SectionHead num="02" etiqueta="Proyectos" titulo="Obras terminadas y en ejecución." id="obras-t">
+      <SectionHead num="02" etiqueta="Proyectos" titulo="Obras finalizadas y en ejecución." id="obras-t">
         <Pendiente texto="elegir las 3 obras que se destacan en la portada" />
       </SectionHead>
       <div class="proyectos-grid">
         {destacados.map((p, i) => <ProyectoCard proyecto={p} numero={i + 1} />)}
       </div>
       <div class="obras-links">
-        <a class="btn btn--primary" href={r('terminados')}>Proyectos terminados <span aria-hidden="true">→</span></a>
+        <a class="btn btn--primary" href={r('terminados')}>Proyectos finalizados <span aria-hidden="true">→</span></a>
         <a class="btn btn--ghost" href={r('construccion')}>En ejecución</a>
       </div>
     </div>

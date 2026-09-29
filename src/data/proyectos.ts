@@ -83,6 +83,6 @@ export const porEstado = (estado: Estado) => proyectos.filter((p) => p.estado ==
 export const altObra = (p: Proyecto, numero: number) => {
   const n = String(numero).padStart(2, '0');
   const que = p.imagen?.tipo === 'render' ? 'Render' : 'Foto';
-  const estado = p.estado === 'terminado' ? 'obra terminada' : 'obra en ejecución';
+  const estado = p.estado === 'terminado' ? 'obra finalizada' : 'obra en ejecución';
   return p.nombre ? `${que} de ${p.nombre}` : `${que} de la ${estado} ${n}`;
 };

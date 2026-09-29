@@ -13,7 +13,7 @@ interface Props {
 const { estado } = Astro.props;
 const lista = porEstado(estado);
 const tabs = [
-  { href: r('terminados'), label: 'Terminados', n: porEstado('terminado').length, activo: estado === 'terminado' },
+  { href: r('terminados'), label: 'Finalizados', n: porEstado('terminado').length, activo: estado === 'terminado' },
   { href: r('construccion'), label: 'En ejecución', n: porEstado('en-construccion').length, activo: estado === 'en-construccion' },
 ];
 ---
@@ -51,7 +51,7 @@ const tabs = [
         <li>Servicios que hizo LOLS</li>
         <li>Magnitud (m² o plazo)</li>
         <li>Fotos (mín. 1600 × 1200 px)</li>
-        <li>Estado: terminada o en curso</li>
+        <li>Estado: finalizada o en ejecución</li>
       </ul>
     </aside>
   </div>
