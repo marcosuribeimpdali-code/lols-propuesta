@@ -1,0 +1,102 @@
+---
+// Ficha de una obra finalizada: /proyectos-terminados/<slug>/ (el slug de su subpágina en el
+// sitio de 2018). La arma la ruta única del sitio, una por cada obra con `slug`.
+import { Image } from 'astro:assets';
+import Base from '../Base.astro';
+import { r, rObra } from '../config';
+import TituloSeccion from '../components/TituloSeccion.astro';
+import PasoAPaso from '../components/PasoAPaso.astro';
+import VisorObra from '../components/VisorObra.astro';
+import CtaFoto from '../components/CtaFoto.astro';
+import Pendiente from '../../comun/Pendiente.astro';
+import { conFicha } from '../../../data/proyectos';
+
+interface Props {
+  indice: number;
+}
+const { indice } = Astro.props;
+const lista = conFicha();
+const p = lista[indice];
+const n = String(indice + 1).padStart(2, '0');
+const titulo = p.nombre ?? `Obra ${n}`;
+const anterior = lista[(indice - 1 + lista.length) % lista.length];
+const siguiente = lista[(indice + 1) % lista.length];
+const numero = (o: typeof p) => String(lista.indexOf(o) + 1).padStart(2, '0');
+
+const datos: [string, string | null][] = [
+  ['Mandante', p.mandante],
+  ['Comuna', p.comuna],
+  ['Año de entrega', p.anio],
+  ['Superficie', p.superficie],
+  ['Plazo', p.plazo],
+  ['Servicios', p.servicios?.join(' · ') ?? null],
+];
+const hayEjemplos = p.etapas.some((e) => e.ejemplo);
+---
+<Base title={`${titulo} · Proyectos finalizados`} description={`Ficha de la ${titulo.toLowerCase()} de LOLS Ingeniería: antes, durante y después.`}>
+  <section class="pn-obra-hero">
+    <div class="wrap pn-obra-hero__in">
+      <div class="pn-obra-hero__txt">
+        <nav aria-label="Migas de pan" class="pn-migas">
+          <a href={r('inicio')}>Inicio</a> <span aria-hidden="true">›</span>
+          <a href={r('terminados')}>Proyectos finalizados</a> <span aria-hidden="true">›</span>
+          <span aria-current="page">{titulo}</span>
+        </nav>
+        <p class="pn-obra-hero__estado"><span>Finalizado</span></p>
+        <h1>{titulo}</h1>
+        {!p.nombre && <p><Pendiente texto="nombre de la obra" /></p>}
+        <dl class="pn-obra-datos">
+          {datos.map(([k, v]) => (
+            <div>
+              <dt>{k}</dt>
+              <dd>{v ?? <span class="pendiente pendiente--mini">pendiente</span>}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      {p.imagen && (
+        <figure class="pn-obra-hero__foto">
+          <Image src={p.imagen.src} alt={`${titulo} terminada`} widths={[372, 744]} sizes="372px" loading="eager" />
+          <figcaption class="cubo__ref">Foto real · {p.imagen.origen}</figcaption>
+        </figure>
+      )}
+    </div>
+  </section>
+
+  <section class="pn-sec" aria-labelledby="pap-t">
+    <div class="wrap">
+      <TituloSeccion antetitulo="La transformación" titulo="Antes, durante y después" id="pap-t">
+        <p>Toque cada etapa para ver cómo avanzó la obra.</p>
+      </TituloSeccion>
+      {hayEjemplos && (
+        <div class="pn-aviso pn-aviso--centro">
+          <Pendiente texto="fotos reales de esta obra para Antes y Durante: las de ahora son de ejemplo" bloque />
+        </div>
+      )}
+      <PasoAPaso etapas={p.etapas} id={`obra-${n}`} />
+    </div>
+  </section>
+
+  <section class="pn-sec pn-sec--gris" aria-labelledby="gal-t">
+    <div class="wrap">
+      <TituloSeccion antetitulo="Registro de la obra" titulo="Galería" id="gal-t">
+        <p>Toque una foto para verla en grande.</p>
+      </TituloSeccion>
+      <VisorObra fotos={[...p.etapas, ...p.galeria]} titulo={titulo} />
+    </div>
+  </section>
+
+  <nav class="wrap pn-obra-nav" aria-label="Otras obras">
+    <a href={rObra(anterior.slug!)} class="pn-obra-nav__link">
+      {anterior.imagen && <Image src={anterior.imagen.src} alt="" widths={[120]} sizes="96px" />}
+      <span><span class="pn-obra-nav__dir">← Obra anterior</span><span class="pn-obra-nav__nombre">{anterior.nombre ?? `Obra ${numero(anterior)}`}</span></span>
+    </a>
+    <a href={r('terminados')} class="pn-obra-nav__todas">Todas las obras</a>
+    <a href={rObra(siguiente.slug!)} class="pn-obra-nav__link pn-obra-nav__link--sig">
+      <span><span class="pn-obra-nav__dir">Obra siguiente →</span><span class="pn-obra-nav__nombre">{siguiente.nombre ?? `Obra ${numero(siguiente)}`}</span></span>
+      {siguiente.imagen && <Image src={siguiente.imagen.src} alt="" widths={[120]} sizes="96px" />}
+    </a>
+  </nav>
+
+  <CtaFoto />
+</Base>

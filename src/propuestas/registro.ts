@@ -19,6 +19,8 @@ export interface Propuesta {
   rasgos: string[];
   /** colores principales, para la muestra en la portada */
   colores: string[];
+  /** tiene ficha por obra (/proyectos-terminados/<slug>/) */
+  fichas: boolean;
 }
 
 export const propuestas: Propuesta[] = [
@@ -29,6 +31,7 @@ export const propuestas: Propuesta[] = [
     resumen: 'Sobria y oscura, como un plano de ingeniería.',
     rasgos: ['Grilla de plano y rótulos técnicos', 'Verde de marca como único acento', 'Tipografía del logo (DM Sans)'],
     colores: ['#0e1410', '#029e4d', '#f3f4f1'],
+    fichas: false,
   },
   {
     slug: 'panoramica',
@@ -37,6 +40,7 @@ export const propuestas: Propuesta[] = [
     resumen: 'Fotográfica, con portada a pantalla completa e imágenes que giran en cubo 3D.',
     rasgos: ['Colores del sitio lols.cl de 2018', 'Fotos grandes y titulares en mayúscula', 'Tipografía condensada (Barlow)'],
     colores: ['#168d3a', '#81d742', '#141414'],
+    fichas: true,
   },
 ];
 

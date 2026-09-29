@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../Base.astro';
-import { r } from '../config';
+import { r, rObra } from '../config';
 import PortadaCubo from '../components/PortadaCubo.astro';
 import TituloSeccion from '../components/TituloSeccion.astro';
 import CtaFoto from '../components/CtaFoto.astro';
@@ -98,11 +98,11 @@ const accesos = [
       <ul class="pn-galeria">
         {terminados.map((p, i) => p.imagen && (
           <li>
-            <a class="pn-galeria__item" href={r('terminados')}>
+            <a class="pn-galeria__item" href={p.slug ? rObra(p.slug) : r('terminados')}>
               <Image src={p.imagen.src} alt={altObra(p, i + 1)} widths={[300, 600]} sizes="(max-width: 640px) 50vw, 300px" />
               <span class="pn-galeria__velo" aria-hidden="true">
                 <span class="pn-galeria__n">Obra {String(i + 1).padStart(2, '0')}</span>
-                <span>Ver proyectos →</span>
+                <span>Ver obra →</span>
               </span>
             </a>
           </li>

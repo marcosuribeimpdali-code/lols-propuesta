@@ -1,0 +1,118 @@
+---
+// Galería de la obra: miniaturas que abren un visor a pantalla completa (<dialog> nativo:
+// Esc cierra y el foco vuelve a la miniatura). Flechas del teclado para pasar de foto.
+import { Image, getImage } from 'astro:assets';
+import type { Foto } from '../../../data/proyectos';
+
+interface Props {
+  fotos: Foto[];
+  titulo: string;
+}
+const { fotos, titulo } = Astro.props;
+
+// versión grande de cada foto para el visor (sin agrandar las que ya son chicas)
+const grandes = await Promise.all(
+  fotos.map((f) => getImage({ src: f.src, width: Math.min(1600, f.src.width), format: 'webp' })),
+);
+const datos = fotos.map((f, i) => ({
+  src: grandes[i].src,
+  alt: f.alt,
+  rotulo: `${f.etapa} · ${f.alt}`,
+  nota: f.ejemplo ? 'Foto de ejemplo' : 'Foto real · sitio lols.cl de 2018',
+}));
+---
+<div data-visor>
+  <ul class="pn-galeria-obra">
+    {fotos.map((f, i) => (
+      <li class:list={{ 'pn-galeria-obra__grande': i === 0 }}>
+        <button type="button" class="pn-galeria-obra__btn" data-i={i} aria-label={`Ver en grande: ${f.alt}`}>
+          <Image src={f.src} alt="" widths={[300, 600]} sizes={i === 0 ? '(max-width: 700px) 100vw, 620px' : '(max-width: 700px) 50vw, 300px'} />
+          <span class="pn-galeria-obra__etapa" aria-hidden="true">{f.etapa}</span>
+          {f.ejemplo && <span class="pn-galeria-obra__ej" aria-hidden="true">Ejemplo</span>}
+        </button>
+      </li>
+    ))}
+  </ul>
+
+  <dialog class="visor" aria-label={`Galería: ${titulo}`}>
+    <div class="visor__top">
+      <p class="visor__titulo">{titulo} <span>Galería</span></p>
+      <p class="visor__n" aria-live="polite"><span data-visor-n>1</span> / {fotos.length}</p>
+      <button type="button" class="visor__cerrar" data-visor-cerrar aria-label="Cerrar la galería">
+        <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M2 2l14 14M16 2 2 16" /></svg>
+      </button>
+    </div>
+    <div class="visor__escena">
+      <button type="button" class="visor__flecha" data-visor-prev aria-label="Foto anterior">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 7 12l8 8" /></svg>
+      </button>
+      <figure class="visor__fig">
+        <img class="visor__img" data-visor-img src={datos[0]?.src} alt={datos[0]?.alt} />
+        <figcaption class="visor__cap"><span data-visor-rotulo>{datos[0]?.rotulo}</span> <span class="visor__nota" data-visor-nota>{datos[0]?.nota}</span></figcaption>
+      </figure>
+      <button type="button" class="visor__flecha visor__flecha--next" data-visor-next aria-label="Foto siguiente">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 4 8 8-8 8" /></svg>
+      </button>
+    </div>
+    <div class="visor__tiras">
+      {fotos.map((f, i) => (
+        <button type="button" class="visor__mini" data-visor-ir={i} aria-label={`Ver foto ${i + 1}`}>
+          <Image src={f.src} alt="" widths={[160]} sizes="120px" />
+        </button>
+      ))}
+    </div>
+  </dialog>
+  <script type="application/json" data-visor-datos set:html={JSON.stringify(datos)} />
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-visor]').forEach((raiz) => {
+    const dialog = raiz.querySelector('dialog')!;
+    const datos = JSON.parse(raiz.querySelector('[data-visor-datos]')!.textContent || '[]') as {
+      src: string;
+      alt: string;
+      rotulo: string;
+      nota: string;
+    }[];
+    const img = raiz.querySelector<HTMLImageElement>('[data-visor-img]')!;
+    const n = raiz.querySelector<HTMLElement>('[data-visor-n]')!;
+    const rotulo = raiz.querySelector<HTMLElement>('[data-visor-rotulo]')!;
+    const nota = raiz.querySelector<HTMLElement>('[data-visor-nota]')!;
+    const minis = [...raiz.querySelectorAll<HTMLButtonElement>('[data-visor-ir]')];
+    let actual = 0;
+
+    const mostrar = (i: number) => {
+      actual = (i + datos.length) % datos.length;
+      const d = datos[actual];
+      img.src = d.src;
+      img.alt = d.alt;
+      rotulo.textContent = d.rotulo;
+      nota.textContent = d.nota;
+      n.textContent = String(actual + 1);
+      minis.forEach((m, k) => (k === actual ? m.setAttribute('aria-current', 'true') : m.removeAttribute('aria-current')));
+    };
+
+    // al cerrar, el foco vuelve a la miniatura que abrió el visor
+    let origen: HTMLButtonElement | null = null;
+    raiz.querySelectorAll<HTMLButtonElement>('.pn-galeria-obra__btn').forEach((b) =>
+      b.addEventListener('click', () => {
+        origen = b;
+        mostrar(Number(b.dataset.i));
+        dialog.showModal();
+      }),
+    );
+    dialog.addEventListener('close', () => origen?.focus());
+    raiz.querySelector('[data-visor-prev]')!.addEventListener('click', () => mostrar(actual - 1));
+    raiz.querySelector('[data-visor-next]')!.addEventListener('click', () => mostrar(actual + 1));
+    raiz.querySelector('[data-visor-cerrar]')!.addEventListener('click', () => dialog.close());
+    minis.forEach((m) => m.addEventListener('click', () => mostrar(Number(m.dataset.visorIr))));
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') mostrar(actual + 1);
+      if (e.key === 'ArrowLeft') mostrar(actual - 1);
+    });
+    // clic en el fondo oscuro (fuera del contenido) cierra
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+  });
+</script>

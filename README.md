@@ -85,6 +85,14 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
   referencial". Para usar fotos reales de LOLS: reemplazar el archivo con el mismo nombre (mín.
   2000 px de ancho) y en `src/data/portada.ts` poner `referencial: false` y `credito: null`.
   Autores: Frames For Your Heart, Jason Richard, Etienne Girardet, Toolmash Expo y Michael Bader.
+- **Fichas de obra**: cada obra finalizada tiene su página en `/proyectos-terminados/<slug>/`,
+  con el mismo slug que usaba en el sitio de 2018 (`bro_cam`, `renacer_bas`…), así esos links
+  siguen funcionando. Muestran el paso a paso **Antes → Durante → Después** con botones y una
+  galería con visor a pantalla completa. "Después" es la foto real de la obra; "Antes" y "Durante"
+  son fotos de ejemplo (`src/assets/ejemplo/` y `src/assets/portada/`, marcadas "Foto de
+  ejemplo"): reemplazarlas por las de cada obra en `etapas` de `src/data/proyectos.ts`, idealmente
+  una foto por etapa tomada desde un ángulo parecido. Autores de las de ejemplo: Billy Freeman e
+  Iain (Unsplash).
 - **Obras (`src/assets/obras/2018/`)**: imágenes del sitio lols.cl de 2018, sin el marco verde
   que traían pegado. Las terminadas son fotos; las "en construcción" son renders con el sello
   "Próximas entregas". Son de 500 px: se reemplazan cuando lleguen fotos actuales.

@@ -12,6 +12,10 @@ interface Props {
 const { actual } = Astro.props;
 const conSelector = principal === null;
 const resto = Astro.url.pathname.replace(new RegExp(`^/${actual}/`), '');
+// desde una ficha de obra, a una propuesta sin fichas se va a su lista de obras
+const esFicha = resto.startsWith('proyectos-terminados/') && resto.split('/').filter(Boolean).length === 2;
+const destino = (p: (typeof propuestas)[number]) =>
+  `/${p.slug}/${esFicha && !p.fichas ? 'proyectos-terminados/' : resto}`;
 ---
 <div class="barra-prop" role="region" aria-label="Aviso de propuesta">
   <div class="barra-prop__in">
@@ -21,7 +25,7 @@ const resto = Astro.url.pathname.replace(new RegExp(`^/${actual}/`), '');
         <ul class="barra-prop__sel">
           {propuestas.map((p) => (
             <li>
-              <a href={`/${p.slug}/${resto}`} aria-current={p.slug === actual ? 'page' : undefined}>
+              <a href={destino(p)} aria-current={p.slug === actual ? 'page' : undefined}>
                 <span class="n">{p.numero}</span> {p.nombre}
               </a>
             </li>

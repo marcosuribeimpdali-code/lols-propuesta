@@ -18,6 +18,7 @@ import PanoTerminados from './panoramica/paginas/proyectos-terminados.astro';
 import PanoConstruccion from './panoramica/paginas/proyectos-en-construccion.astro';
 import PanoContacto from './panoramica/paginas/contacto.astro';
 import PanoPrivacidad from './panoramica/paginas/politica-de-privacidad.astro';
+import PanoObra from './panoramica/paginas/obra.astro';
 
 type Componente = typeof PlanoInicio;
 
@@ -40,4 +41,9 @@ export const paginasDe: Record<string, Record<Pagina, Componente>> = {
     contacto: PanoContacto,
     privacidad: PanoPrivacidad,
   },
+};
+
+/** ficha de obra (/proyectos-terminados/<slug>/) de las propuestas que la tienen */
+export const fichasDe: Record<string, Componente> = {
+  panoramica: PanoObra,
 };
