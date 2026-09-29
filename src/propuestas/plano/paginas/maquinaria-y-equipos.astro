@@ -1,0 +1,35 @@
+---
+// Maquinaria y capacidad técnica en la propuesta Plano: mismos datos que Panorámica.
+import { Image } from 'astro:assets';
+import Base from '../Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Pendiente from '../../comun/Pendiente.astro';
+import { cifrasEquipos, lineas, maquinaria, flota, flotaMarcas } from '../../../data/equipos';
+---
+<Base title="Maquinaria y equipos" description="Maquinaria, andamios, alzaprimas, moldajes y vehículos propios de LOLS Ingeniería.">
+  <PageHero titulo="Maquinaria y capacidad técnica" seccion="Equipos propios">
+    <p>Trabajamos con equipos propios: la obra no espera un arriendo para avanzar.</p>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap">
+      <ul>
+        {cifrasEquipos.map((c) => <li><strong>{c.valor}</strong> {c.texto}</li>)}
+      </ul>
+      {lineas.map((l) => (
+        <div>
+          <h2>{l.titulo}</h2>
+          <Image src={l.foto.src} alt={l.foto.alt} widths={[400]} sizes="400px" style="max-width: 400px;" />
+          <p><strong>{l.cifra}.</strong> {l.texto}</p>
+        </div>
+      ))}
+      <h2>Maquinaria</h2>
+      <ul>
+        {maquinaria.map((m) => <li>{m.nombre}: {m.cantidad}</li>)}
+      </ul>
+      <h2>Vehículos</h2>
+      <p>{flota.map((f) => `${f.valor} ${f.texto}`).join(' · ')}. {flotaMarcas}</p>
+      <Pendiente texto="fotos reales de los equipos: las de ahora son del catálogo interno" bloque />
+    </div>
+  </section>
+</Base>

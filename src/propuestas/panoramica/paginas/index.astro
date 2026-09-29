@@ -11,8 +11,12 @@ import Revisar from '../../comun/Revisar.astro';
 import { empresa } from '../../../data/empresa';
 import { servicios, revisarDescripciones, fraseServicios } from '../../../data/servicios';
 import { porEstado, altObra } from '../../../data/proyectos';
+import { lineas, maquinaria } from '../../../data/equipos';
 
 const terminados = porEstado('terminado');
+
+// adelanto de la página de maquinaria: 4 equipos propios
+const equiposPortada = [lineas[1].foto, maquinaria[1].foto!, maquinaria[0].foto!, maquinaria[5].foto!];
 
 // "Cómo trabajamos": los mismos pasos que promete la página de contacto
 const proceso = [
@@ -74,6 +78,27 @@ const cifras = [
           </li>
         ))}
       </ul>
+    </div>
+  </section>
+
+  <section class="pn-sec pn-sec--gris" aria-labelledby="eqp-t">
+    <div class="wrap eq-teaser">
+      <div class="eq-teaser__txt">
+        <TituloSeccion antetitulo="Capacidad técnica" titulo="Equipos propios" id="eqp-t" centrado={false} />
+        <p class="pn-grande">
+          Más de 7.000 alzaprimas, 5.000 piezas de andamio, 4.600 m² de moldaje, maquinaria y más de 25 vehículos:
+          la obra no espera un arriendo para avanzar.
+        </p>
+        <a class="btn btn--verde" href={r('maquinaria')}>Ver maquinaria y equipos <span aria-hidden="true">→</span></a>
+      </div>
+      <ul class="eq-teaser__fotos">
+        {equiposPortada.map((f) => (
+          <li class="eq-foto">
+            <Image src={f.src} alt={f.alt} widths={[300, 600]} sizes="(max-width: 900px) 50vw, 270px" />
+          </li>
+        ))}
+      </ul>
+      <p class="eq-teaser__ref">Imágenes referenciales</p>
     </div>
   </section>
 
