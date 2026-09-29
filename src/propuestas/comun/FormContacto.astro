@@ -26,6 +26,22 @@ const etapas = [
   { valor: 'licitacion', texto: 'Es una licitación' },
 ];
 const plazos = ['Lo antes posible', 'En 1 a 3 meses', 'En 3 a 6 meses', 'En más de 6 meses', 'Aún no lo sé'];
+// rangos en pesos, que entiende cualquiera (una empresa puede pensar en UF: lo decide la jefatura)
+const presupuestos = [
+  'Hasta $10 millones',
+  '$10 a $50 millones',
+  '$50 a $200 millones',
+  '$200 a $1.000 millones',
+  'Más de $1.000 millones',
+  'Aún no lo sé',
+];
+const terrenos = [
+  { valor: 'plano', texto: 'Plano' },
+  { valor: 'pendiente', texto: 'Con pendiente' },
+  { valor: 'construccion', texto: 'Con una construcción existente' },
+  { valor: 'blando', texto: 'Relleno o suelo blando' },
+  { valor: 'no-se', texto: 'No lo sé' },
+];
 ---
 <form class="form" id="form-contacto" method="post" enctype="multipart/form-data" aria-labelledby="form-t" aria-describedby="form-req">
   <h2 id="form-t" class="form__t">{titulo}</h2>
@@ -59,13 +75,40 @@ const plazos = ['Lo antes posible', 'En 1 a 3 meses', 'En 3 a 6 meses', 'En más
     <div class="form__fila">
       <div class="campo">
         <label for="f-comuna">Comuna de la obra</label>
-        <input id="f-comuna" name="comuna" type="text" autocomplete="address-level2" required />
+        <input id="f-comuna" name="comuna" type="text" autocomplete="off" required />
       </div>
+      <div class="campo">
+        <label for="f-ubicacion">Ubicación de la obra <span class="campo__op">(opcional)</span></label>
+        <input id="f-ubicacion" name="ubicacion" type="text" autocomplete="off" aria-describedby="f-ubicacion-ayuda" />
+        <p id="f-ubicacion-ayuda" class="campo__ayuda">Dirección o una referencia: calle, sector o parcela.</p>
+      </div>
+    </div>
+    <div class="form__fila">
       <div class="campo">
         <label for="f-superficie">Superficie aproximada <span class="campo__op">(opcional, en m²)</span></label>
         <input id="f-superficie" name="superficie" type="number" min="1" step="1" inputmode="numeric" />
       </div>
+      <div class="campo">
+        <label for="f-presupuesto">Presupuesto estimado <span class="campo__op">(opcional)</span></label>
+        <select id="f-presupuesto" name="presupuesto" aria-describedby="f-presupuesto-ayuda">
+          <option value="">Elegir…</option>
+          {presupuestos.map((p) => <option>{p}</option>)}
+        </select>
+        <p id="f-presupuesto-ayuda" class="campo__ayuda">Solo como referencia, para preparar una propuesta a su medida. <Revisar nota="los rangos, con la jefatura" /></p>
+      </div>
     </div>
+
+    <fieldset class="campo campo--grupo">
+      <legend class="campo__label">Tipo de terreno <span class="campo__op">(opcional)</span></legend>
+      <div class="chips">
+        {terrenos.map((x) => (
+          <label class="chip">
+            <input type="radio" name="terreno" value={x.valor} />
+            <span>{x.texto}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
 
     <div class="campo" role="radiogroup" aria-labelledby="f-etapa-t">
       <span class="campo__label" id="f-etapa-t">¿En qué etapa está su proyecto?</span>
