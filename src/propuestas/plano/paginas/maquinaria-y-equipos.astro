@@ -1,14 +1,14 @@
 ---
-// Maquinaria y capacidad técnica en la propuesta Plano: mismos datos que Panorámica.
+// Capacidad técnica en la propuesta Plano: mismos datos que Panorámica (por uso, con fotos en obra).
 import { Image } from 'astro:assets';
 import Base from '../Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Pendiente from '../../comun/Pendiente.astro';
-import { cifrasEquipos, lineas, maquinaria, flota, flotaMarcas } from '../../../data/equipos';
+import { cifrasEquipos, ventajas, usos } from '../../../data/equipos';
 ---
-<Base title="Maquinaria y equipos" description="Maquinaria, andamios, alzaprimas, moldajes y vehículos propios de LOLS Ingeniería.">
-  <PageHero titulo="Maquinaria y capacidad técnica" seccion="Equipos propios">
-    <p>Trabajamos con equipos propios: la obra no espera un arriendo para avanzar.</p>
+<Base title="Capacidad técnica" description="Moldajes, alzaprimas, andamios, maquinaria y vehículos propios de LOLS Ingeniería.">
+  <PageHero titulo="Capacidad técnica" seccion="Medios propios">
+    <p>Moldajes, alzaprimas, andamios, maquinaria y vehículos propios: cada obra parte con lo que ya tenemos.</p>
   </PageHero>
 
   <section class="section">
@@ -16,20 +16,18 @@ import { cifrasEquipos, lineas, maquinaria, flota, flotaMarcas } from '../../../
       <ul>
         {cifrasEquipos.map((c) => <li><strong>{c.valor}</strong> {c.texto}</li>)}
       </ul>
-      {lineas.map((l) => (
+      <ol>
+        {ventajas.map((v) => <li><strong>{v.titulo}.</strong> {v.texto}</li>)}
+      </ol>
+      {usos.map((u) => (
         <div>
-          <h2>{l.titulo}</h2>
-          <Image src={l.foto.src} alt={l.foto.alt} widths={[400]} sizes="400px" style="max-width: 400px;" />
-          <p><strong>{l.cifra}.</strong> {l.texto}</p>
+          <h2>{u.titulo}</h2>
+          <Image src={u.foto.src} alt={u.foto.alt} widths={[400]} sizes="400px" style="max-width: 400px;" />
+          <p>{u.texto}</p>
+          <ul>{u.equipos.map((e) => <li>{e}</li>)}</ul>
         </div>
       ))}
-      <h2>Maquinaria</h2>
-      <ul>
-        {maquinaria.map((m) => <li>{m.nombre}: {m.cantidad}</li>)}
-      </ul>
-      <h2>Vehículos</h2>
-      <p>{flota.map((f) => `${f.valor} ${f.texto}`).join(' · ')}. {flotaMarcas}</p>
-      <Pendiente texto="fotos reales de los equipos: las de ahora son del catálogo interno" bloque />
+      <Pendiente texto="fotos de los equipos de LOLS en obra: las de ahora son de stock" bloque />
     </div>
   </section>
 </Base>

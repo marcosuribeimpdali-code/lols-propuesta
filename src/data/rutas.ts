@@ -9,7 +9,7 @@ export const paginas = {
   inicio: '',
   quienes: 'quienes-somos/',
   servicios: 'nuestros-servicios/',
-  maquinaria: 'maquinaria-y-equipos/',
+  maquinaria: 'capacidad-tecnica/',
   terminados: 'proyectos-terminados/',
   construccion: 'proyectos-en-construccion/',
   contacto: 'contacto/',

@@ -251,6 +251,7 @@ main:focus {
 .pn-nav a {
   display: block;
   padding: 0.45em 0.85em;
+  white-space: nowrap;
   color: var(--tinta);
   font: 600 1.08rem/1.2 var(--cond);
   letter-spacing: 0.07em;
@@ -281,6 +282,21 @@ main:focus {
 }
 .pn-menu-btn {
   display: none;
+}
+/* notebook y tablet horizontal: el menú completo cabe en una línea */
+@media (min-width: 961px) and (max-width: 1240px) {
+  .pn-bar__in {
+    gap: 16px;
+  }
+  .pn-nav a {
+    padding-inline: 0.55em;
+    font-size: 0.98rem;
+    letter-spacing: 0.04em;
+  }
+  .pn-nav a.pn-nav__cta {
+    margin-left: 8px;
+    padding-inline: 0.9em;
+  }
 }
 
 /* portada: cabecera transparente sobre la foto */
@@ -3237,105 +3253,106 @@ fieldset.campo--grupo > legend {
   vertical-align: 1px;
 }
 
-/* ---------- maquinaria y capacidad técnica ---------- */
+/* ---------- capacidad técnica ---------- */
+/* equipos mostrados por uso, con fotos en obra (no fichas de catálogo en fondo blanco) */
+.eq-intro {
+  padding-bottom: 0;
+}
 .pn-cifras--borde {
-  margin-top: clamp(8px, 2vw, 24px);
+  margin-top: clamp(48px, 7vw, 88px);
   border-top: 1px solid var(--linea);
 }
-/* foto de equipo: catálogo en fondo blanco, siempre 4:3 y entera */
-.eq-foto {
-  position: relative;
+.eq-dos__img img {
+  aspect-ratio: 5 / 4;
+}
+.eq-usos {
   display: grid;
-  place-items: center;
-  aspect-ratio: 4 / 3;
+  gap: clamp(56px, 8vw, 104px);
+}
+.eq-uso {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 72px);
+}
+.eq-uso--inv {
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+}
+.eq-uso--inv .eq-uso__foto {
+  order: 2;
+}
+.eq-uso__foto {
+  position: relative;
   margin: 0;
-  overflow: hidden;
-  background: #fff;
-  border: 1px solid var(--linea);
 }
-.eq-foto img {
+.eq-uso__foto img {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.eq-foto--real img {
+  aspect-ratio: 3 / 2;
   object-fit: cover;
 }
-.eq-foto .pendiente {
-  margin: 16px;
-}
-.eq-lineas {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
-  list-style: none;
-  padding: 0;
-}
-.eq-linea {
-  display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
-  align-items: center;
-  gap: 24px;
-  padding: 20px;
-  background: #fff;
-  border-top: 5px solid var(--lima);
-}
-.eq-linea__txt h3 {
-  font: 800 1.7rem/1 var(--cond);
-  text-transform: uppercase;
-}
-.eq-linea__cifra {
-  margin-top: 6px;
-  font: 700 1.1rem/1.2 var(--cond);
-  letter-spacing: 0.06em;
+.eq-uso__ante {
+  font: 700 0.98rem/1.2 var(--cond);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--verde-osc);
 }
-.eq-linea__txt p + p {
-  margin-top: 10px;
-  font-size: 1rem;
-  color: var(--tinta-2);
-}
-.eq-maquinas {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
-  gap: 28px 20px;
-  list-style: none;
-  padding: 0;
-}
-.eq-maquina h3 {
-  margin-top: 12px;
-  font: 700 1.2rem/1.1 var(--cond);
+.eq-uso__txt h3 {
+  margin-top: 8px;
+  font: 800 clamp(1.8rem, 1.2rem + 1.6vw, 2.5rem) / 1 var(--cond);
   text-transform: uppercase;
 }
-.eq-maquina__n {
-  margin-top: 4px;
-  font-size: 0.95rem;
-  color: var(--tinta-2);
+.eq-uso__txt h3::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 5px;
+  margin-top: 16px;
+  background: var(--lima);
 }
-.eq-flota {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+.eq-uso__desc {
+  margin-top: 18px;
+  font-size: 1.12rem;
+  line-height: 1.55;
+}
+.eq-uso__equipos {
+  margin-top: 22px;
+}
+.eq-uso__equipos li {
+  min-height: 40px;
+  background: #fff;
+  font-weight: 500;
+}
+/* pedido del listado para licitaciones */
+.eq-licita-sec {
+  padding-block: clamp(40px, 6vw, 72px);
+}
+.eq-licita {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 40px;
+  justify-content: space-between;
+  gap: 20px 40px;
+  padding: clamp(24px, 4vw, 40px);
+  border-left: 6px solid var(--lima);
+  background: #fff;
 }
-.eq-flota .pn-tit {
-  margin-bottom: 0;
-}
-.eq-flota__n {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-  list-style: none;
-  padding: 0;
-}
-.eq-flota__n li {
-  padding: 22px 20px;
-  border-top: 5px solid var(--lima);
-  background: rgb(0 0 0 / 0.14);
-  font: 700 1.2rem var(--cond);
-  letter-spacing: 0.04em;
+.eq-licita__t {
+  font: 800 clamp(1.6rem, 1.2rem + 1.2vw, 2.2rem) / 1 var(--cond);
   text-transform: uppercase;
+}
+.eq-licita p {
+  margin-top: 10px;
+  max-width: 62ch;
+  color: var(--tinta-2);
+}
+@media (max-width: 900px) {
+  .eq-uso,
+  .eq-uso--inv {
+    grid-template-columns: 1fr;
+  }
+  .eq-uso--inv .eq-uso__foto {
+    order: 0;
+  }
 }
 /* adelanto en la portada */
 .eq-teaser {
@@ -3354,6 +3371,12 @@ fieldset.campo--grupo > legend {
   list-style: none;
   padding: 0;
 }
+.eq-teaser__fotos img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
 .eq-teaser__ref {
   grid-column: 2;
   font-family: var(--mono);
@@ -3362,8 +3385,6 @@ fieldset.campo--grupo > legend {
   color: var(--tinta-2);
 }
 @media (max-width: 960px) {
-  .eq-lineas,
-  .eq-flota,
   .eq-teaser {
     grid-template-columns: 1fr;
   }
@@ -3371,96 +3392,10 @@ fieldset.campo--grupo > legend {
     grid-column: 1;
   }
 }
-@media (max-width: 560px) {
-  .eq-linea {
-    grid-template-columns: 1fr;
-  }
-  .eq-flota__n {
-    grid-template-columns: 1fr;
-  }
-  .eq-maquinas {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px 12px;
-  }
-}
 
-/* catálogo de equipos por familias */
-.eq-indice {
-  margin-top: clamp(28px, 4vw, 44px);
-}
-.eq-familias {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
-  gap: 30px 20px;
-  list-style: none;
-  padding: 0;
-}
-.eq-familia h3 {
-  margin-top: 12px;
-  font: 700 1.25rem/1.1 var(--cond);
-  text-transform: uppercase;
-}
-.eq-familia__n {
-  margin-top: 4px;
-  font: 700 1.05rem/1.2 var(--cond);
-  letter-spacing: 0.04em;
-  color: var(--verde-osc);
-}
-.eq-familia__medidas {
-  margin-top: 2px;
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: var(--tinta);
-}
-.eq-familia__txt {
-  margin-top: 6px;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: var(--tinta-2);
-}
-.eq-nota {
-  margin-top: 28px;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  text-align: center;
-  color: var(--tinta-2);
-}
-.eq-faena {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: center;
-  gap: clamp(28px, 5vw, 64px);
-}
-.eq-faena .pn-tit {
-  margin-bottom: 16px;
-}
-.eq-faena__txt {
-  margin-top: 10px;
-  font-size: 1.1rem;
-}
-@media (max-width: 900px) {
-  .eq-faena {
-    grid-template-columns: 1fr;
-  }
-}
-@media (max-width: 560px) {
-  .eq-familias {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px 12px;
-  }
-  .eq-familia h3 {
-    font-size: 1.08rem;
-  }
-}
-
-/* modo limpio: servicio sin foto → "Qué incluye" a todo el ancho; equipo sin foto → isotipo gris */
+/* modo limpio: servicio sin foto → "Qué incluye" a todo el ancho */
 html:not(.con-marcas) .pn-serv-item__cols--sin-foto {
   grid-template-columns: 1fr;
-}
-.sin-foto {
-  width: 34%;
-  height: auto;
-  color: var(--linea);
 }
 /* modo limpio: en Contacto se esconde "Horario" (pendiente) y quedan 3 datos, a todo el ancho */
 @media (min-width: 1001px) {

@@ -1,42 +1,40 @@
 ---
-// Maquinaria y capacidad técnica (datos en src/data/equipos.ts): lo que LOLS tiene en propiedad.
-// El mensaje es que la obra no depende de arriendos: cifras reales del inventario de Bóveda y el
-// catálogo completo (andamios, alzaprimas y vigas, moldajes, maquinaria, faena y flota).
+// Capacidad técnica (datos en src/data/equipos.ts): lo que LOLS hace con equipos propios.
+// Como en las constructoras de referencia, se muestra por USO y con fotos en obra, con pocas cifras
+// grandes; el detalle pieza por pieza (unidades y medidas) se envía a solicitud para licitaciones.
 import { Image } from 'astro:assets';
 import Base from '../Base.astro';
+import { r } from '../config';
 import PageBanner from '../components/PageBanner.astro';
 import TituloSeccion from '../components/TituloSeccion.astro';
 import CtaFoto from '../components/CtaFoto.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import Revisar from '../../comun/Revisar.astro';
-import SinFoto from '../../comun/SinFoto.astro';
-import { diapositivas } from '../../../data/portada';
-import { cifrasEquipos, catalogo, lineas, maquinaria, flota, flotaMarcas, fuenteEquipos } from '../../../data/equipos';
-
-const banner = diapositivas[4];
-const unidades = (n: number) => (n === 1 ? '1 unidad' : `${n} unidades`);
-const faena = lineas[3];
-const indice = [
-  ...catalogo.map((g) => ({ id: g.id, titulo: g.titulo })),
-  { id: 'maquinaria', titulo: 'Maquinaria' },
-  { id: 'faena', titulo: 'Faena' },
-  { id: 'flota', titulo: 'Vehículos' },
-];
+import { cifrasEquipos, ventajas, ventajasRevisar, usos, fotoBanner, fotoBodega, fuenteEquipos } from '../../../data/equipos';
 ---
-<Base title="Maquinaria y equipos" description="Maquinaria, andamios, alzaprimas, moldajes y vehículos propios de LOLS Ingeniería.">
-  <PageBanner titulo="Maquinaria y capacidad técnica" img={banner.img} referencial={banner.credito ?? undefined}>
-    <p>Trabajamos con equipos propios: la obra no espera un arriendo para avanzar.</p>
+<Base title="Capacidad técnica" description="Moldajes, alzaprimas, andamios, maquinaria y vehículos propios de LOLS Ingeniería.">
+  <PageBanner titulo="Capacidad técnica" img={fotoBanner.src} referencial={fotoBanner.credito ?? undefined}>
+    <p>Moldajes, alzaprimas, andamios, maquinaria y vehículos propios: cada obra parte con lo que ya tenemos.</p>
   </PageBanner>
 
-  <section class="pn-sec" aria-labelledby="eq-t">
-    <div class="wrap">
-      <TituloSeccion antetitulo="Capacidad técnica" titulo="Equipos propios para su obra" id="eq-t">
-        <p>
-          Andamios, alzaprimas, moldajes, maquinaria y vehículos son de LOLS. Así planificamos cada obra con lo que
-          ya tenemos, sin depender de terceros.
+  <section class="pn-sec eq-intro" aria-labelledby="eq-t">
+    <div class="wrap pn-dos">
+      <div class="pn-dos__txt">
+        <TituloSeccion antetitulo="Medios propios" titulo="Construimos con equipos que son nuestros" id="eq-t" centrado={false} />
+        <p class="pn-grande">
+          Los moldajes, alzaprimas, andamios, la maquinaria y los vehículos con que trabajamos son de LOLS. No
+          dependemos de un arriendo para empezar ni para avanzar.
         </p>
-        <p class="pn-serv-nota solo-marca"><Revisar nota={`cifras del ${fuenteEquipos}; confirmar que se puedan publicar`} /></p>
-      </TituloSeccion>
+        <p>
+          Cuando una obra termina, los equipos vuelven a nuestra bodega, se revisan y quedan listos para la
+          siguiente. Así planificamos cada proyecto sabiendo con qué contamos.
+        </p>
+        <p class="solo-marca"><Revisar nota={`cifras del ${fuenteEquipos}; confirmar que se puedan publicar`} /></p>
+      </div>
+      <figure class="pn-dos__img eq-dos__img">
+        <Image src={fotoBodega.src} alt={fotoBodega.alt} widths={[600, 1200]} sizes="(max-width: 900px) 100vw, 560px" />
+        {fotoBodega.credito && <figcaption class="cubo__ref">Imagen referencial · {fotoBodega.credito}</figcaption>}
+      </figure>
     </div>
     <div class="pn-cifras pn-cifras--borde">
       <div class="wrap">
@@ -50,98 +48,67 @@ const indice = [
         </dl>
       </div>
     </div>
-    <div class="wrap">
-      <ul class="pn-chips eq-indice" aria-label="Ir a una sección">
-        {indice.map((s) => <li><a href={`#${s.id}`}>{s.titulo}</a></li>)}
-      </ul>
-    </div>
   </section>
 
-  {catalogo.map((g, i) => (
-    <section class:list={['pn-sec', 'eq-grupo', { 'pn-sec--gris': i % 2 === 0 }]} id={g.id} aria-labelledby={`${g.id}-t`}>
-      <div class="wrap">
-        <TituloSeccion antetitulo="Equipos propios" titulo={g.titulo} id={`${g.id}-t`}>
-          <p>{g.resumen}</p>
-        </TituloSeccion>
-        <ul class="eq-familias">
-          {g.familias.map((f) => (
-            <li class="eq-familia">
-              <figure class="eq-foto">
-                {f.foto ? (
-                  <Image src={f.foto} alt={f.nombre} widths={[360, 720]} sizes="(max-width: 600px) 50vw, 280px" />
-                ) : (
-                  <><Pendiente texto="foto" /><SinFoto /></>
-                )}
-              </figure>
-              <h3>{f.nombre}</h3>
-              <p class="eq-familia__n">{f.cantidad}</p>
-              {f.medidas && <p class="eq-familia__medidas">{f.medidas}</p>}
-              <p class="eq-familia__txt">{f.texto}</p>
-            </li>
-          ))}
-        </ul>
-        <p class="eq-nota">Fotos del catálogo interno: algunas son de nuestros equipos y otras son referenciales.</p>
-      </div>
-    </section>
-  ))}
-
-  <section class="pn-sec" id="maquinaria" aria-labelledby="maq-t">
+  <section class="pn-directrices" aria-labelledby="vent-t">
     <div class="wrap">
-      <TituloSeccion antetitulo="Equipos propios" titulo="Maquinaria" id="maq-t">
-        <p>Para bombear hormigón, mover carga, trabajar en altura y preparar la enfierradura en la misma obra.</p>
+      <TituloSeccion antetitulo="Por qué importa" titulo="Ventajas de trabajar con equipos propios" id="vent-t" claro>
+        <p class="solo-marca"><Revisar nota={ventajasRevisar} /></p>
       </TituloSeccion>
-      <ul class="eq-maquinas">
-        {maquinaria.map((m) => (
-          <li class="eq-maquina">
-            <figure class="eq-foto">
-              {m.foto ? (
-                <>
-                  <Image src={m.foto.src} alt={m.foto.alt} widths={[360, 720]} sizes="(max-width: 600px) 50vw, 280px" />
-                  <figcaption class="cubo__ref">Imagen referencial</figcaption>
-                </>
-              ) : (
-                <><Pendiente texto="foto" /><SinFoto /></>
-              )}
-            </figure>
-            <h3>{m.nombre}</h3>
-            <p class="eq-maquina__n">{unidades(m.cantidad)}</p>
+      <ol class="pn-directrices__grid">
+        {ventajas.map((v, i) => (
+          <li>
+            <span class="pn-directrices__n">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{v.titulo}</h3>
+            <p>{v.texto}</p>
           </li>
         ))}
-      </ul>
+      </ol>
     </div>
   </section>
 
-  <section class="pn-sec pn-sec--gris" id="faena" aria-labelledby="faena-t">
-    <div class="wrap eq-faena">
-      <figure class="eq-foto eq-foto--real">
-        <Image src={faena.foto.src} alt={faena.foto.alt} widths={[600, 1200]} sizes="(max-width: 900px) 100vw, 560px" />
-        <figcaption class="cubo__ref">Foto real</figcaption>
-      </figure>
-      <div>
-        <TituloSeccion antetitulo="Equipos propios" titulo={faena.titulo} id="faena-t" centrado={false} />
-        <p class="eq-linea__cifra">{faena.cifra}</p>
-        <p class="eq-faena__txt">{faena.texto}</p>
+  <section class="pn-sec" aria-labelledby="usos-t">
+    <div class="wrap">
+      <TituloSeccion antetitulo="En obra" titulo="Lo que hacemos con nuestros equipos" id="usos-t" />
+      <div class="eq-usos">
+        {usos.map((u, i) => (
+          <article class:list={['eq-uso', { 'eq-uso--inv': i % 2 === 1 }]} id={u.id} aria-labelledby={`${u.id}-t`}>
+            <figure class="eq-uso__foto">
+              <Image src={u.foto.src} alt={u.foto.alt} widths={[640, 1100]} sizes="(max-width: 900px) 100vw, 620px" />
+              <figcaption class="cubo__ref">
+                {u.foto.real ? 'Foto real' : `Imagen referencial${u.foto.credito ? ` · ${u.foto.credito}` : ''}`}
+              </figcaption>
+            </figure>
+            <div class="eq-uso__txt">
+              <p class="eq-uso__ante">{u.antetitulo}</p>
+              <h3 id={`${u.id}-t`}>{u.titulo}</h3>
+              <p class="eq-uso__desc">{u.texto}</p>
+              <ul class="pn-incluye eq-uso__equipos" aria-label="Con qué lo hacemos">
+                {u.equipos.map((e) => <li>{e}</li>)}
+              </ul>
+            </div>
+          </article>
+        ))}
       </div>
     </div>
   </section>
 
-  <section class="pn-directrices" id="flota" aria-labelledby="flota-t">
-    <div class="wrap eq-flota">
-      <TituloSeccion antetitulo="Flota" titulo="Vehículos propios" id="flota-t" claro centrado={false}>
-        <p>Para mover personal, materiales y equipos entre la bodega y cada obra. {flotaMarcas}</p>
-      </TituloSeccion>
-      <ul class="eq-flota__n">
-        {flota.map((f) => (
-          <li><span class="pn-directrices__n">{f.valor}</span> {f.texto}</li>
-        ))}
-      </ul>
+  <section class="pn-sec pn-sec--gris eq-licita-sec" aria-labelledby="lic-t">
+    <div class="wrap">
+      <div class="eq-licita">
+        <div>
+          <h2 id="lic-t" class="eq-licita__t">¿Su licitación pide el listado de equipos?</h2>
+          <p>Le enviamos el detalle de moldajes, alzaprimas, andamios, maquinaria y vehículos, con cantidades y medidas.</p>
+        </div>
+        <a class="btn btn--verde" href={r('contacto')}>Solicitar el listado <span aria-hidden="true">→</span></a>
+      </div>
     </div>
   </section>
 
-  <section class="pn-sec pn-sec--gris solo-marca" aria-label="Fotos de los equipos">
+  <section class="pn-sec solo-marca" aria-label="Fotos de los equipos">
     <div class="wrap">
       <Pendiente
-        texto="una sesión de fotos en bodega de los equipos y la flota, y confirmar cuáles fotos del catálogo son de equipos propios"
+        texto="fotos de los equipos de LOLS trabajando en obra (moldaje armado, losa apuntalada, andamio de fachada, bomba, flota formada con el logo y la bodega ordenada). Las de ahora son de stock"
         bloque
       />
     </div>

@@ -73,6 +73,7 @@ npm run build    # genera dist/
 | Servicios y sus descripciones | `src/data/servicios.ts` |
 | Obras (ficha por proyecto + imagen) | `src/data/proyectos.ts` (imágenes en `src/assets/obras/`) |
 | Diapositivas de la portada giratoria | `src/data/portada.ts` (fotos en `src/assets/portada/`) |
+| Capacidad técnica (equipos propios: cifras, usos, fotos) | `src/data/equipos.ts` (fotos en `src/assets/capacidad/`) |
 | Colores y tipografía de cada propuesta | `public/estilos/<slug>.css` |
 | Qué propuesta se publica | `principal` en `src/propuestas/registro.ts` |
 
@@ -93,6 +94,16 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
   ejemplo"): reemplazarlas por las de cada obra en `etapas` de `src/data/proyectos.ts`, idealmente
   una foto por etapa tomada desde un ángulo parecido. Autores de las de ejemplo: Billy Freeman e
   Iain (Unsplash).
+- **Capacidad técnica (`src/assets/capacidad/`)**: la página muestra los equipos propios **por uso y
+  en obra** (moldaje de muros, losas apuntaladas, andamios, maquinaria, faena, flota), como lo hacen
+  las constructoras de referencia; no hay fichas de piezas en fondo blanco ni unidades por pieza
+  (se leían como tienda de arriendo). Las fotos son de stock de Unsplash marcadas "Imagen
+  referencial", salvo el contenedor de faena, que es real. Autores: Julia Taubitz, Di, Ray
+  Donnelly, Etienne Girardet, Estefania Ruiz, Yurii Hetsko y Maaz Khan. El detalle pieza por pieza
+  del inventario queda en `catalogo` (no se publica) para el listado que se envía a licitaciones.
+  Fotos reales que hacen falta: moldaje de muros armado, losa apuntalada con alzaprimas, andamio
+  de fachada con gente con EPP, la bomba de hormigón trabajando, la flota formada con el logo (sin
+  patentes legibles) y la bodega ordenada; horizontales, con luz de día y sin fondo blanco.
 - **Obras (`src/assets/obras/2018/`)**: imágenes del sitio lols.cl de 2018, sin el marco verde
   que traían pegado. Las terminadas son fotos; las "en construcción" son renders con el sello
   "Próximas entregas". Son de 500 px: se reemplazan cuando lleguen fotos actuales.
