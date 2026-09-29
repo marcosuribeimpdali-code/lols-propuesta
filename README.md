@@ -99,6 +99,15 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
 - **Capturas de la portada selectora (`src/assets/capturas/<slug>.jpg`)**: se sacan a mano
   (1440 × 900) si una propuesta cambia mucho.
 
+## Marcas de revisión ([PENDIENTE] y "Por confirmar")
+
+El sitio se ve **limpio por defecto**: las marcas amarillas y la barra de arriba están escondidas.
+Se muestran con **"Mostrar pendientes"** (al pie de cada página) o entrando con
+`?pendientes=1` (por ejemplo `https://new.lols.cl/?pendientes=1`); queda recordado en ese
+navegador hasta apretar "Ocultar pendientes" o entrar con `?pendientes=0`. La política de privacidad
+muestra sus marcas siempre (es un borrador legal con huecos a mitad de frase). Detalles en
+`src/propuestas/comun/marcas.css` (`.solo-marca`, `.si-limpio`, `.siempre-marcas`).
+
 ## Pendientes antes de salir de propuesta
 
 - Contenido: validar los textos propuestos de los servicios, nombres y datos de las obras, hitos

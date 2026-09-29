@@ -1,0 +1,18 @@
+---
+// Va en el <head> de cada Base, antes de que se pinte la página: decide si se ven las marcas de
+// revisión (html.con-marcas). Por defecto NO se ven: el sitio queda limpio para mostrarlo.
+// ?pendientes=1 las prende y queda recordado; ?pendientes=0 las apaga.
+---
+<script is:inline>
+  (function () {
+    var raiz = document.documentElement;
+    var v = new URLSearchParams(location.search).get('pendientes');
+    try {
+      if (v === '1') localStorage.setItem('lols-marcas', '1');
+      if (v === '0') localStorage.removeItem('lols-marcas');
+      if (localStorage.getItem('lols-marcas') === '1') raiz.classList.add('con-marcas');
+    } catch (e) {
+      if (v === '1') raiz.classList.add('con-marcas');
+    }
+  })();
+</script>

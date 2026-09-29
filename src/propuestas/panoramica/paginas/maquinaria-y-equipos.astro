@@ -9,6 +9,7 @@ import TituloSeccion from '../components/TituloSeccion.astro';
 import CtaFoto from '../components/CtaFoto.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import Revisar from '../../comun/Revisar.astro';
+import SinFoto from '../../comun/SinFoto.astro';
 import { diapositivas } from '../../../data/portada';
 import { cifrasEquipos, catalogo, lineas, maquinaria, flota, flotaMarcas, fuenteEquipos } from '../../../data/equipos';
 
@@ -34,7 +35,7 @@ const indice = [
           Andamios, alzaprimas, moldajes, maquinaria y vehículos son de LOLS. Así planificamos cada obra con lo que
           ya tenemos, sin depender de terceros.
         </p>
-        <p class="pn-serv-nota"><Revisar nota={`cifras del ${fuenteEquipos}; confirmar que se puedan publicar`} /></p>
+        <p class="pn-serv-nota solo-marca"><Revisar nota={`cifras del ${fuenteEquipos}; confirmar que se puedan publicar`} /></p>
       </TituloSeccion>
     </div>
     <div class="pn-cifras pn-cifras--borde">
@@ -69,7 +70,7 @@ const indice = [
                 {f.foto ? (
                   <Image src={f.foto} alt={f.nombre} widths={[360, 720]} sizes="(max-width: 600px) 50vw, 280px" />
                 ) : (
-                  <Pendiente texto="foto" />
+                  <><Pendiente texto="foto" /><SinFoto /></>
                 )}
               </figure>
               <h3>{f.nombre}</h3>
@@ -99,7 +100,7 @@ const indice = [
                   <figcaption class="cubo__ref">Imagen referencial</figcaption>
                 </>
               ) : (
-                <Pendiente texto="foto" />
+                <><Pendiente texto="foto" /><SinFoto /></>
               )}
             </figure>
             <h3>{m.nombre}</h3>
@@ -137,7 +138,7 @@ const indice = [
     </div>
   </section>
 
-  <section class="pn-sec pn-sec--gris" aria-label="Fotos de los equipos">
+  <section class="pn-sec pn-sec--gris solo-marca" aria-label="Fotos de los equipos">
     <div class="wrap">
       <Pendiente
         texto="una sesión de fotos en bodega de los equipos y la flota, y confirmar cuáles fotos del catálogo son de equipos propios"

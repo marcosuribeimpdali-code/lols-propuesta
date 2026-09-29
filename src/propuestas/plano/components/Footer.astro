@@ -2,6 +2,7 @@
 import Logo from '../../comun/Logo.astro';
 import { empresa } from '../../../data/empresa';
 import { r } from '../config';
+import InterruptorMarcas from '../../comun/InterruptorMarcas.astro';
 
 const anio = new Date().getFullYear();
 ---
@@ -38,7 +39,7 @@ const anio = new Date().getFullYear();
   <div class="wrap">
     <div class="footer-legal">
       <p>© {anio} {empresa.razonSocial}</p>
-      <p><a href={r('privacidad')}>Política de privacidad</a> · Propuesta de sitio en revisión</p>
+      <p><a href={r('privacidad')}>Política de privacidad</a> · Propuesta de sitio en revisión · <InterruptorMarcas /></p>
     </div>
   </div>
 </footer>

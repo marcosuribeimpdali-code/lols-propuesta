@@ -56,7 +56,7 @@ const cifras = [
     <div class="wrap">
       <TituloSeccion antetitulo="Lo que hacemos" titulo="Nuestros servicios" id="serv-t">
         <p class="pn-frase">{fraseServicios}</p>
-        <p class="pn-serv-nota"><Revisar nota={revisarDescripciones} /></p>
+        <p class="pn-serv-nota solo-marca"><Revisar nota={revisarDescripciones} /></p>
       </TituloSeccion>
       <ul class="pn-serv-grid">
         {servicios.map((s) => (
@@ -95,7 +95,7 @@ const cifras = [
   <section class="pn-directrices pn-proceso" aria-labelledby="proc-t">
     <div class="wrap">
       <TituloSeccion antetitulo="Cómo trabajamos" titulo="De la idea a la entrega" id="proc-t" claro>
-        <p><Revisar nota="pasos del proceso a confirmar con la jefatura" /></p>
+        <p class="solo-marca"><Revisar nota="pasos del proceso a confirmar con la jefatura" /></p>
       </TituloSeccion>
       <ol class="pn-directrices__grid pn-proceso__grid">
         {proceso.map((p, i) => (
@@ -112,7 +112,7 @@ const cifras = [
   <section class="pn-sec pn-sec--gris" aria-labelledby="obras-t">
     <div class="wrap">
       <TituloSeccion antetitulo="Proyectos" titulo="Obras entregadas" id="obras-t">
-        <p>Fotos del sitio de 2018. <Pendiente texto="nombres y datos de cada obra" /></p>
+        <p class="solo-marca">Fotos del sitio de 2018. <Pendiente texto="nombres y datos de cada obra" /></p>
       </TituloSeccion>
       <ul class="pn-galeria">
         {terminados.map((p, i) => p.imagen && (

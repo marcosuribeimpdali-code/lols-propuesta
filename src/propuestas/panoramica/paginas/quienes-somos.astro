@@ -29,7 +29,7 @@ const servicios = listaServicios.charAt(0).toLowerCase() + listaServicios.slice(
           {' '}{empresa.cifras.obras} obras realizadas.
         </p>
         <p>Hoy somos más de {empresa.cifras.trabajadores} trabajadores en {servicios} <Revisar nota={empresa.cifrasRevisar} /></p>
-        <p><Pendiente texto="2 o 3 líneas sobre el tipo de obras que hace la empresa y para quién" /></p>
+        <p class="solo-marca"><Pendiente texto="2 o 3 líneas sobre el tipo de obras que hace la empresa y para quién" /></p>
       </div>
       <figure class="pn-dos__img">
         <Image src={lateral.img} alt={lateral.alt} widths={[600, 1200]} sizes="(max-width: 900px) 100vw, 560px" />

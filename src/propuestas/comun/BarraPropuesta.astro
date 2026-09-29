@@ -3,6 +3,7 @@
 // suma un selector para saltar a la misma página en otra (de /plano/contacto/ a
 // /panoramica/contacto/, por ejemplo).
 import { principal, propuestas } from '../registro';
+import InterruptorMarcas from './InterruptorMarcas.astro';
 import './marcas.css';
 
 interface Props {
@@ -17,7 +18,7 @@ const esFicha = resto.startsWith('proyectos-terminados/') && resto.split('/').fi
 const destino = (p: (typeof propuestas)[number]) =>
   `/${p.slug}/${esFicha && !p.fichas ? 'proyectos-terminados/' : resto}`;
 ---
-<div class="barra-prop" role="region" aria-label="Aviso de propuesta">
+<div class:list={['barra-prop', { 'solo-marca': !conSelector }]} role="region" aria-label="Aviso de propuesta">
   <div class="barra-prop__in">
     <p><strong>Propuesta de sitio para lols.cl</strong> · en revisión, no es el sitio oficial.</p>
     {conSelector && (
@@ -34,9 +35,10 @@ const destino = (p: (typeof propuestas)[number]) =>
         </ul>
       </nav>
     )}
-    <p class="barra-prop__leyenda">
+    <p class="barra-prop__leyenda solo-marca">
       <span class="pendiente">[PENDIENTE]</span> falta
       <span class="revisar"><span aria-hidden="true">⚠</span> Por confirmar</span> validar dato
+      <InterruptorMarcas />
     </p>
   </div>
 </div>

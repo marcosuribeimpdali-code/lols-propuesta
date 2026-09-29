@@ -11,6 +11,30 @@
   --rv-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
+/* ---------- modo limpio ----------
+   Por defecto el sitio se ve SIN marcas de revisión, para mostrarlo. "Mostrar pendientes" (en el
+   pie) o ?pendientes=1 en la dirección ponen html.con-marcas y las muestran (queda recordado).
+   .solo-marca    bloque que existe solo por una marca: se esconde con ella.
+   .si-limpio     reemplazo que se ve solo sin marcas (por ejemplo, el relleno de una foto).
+   .siempre-marcas zona cuyas marcas se ven siempre: la política de privacidad es un borrador legal
+                  con huecos a mitad de frase. */
+html:not(.con-marcas) :is(.pendiente, .revisar, .solo-marca):not(.siempre-marcas *) {
+  display: none !important;
+}
+html.con-marcas .si-limpio {
+  display: none !important;
+}
+.interruptor-marcas {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
 /* ---------- marcas ---------- */
 .pendiente {
   font-family: var(--rv-mono);

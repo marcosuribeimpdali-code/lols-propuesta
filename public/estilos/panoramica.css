@@ -3452,3 +3452,19 @@ fieldset.campo--grupo > legend {
     font-size: 1.08rem;
   }
 }
+
+/* modo limpio: servicio sin foto → "Qué incluye" a todo el ancho; equipo sin foto → isotipo gris */
+html:not(.con-marcas) .pn-serv-item__cols--sin-foto {
+  grid-template-columns: 1fr;
+}
+.sin-foto {
+  width: 34%;
+  height: auto;
+  color: var(--linea);
+}
+/* modo limpio: en Contacto se esconde "Horario" (pendiente) y quedan 3 datos, a todo el ancho */
+@media (min-width: 1001px) {
+  html:not(.con-marcas) .pn-datos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

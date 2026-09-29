@@ -32,7 +32,7 @@ const fotoDe: Record<string, (typeof diapositivas)[number] | undefined> = {
           <li><a href={`#${s.slug}`}><IconoServicio nombre={s.icono} />{s.nombre}</a></li>
         ))}
       </ul>
-      <p class="pn-serv-nota"><Revisar nota={revisarDescripciones} /></p>
+      <p class="pn-serv-nota solo-marca"><Revisar nota={revisarDescripciones} /></p>
 
       <div class="pn-serv-lista">
         {servicios.map((s, i) => {
@@ -52,14 +52,14 @@ const fotoDe: Record<string, (typeof diapositivas)[number] | undefined> = {
                 )}
                 <p>{s.detalle}</p>
 
-                <div class="pn-serv-item__cols">
+                <div class:list={['pn-serv-item__cols', { 'pn-serv-item__cols--sin-foto': !foto }]}>
                   <div>
                     <h3 class="pn-serv-item__h">Qué incluye</h3>
                     <ul class="pn-incluye">
                       {s.incluye.map((x) => <li>{x}</li>)}
                     </ul>
                   </div>
-                  <figure class="pn-serv-item__foto">
+                  <figure class:list={['pn-serv-item__foto', { 'solo-marca': !foto }]}>
                     {foto ? (
                       <>
                         <Image src={foto.img} alt={foto.alt} widths={[480, 960]} sizes="(max-width: 900px) 100vw, 480px" />
@@ -71,7 +71,7 @@ const fotoDe: Record<string, (typeof diapositivas)[number] | undefined> = {
                   </figure>
                 </div>
 
-                <div class="pn-serv-item__obras">
+                <div class="pn-serv-item__obras solo-marca">
                   <h3 class="pn-serv-item__h">Obras con este servicio</h3>
                   <Pendiente texto={`qué obras del listado incluyeron ${s.nombre.toLowerCase()}`} />
                 </div>

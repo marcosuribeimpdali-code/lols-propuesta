@@ -1,0 +1,31 @@
+---
+// Botón "Mostrar pendientes / Ocultar pendientes": prende o apaga las marcas de revisión
+// ([PENDIENTE], "Por confirmar" y la barra amarilla de arriba). La preferencia queda guardada en
+// el navegador; también se prende con ?pendientes=1 en la dirección (y se apaga con ?pendientes=0).
+// El estado inicial lo pone el script de <head> de cada Base (ver ModoMarcas.astro).
+---
+<button type="button" class="interruptor-marcas" data-marcas aria-pressed="false">Mostrar pendientes</button>
+
+<script>
+  const botones = [...document.querySelectorAll<HTMLButtonElement>('[data-marcas]')];
+  const pintar = () => {
+    const on = document.documentElement.classList.contains('con-marcas');
+    botones.forEach((b) => {
+      b.setAttribute('aria-pressed', String(on));
+      b.textContent = on ? 'Ocultar pendientes' : 'Mostrar pendientes';
+    });
+  };
+  botones.forEach((b) =>
+    b.addEventListener('click', () => {
+      const on = document.documentElement.classList.toggle('con-marcas');
+      try {
+        if (on) localStorage.setItem('lols-marcas', '1');
+        else localStorage.removeItem('lols-marcas');
+      } catch {
+        /* sin almacenamiento: vale solo para esta página */
+      }
+      pintar();
+    }),
+  );
+  pintar();
+</script>
