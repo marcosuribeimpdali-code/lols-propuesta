@@ -1523,13 +1523,6 @@ main:focus {
 .pn-serv-item__cuerpo .pendiente--bloque {
   justify-self: stretch;
 }
-.pn-serv-item__acciones {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 24px;
-  margin-top: 6px;
-}
 @media (max-width: 700px) {
   .pn-serv-item {
     grid-template-columns: 1fr;

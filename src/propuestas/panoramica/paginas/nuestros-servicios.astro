@@ -3,7 +3,6 @@
 // línea). Cada servicio: descripción, cómo se trabaja, qué incluye, foto y obras de ese tipo.
 import { Image } from 'astro:assets';
 import Base from '../Base.astro';
-import { r } from '../config';
 import PageBanner from '../components/PageBanner.astro';
 import CtaFoto from '../components/CtaFoto.astro';
 import IconoServicio from '../../comun/IconoServicio.astro';
@@ -75,11 +74,6 @@ const fotoDe: Record<string, (typeof diapositivas)[number] | undefined> = {
                 <div class="pn-serv-item__obras">
                   <h3 class="pn-serv-item__h">Obras con este servicio</h3>
                   <Pendiente texto={`qué obras del listado incluyeron ${s.nombre.toLowerCase()}`} />
-                </div>
-
-                <div class="pn-serv-item__acciones">
-                  <a class="btn btn--verde" href={r('contacto')}>Cotizar<span class="visually-hidden"> {s.nombre.toLowerCase()}</span> <span aria-hidden="true">→</span></a>
-                  <a class="pn-link" href={r('terminados')}>Ver proyectos <span aria-hidden="true">→</span></a>
                 </div>
               </div>
             </article>
