@@ -2625,57 +2625,6 @@ html:not(.js) .form__siguiente {
   color: #fff;
 }
 
-/* franja de respaldo: logos de mandantes y certificaciones (pendientes) */
-.pn-respaldo {
-  background: #fff;
-  border-bottom: 1px solid var(--linea);
-}
-.pn-respaldo__in {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: 14px 36px;
-  padding-block: 36px;
-}
-.pn-respaldo__t {
-  max-width: 9em;
-  font: 700 1.1rem/1.2 var(--cond);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--tinta-2);
-}
-.pn-respaldo__logos {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 12px;
-  list-style: none;
-  padding: 0;
-}
-.pn-respaldo__logo {
-  display: grid;
-  place-items: center;
-  height: 64px;
-  border: 1px dashed var(--rv-line);
-  background: var(--rv-bg);
-  color: var(--rv-ink);
-  font-family: var(--mono);
-  font-size: 0.72rem;
-}
-.pn-respaldo__pend {
-  grid-column: 1 / -1;
-}
-@media (max-width: 860px) {
-  .pn-respaldo__in {
-    grid-template-columns: 1fr;
-  }
-  .pn-respaldo__t {
-    max-width: none;
-  }
-  .pn-respaldo__logos {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
 /* cómo trabajamos: 4 pasos en la banda verde */
 .pn-proceso__grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
