@@ -1,0 +1,39 @@
+---
+import Base from '../Base.astro';
+import { r } from '../config';
+import PageBanner from '../components/PageBanner.astro';
+import TituloSeccion from '../components/TituloSeccion.astro';
+import FormPostulacion from '../../comun/FormPostulacion.astro';
+import IconoServicio from '../../comun/IconoServicio.astro';
+import Pendiente from '../../comun/Pendiente.astro';
+import { servicios } from '../../../data/servicios';
+import { diapositivas } from '../../../data/portada';
+
+const banner = diapositivas[2];
+---
+<Base title="Trabaja con nosotros" description="Envíe su CV a LOLS Ingeniería.">
+  <PageBanner titulo="Trabaja con nosotros" img={banner.img} referencial={banner.credito ?? undefined}>
+    <p>¿Quiere ser parte del equipo de LOLS Ingeniería? Envíenos sus antecedentes.</p>
+  </PageBanner>
+
+  <section class="pn-sec">
+    <div class="wrap pn-trabaja">
+      <div class="pn-trabaja__info">
+        <TituloSeccion antetitulo="Postulaciones" titulo="Áreas en las que trabajamos" centrado={false} />
+        <ul class="pn-trabaja__areas">
+          {servicios.map((s) => (
+            <li><span class="pn-serv__icono"><IconoServicio nombre={s.icono} /></span>{s.nombre}</li>
+          ))}
+        </ul>
+        <h3 class="pn-trabaja__h">Ofertas vigentes</h3>
+        <Pendiente texto="cargos abiertos, si se quieren publicar (cargo, lugar, requisitos)" bloque />
+        <p class="pn-trabaja__nota">
+          ¿Busca cotizar una obra? Vaya a <a href={r('contacto')}>Cuéntenos su proyecto</a>.
+        </p>
+      </div>
+      <div class="pn-form-caja">
+        <FormPostulacion privacidadHref={r('privacidad')} />
+      </div>
+    </div>
+  </section>
+</Base>

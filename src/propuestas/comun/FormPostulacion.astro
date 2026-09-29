@@ -1,0 +1,110 @@
+---
+// "Trabaja con nosotros": envío de CV. Va aparte del formulario de proyectos porque un CV es un
+// dato personal con otra finalidad (selección de personal) y otro plazo de guardado: la Ley
+// 21.719 pide un consentimiento propio. Propuesta: NO envía ni guarda nada todavía.
+import Pendiente from './Pendiente.astro';
+import { empresa } from '../../data/empresa';
+
+interface Props {
+  privacidadHref: string;
+}
+const { privacidadHref } = Astro.props;
+
+const areas = [
+  'Obra gruesa',
+  'Terminaciones',
+  'Electricidad',
+  'Montaje industrial',
+  'Mantención',
+  'Voz y datos',
+  'Muebles',
+  'Prevención de riesgos',
+  'Oficina técnica o administración',
+  'Otra',
+];
+const experiencia = ['Menos de 1 año', '1 a 3 años', '3 a 5 años', '5 a 10 años', 'Más de 10 años'];
+---
+<form class="form" id="form-cv" method="post" enctype="multipart/form-data" aria-labelledby="cv-t" aria-describedby="cv-req">
+  <h2 id="cv-t" class="form__t">Envíenos su CV</h2>
+  <p id="cv-req" class="form__req">Todo es obligatorio, salvo lo marcado como opcional.</p>
+
+  <div class="form__fila">
+    <div class="campo">
+      <label for="cv-nombre">Nombre completo</label>
+      <input id="cv-nombre" name="nombre" type="text" autocomplete="name" required />
+    </div>
+    <div class="campo">
+      <label for="cv-comuna">Comuna donde vive <span class="campo__op">(opcional)</span></label>
+      <input id="cv-comuna" name="comuna" type="text" autocomplete="address-level2" />
+    </div>
+  </div>
+  <div class="form__fila">
+    <div class="campo">
+      <label for="cv-correo">Correo</label>
+      <input id="cv-correo" name="correo" type="email" autocomplete="email" required />
+    </div>
+    <div class="campo">
+      <label for="cv-telefono">Teléfono</label>
+      <input id="cv-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" required />
+    </div>
+  </div>
+  <div class="form__fila">
+    <div class="campo">
+      <label for="cv-area">Área en la que quiere trabajar</label>
+      <select id="cv-area" name="area" required>
+        <option value="">Elegir…</option>
+        {areas.map((a) => <option>{a}</option>)}
+      </select>
+    </div>
+    <div class="campo">
+      <label for="cv-experiencia">Años de experiencia <span class="campo__op">(opcional)</span></label>
+      <select id="cv-experiencia" name="experiencia">
+        <option value="">Elegir…</option>
+        {experiencia.map((e) => <option>{e}</option>)}
+      </select>
+    </div>
+  </div>
+  <div class="campo">
+    <label for="cv-cargo">Cargo u oficio</label>
+    <input id="cv-cargo" name="cargo" type="text" required aria-describedby="cv-cargo-ayuda" />
+    <p id="cv-cargo-ayuda" class="campo__ayuda">Por ejemplo: maestro, eléctrico, jefe de obra, prevencionista.</p>
+  </div>
+  <div class="campo">
+    <label for="cv-archivo">Su CV</label>
+    <input id="cv-archivo" class="adjuntos" name="cv" type="file" accept=".pdf,.doc,.docx" required aria-describedby="cv-archivo-ayuda" />
+    <p id="cv-archivo-ayuda" class="campo__ayuda">PDF o Word. <Pendiente texto="tamaño máximo que aceptará el servidor" /></p>
+  </div>
+  <div class="campo">
+    <label for="cv-mensaje">Algo más que quiera contarnos <span class="campo__op">(opcional)</span></label>
+    <textarea id="cv-mensaje" name="mensaje" rows="4"></textarea>
+  </div>
+
+  <!-- Ley 21.719: consentimiento propio para la selección de personal, casilla SIN marcar -->
+  <div class="consent">
+    <input id="cv-consent" name="consentimiento" type="checkbox" required />
+    <label for="cv-consent">
+      Acepto que {empresa.nombreCorto} guarde mi CV y mis datos para sus procesos de selección de
+      personal, según su{' '}
+      <a href={privacidadHref}>política de privacidad</a>.
+    </label>
+  </div>
+
+  <Pendiente texto="definir a qué correo llegan las postulaciones y cuánto tiempo se guardan los CV" bloque />
+
+  <button class="btn btn--primary" type="submit">Enviar postulación <span aria-hidden="true">→</span></button>
+
+  <p class="form__estado" id="cv-estado" role="status" tabindex="-1" hidden></p>
+</form>
+
+<script>
+  const form = document.getElementById('form-cv') as HTMLFormElement | null;
+  const estado = document.getElementById('cv-estado');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!estado) return;
+    estado.textContent =
+      'Gracias. Esto es una propuesta: el formulario aún no envía postulaciones. En el sitio final, aquí se confirmaría la recepción de su CV.';
+    estado.hidden = false;
+    estado.focus();
+  });
+</script>

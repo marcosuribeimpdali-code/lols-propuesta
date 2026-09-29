@@ -1,7 +1,9 @@
 ---
+// Pie: sin repetir lo que ya muestra cada página (la lista de servicios está en el menú y en
+// Servicios; la invitación a cotizar, en la franja verde de arriba).
 import Logo from '../../comun/Logo.astro';
+import Pendiente from '../../comun/Pendiente.astro';
 import { empresa } from '../../../data/empresa';
-import { servicios } from '../../../data/servicios';
 import { r } from '../config';
 
 const anio = new Date().getFullYear();
@@ -11,21 +13,22 @@ const anio = new Date().getFullYear();
     <div class="pn-footer__marca">
       <a href={r('inicio')} class="pn-footer__logo" aria-label="LOLS Ingeniería, ir al inicio"><Logo decorativo /></a>
       <p>{empresa.lema}.</p>
-      <p class="pn-footer__dir">{empresa.directrices}</p>
     </div>
     <div>
-      <h2 class="pn-footer__h">Servicios</h2>
+      <h2 class="pn-footer__h">Empresa</h2>
       <ul>
-        {servicios.map((s) => <li><a href={r('servicios', `#${s.slug}`)}>{s.nombre}</a></li>)}
+        <li><a href={r('quienes')}>Quiénes somos</a></li>
+        <li><a href={r('servicios')}>Servicios</a></li>
+        <li><a href={r('terminados')}>Proyectos finalizados</a></li>
+        <li><a href={r('construccion')}>Proyectos en ejecución</a></li>
+        <li><a href={r('contacto')}>Cuéntenos su proyecto</a></li>
       </ul>
     </div>
     <div>
-      <h2 class="pn-footer__h">Menú</h2>
+      <h2 class="pn-footer__h">Trabaje con LOLS</h2>
       <ul>
-        <li><a href={r('quienes')}>Quiénes somos</a></li>
-        <li><a href={r('terminados')}>Proyectos finalizados</a></li>
-        <li><a href={r('construccion')}>Proyectos en ejecución</a></li>
-        <li><a href={r('contacto')}>Contacto</a></li>
+        <li><a href={r('trabaja')}>Trabaja con nosotros</a></li>
+        <li class="pn-footer__pend"><Pendiente texto="registro de proveedores, si se quiere" /></li>
       </ul>
     </div>
     <div>

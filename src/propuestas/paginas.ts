@@ -10,6 +10,7 @@ import PlanoTerminados from './plano/paginas/proyectos-terminados.astro';
 import PlanoConstruccion from './plano/paginas/proyectos-en-construccion.astro';
 import PlanoContacto from './plano/paginas/contacto.astro';
 import PlanoPrivacidad from './plano/paginas/politica-de-privacidad.astro';
+import PlanoTrabaja from './plano/paginas/trabaja-con-nosotros.astro';
 
 import PanoInicio from './panoramica/paginas/index.astro';
 import PanoQuienes from './panoramica/paginas/quienes-somos.astro';
@@ -19,6 +20,7 @@ import PanoConstruccion from './panoramica/paginas/proyectos-en-construccion.ast
 import PanoContacto from './panoramica/paginas/contacto.astro';
 import PanoPrivacidad from './panoramica/paginas/politica-de-privacidad.astro';
 import PanoObra from './panoramica/paginas/obra.astro';
+import PanoTrabaja from './panoramica/paginas/trabaja-con-nosotros.astro';
 
 type Componente = typeof PlanoInicio;
 
@@ -31,6 +33,7 @@ export const paginasDe: Record<string, Record<Pagina, Componente>> = {
     construccion: PlanoConstruccion,
     contacto: PlanoContacto,
     privacidad: PlanoPrivacidad,
+    trabaja: PlanoTrabaja,
   },
   panoramica: {
     inicio: PanoInicio,
@@ -40,6 +43,7 @@ export const paginasDe: Record<string, Record<Pagina, Componente>> = {
     construccion: PanoConstruccion,
     contacto: PanoContacto,
     privacidad: PanoPrivacidad,
+    trabaja: PanoTrabaja,
   },
 };
 

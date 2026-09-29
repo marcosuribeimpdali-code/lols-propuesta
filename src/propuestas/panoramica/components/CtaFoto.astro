@@ -1,7 +1,6 @@
 ---
 // Llamado a contacto sobre foto (como el "¡Construyamos tu sueño, juntos!" de la referencia).
 import { Image } from 'astro:assets';
-import { empresa } from '../../../data/empresa';
 import { r } from '../config';
 import { diapositivas } from '../../../data/portada';
 
@@ -12,10 +11,9 @@ const fondo = diapositivas[0];
   <div class="pn-cta__velo" aria-hidden="true"></div>
   <div class="wrap pn-cta__in">
     <h2 id="pn-cta-t">Conversemos su próximo proyecto</h2>
-    <p>{empresa.razonSocial} · {empresa.direccion.valor}</p>
+    <p>Cuéntenos qué necesita en 3 pasos y lo contactamos.</p>
     <div class="pn-cta__acciones">
-      <a class="btn btn--lima" href={r('contacto')}>Contáctenos <span aria-hidden="true">→</span></a>
-      <a class="btn btn--linea-clara" href={empresa.telefonoHref}>{empresa.telefono.valor}</a>
+      <a class="btn btn--lima" href={r('contacto')}>Cuéntenos su proyecto <span aria-hidden="true">→</span></a>
     </div>
   </div>
   {fondo.referencial && <p class="cubo__ref">Imagen referencial{fondo.credito && ` · ${fondo.credito}`}</p>}

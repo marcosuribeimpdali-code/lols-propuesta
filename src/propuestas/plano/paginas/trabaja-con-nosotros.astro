@@ -1,0 +1,23 @@
+---
+import Base from '../Base.astro';
+import { r } from '../config';
+import PageHero from '../components/PageHero.astro';
+import FormPostulacion from '../../comun/FormPostulacion.astro';
+import Pendiente from '../../comun/Pendiente.astro';
+---
+<Base title="Trabaja con nosotros" description="Envíe su CV a LOLS Ingeniería.">
+  <PageHero titulo="Trabaja con nosotros" seccion="Postulaciones">
+    <p>¿Quiere ser parte del equipo de LOLS Ingeniería? Envíenos sus antecedentes.</p>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap contacto-grid">
+      <div>
+        <h2 class="visually-hidden">Ofertas vigentes</h2>
+        <Pendiente texto="cargos abiertos, si se quieren publicar (cargo, lugar, requisitos)" bloque />
+        <p style="margin-top: 20px;">¿Busca cotizar una obra? Vaya a <a href={r('contacto')}>Cuéntenos su proyecto</a>.</p>
+      </div>
+      <FormPostulacion privacidadHref={r('privacidad')} />
+    </div>
+  </section>
+</Base>

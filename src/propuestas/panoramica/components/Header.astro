@@ -26,7 +26,10 @@ const current = (href: string, seccion?: string[]) =>
         <a href={empresa.telefonoHref}><span aria-hidden="true">☎</span> {empresa.telefono.valor}</a>
         <a href={`mailto:${empresa.correo.valor}`}><span aria-hidden="true">✉</span> {empresa.correo.valor}</a>
       </p>
-      <p class="pn-top__lema">{empresa.razonSocial}</p>
+      <p class="pn-top__der">
+        <a href={r('trabaja')}>Trabaja con nosotros</a>
+        <span class="pn-top__lema">{empresa.razonSocial}</span>
+      </p>
     </div>
   </div>
   <div class="pn-bar">

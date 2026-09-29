@@ -13,6 +13,7 @@ export const paginas = {
   construccion: 'proyectos-en-construccion/',
   contacto: 'contacto/',
   privacidad: 'politica-de-privacidad/',
+  trabaja: 'trabaja-con-nosotros/',
 } as const;
 
 export type Pagina = keyof typeof paginas;

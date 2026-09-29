@@ -16,6 +16,14 @@ import { diapositivas } from '../../../data/portada';
 const terminados = porEstado('terminado');
 const enConstruccion = porEstado('en-construccion');
 
+// "Cómo trabajamos": los mismos pasos que promete la página de contacto
+const proceso = [
+  { titulo: 'Cuéntenos su proyecto', texto: 'En 3 pasos: el servicio que necesita, los datos de la obra y cómo contactarlo.' },
+  { titulo: 'Visita o reunión', texto: 'Conversamos el proyecto en terreno, en oficina o por videollamada.' },
+  { titulo: 'Propuesta', texto: 'Le enviamos una propuesta técnica y económica con alcance y plazo.' },
+  { titulo: 'Ejecución y entrega', texto: 'Construimos, coordinamos cada etapa y entregamos la obra terminada.' },
+];
+
 // accesos directos bajo la portada (como las 4 tarjetas con foto de la referencia)
 const accesos = [
   { titulo: 'Servicios', bajada: 'Seis especialidades', href: r('servicios'), img: diapositivas[1].img, ref: diapositivas[1].credito },
@@ -48,6 +56,16 @@ const accesos = [
     </div>
   </section>
 
+  <section class="pn-respaldo" aria-labelledby="resp-t">
+    <div class="wrap pn-respaldo__in">
+      <h2 id="resp-t" class="pn-respaldo__t">Han confiado en nosotros</h2>
+      <ul class="pn-respaldo__logos" aria-label="Logos de mandantes (pendientes)">
+        {Array.from({ length: 6 }, () => <li class="pn-respaldo__logo" aria-hidden="true">Logo</li>)}
+      </ul>
+      <p class="pn-respaldo__pend"><Pendiente texto="logos de mandantes (con su autorización) y certificaciones o registros vigentes, si los hay" /></p>
+    </div>
+  </section>
+
   <section class="pn-sec" aria-labelledby="serv-t">
     <div class="wrap">
       <TituloSeccion antetitulo="Lo que hacemos" titulo="Nuestros servicios" id="serv-t">
@@ -66,27 +84,23 @@ const accesos = [
     </div>
   </section>
 
-  <section class="pn-directrices" aria-labelledby="dir-t">
+  <section class="pn-directrices pn-proceso" aria-labelledby="proc-t">
     <div class="wrap">
-      <TituloSeccion antetitulo={empresa.nombreCorto} titulo="Nuestras directrices" id="dir-t" claro />
-      <ol class="pn-directrices__grid">
-        <li>
-          <span class="pn-directrices__n">01</span>
-          <h3>Experiencia</h3>
-          <p>{empresa.experiencia.valor}</p>
-          <Revisar nota={empresa.experiencia.revisar} />
-        </li>
-        <li>
-          <span class="pn-directrices__n">02</span>
-          <h3>Seguridad</h3>
-          <p>{empresa.principios[1]}</p>
-        </li>
-        <li>
-          <span class="pn-directrices__n">03</span>
-          <h3>Calidad</h3>
-          <p>{empresa.principios[0]}</p>
-        </li>
+      <TituloSeccion antetitulo="Cómo trabajamos" titulo="De la idea a la entrega" id="proc-t" claro>
+        <p><Revisar nota="pasos del proceso a confirmar con la jefatura" /></p>
+      </TituloSeccion>
+      <ol class="pn-directrices__grid pn-proceso__grid">
+        {proceso.map((p, i) => (
+          <li>
+            <span class="pn-directrices__n">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{p.titulo}</h3>
+            <p>{p.texto}</p>
+          </li>
+        ))}
       </ol>
+      <div class="pn-centro">
+        <a class="btn btn--lima" href={r('contacto')}>Cuéntenos su proyecto <span aria-hidden="true">→</span></a>
+      </div>
     </div>
   </section>
 
