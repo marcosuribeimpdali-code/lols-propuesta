@@ -96,21 +96,26 @@ const total = caras.length;
     const fundir = (cara: HTMLElement, desde: number, hasta: number) =>
       cara.animate([{ opacity: desde }, { opacity: hasta }], { duration: 450, fill: 'forwards' });
 
-    const ir = (destino: number, dir = destino > actual ? 1 : -1) => {
+    const fotoDe = (cara: HTMLElement) => cara.querySelector<HTMLImageElement>('.cubo__img');
+
+    const ir = async (destino: number, dir = destino > actual ? 1 : -1) => {
       destino = (destino + caras.length) % caras.length;
       if (ocupado || destino === actual) return;
       ocupado = true;
       const sale = caras[actual];
       const entra = caras[destino];
-      entra.classList.add('is-entrando');
+      // la foto que entra, ya decodificada: si no, se ve un instante en negro, "como cargando"
+      await fotoDe(entra)?.decode().catch(() => {});
+      // la cara que entra queda activa AL EMPEZAR el giro: el zoom de la foto y la entrada de los
+      // textos (animaciones CSS de .is-activa) corren mientras gira. Si se activara al terminar, los
+      // textos se esconden y vuelven a aparecer y la foto salta de tamaño.
+      entra.classList.add('is-activa');
       const a1 = reducido ? fundir(sale, 1, 0) : girar(sale, 0, -90 * dir);
       const a2 = reducido ? fundir(entra, 0, 1) : girar(entra, 90 * dir, 0);
       a2.finished.then(() => {
         sale.classList.remove('is-activa');
         sale.inert = true;
         a1.cancel();
-        entra.classList.remove('is-entrando');
-        entra.classList.add('is-activa');
         entra.inert = false;
         a2.cancel();
         actual = destino;
@@ -174,5 +179,10 @@ const total = caras.length;
 
     mostrarPausa();
     programar();
+
+    // con la página ya cargada, se preparan de antemano las fotos de las otras caras
+    const precargar = () => caras.slice(1).forEach((c) => fotoDe(c)?.decode().catch(() => {}));
+    if ('requestIdleCallback' in window) requestIdleCallback(precargar, { timeout: 3000 });
+    else setTimeout(precargar, 1500);
   }
 </script>

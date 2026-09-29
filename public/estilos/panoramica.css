@@ -493,8 +493,8 @@ main:focus {
   backface-visibility: hidden;
   transform-style: flat;
 }
-.cubo__cara.is-activa,
-.cubo__cara.is-entrando {
+/* durante el giro, las dos caras (la que sale y la que entra) tienen .is-activa */
+.cubo__cara.is-activa {
   visibility: visible;
 }
 .cubo__img {
