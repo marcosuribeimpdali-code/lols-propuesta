@@ -1611,3 +1611,11 @@ html:not(.js) .form__siguiente {
 .paso__t {
   margin-bottom: 18px;
 }
+
+/* error de un campo (por ejemplo, un archivo que pesa demasiado) */
+.campo__error {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #b42318;
+}

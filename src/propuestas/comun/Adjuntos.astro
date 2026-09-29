@@ -1,0 +1,125 @@
+---
+// Campo para adjuntar archivos con límites de tamaño y cantidad (src/data/adjuntos.ts).
+// - Avisa al tiro si un archivo o el total se pasa, y no deja avanzar ni enviar hasta corregirlo.
+// - Las fotos JPEG se achican en el navegador (lado mayor 2000 px) antes de enviarse: una foto
+//   de celular baja de 3–5 MB a ~0,5 MB sin que se note.
+// La ayuda (qué se acepta y cuánto) va en el slot.
+import type { LimitesAdjuntos } from '../../data/adjuntos';
+
+interface Props {
+  id: string;
+  name: string;
+  label: string;
+  limites: LimitesAdjuntos;
+  opcional?: boolean;
+}
+const { id, name, label, limites, opcional = false } = Astro.props;
+---
+<div
+  class="campo"
+  data-adjuntos-campo
+  data-max-archivo={limites.maxArchivo}
+  data-max-archivos={limites.maxArchivos}
+  data-max-total={limites.maxTotal}
+  data-achicar={limites.achicarFotos ? '1' : undefined}
+>
+  <label for={id}>{label} {opcional && <span class="campo__op">(opcional)</span>}</label>
+  <input
+    id={id}
+    class="adjuntos"
+    name={name}
+    type="file"
+    {...(limites.maxArchivos > 1 ? { multiple: true } : {})}
+    accept={limites.tipos}
+    required={!opcional}
+    aria-describedby={`${id}-ayuda ${id}-error`}
+  />
+  <p id={`${id}-ayuda`} class="campo__ayuda"><slot /></p>
+  <p id={`${id}-error`} class="campo__error" role="alert" hidden></p>
+  <ul class="adjuntos__lista" data-adjuntos-lista aria-live="polite"></ul>
+</div>
+
+<script>
+  const MB = 1024 * 1024;
+  const fmt = (b: number) => `${(b / MB).toFixed(1).replace('.', ',')} MB`;
+
+  // foto JPEG → lado mayor 2000 px, calidad 82 %; si no conviene, se deja la original
+  const achicar = async (f: File): Promise<{ file: File; antes: number | null }> => {
+    if (f.type !== 'image/jpeg') return { file: f, antes: null };
+    try {
+      const bmp = await createImageBitmap(f, { imageOrientation: 'from-image' });
+      const escala = Math.min(1, 2000 / Math.max(bmp.width, bmp.height));
+      if (escala === 1 && f.size < 1.5 * MB) return { file: f, antes: null };
+      const lienzo = document.createElement('canvas');
+      lienzo.width = Math.round(bmp.width * escala);
+      lienzo.height = Math.round(bmp.height * escala);
+      lienzo.getContext('2d')!.drawImage(bmp, 0, 0, lienzo.width, lienzo.height);
+      const blob = await new Promise<Blob | null>((r) => lienzo.toBlob(r, 'image/jpeg', 0.82));
+      if (!blob || blob.size >= f.size) return { file: f, antes: null };
+      const nombre = f.name.replace(/\.jpe?g$/i, '') + '.jpg';
+      return { file: new File([blob], nombre, { type: 'image/jpeg', lastModified: f.lastModified }), antes: f.size };
+    } catch {
+      return { file: f, antes: null };
+    }
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-adjuntos-campo]').forEach((campo) => {
+    const input = campo.querySelector<HTMLInputElement>('input[type="file"]')!;
+    const lista = campo.querySelector<HTMLUListElement>('[data-adjuntos-lista]')!;
+    const error = campo.querySelector<HTMLElement>('.campo__error')!;
+    const maxArchivo = Number(campo.dataset.maxArchivo);
+    const maxArchivos = Number(campo.dataset.maxArchivos);
+    const maxTotal = Number(campo.dataset.maxTotal);
+    const conAchicar = campo.dataset.achicar === '1';
+
+    const avisar = (msg: string) => {
+      input.setCustomValidity(msg);
+      error.textContent = msg;
+      error.hidden = !msg;
+    };
+
+    const validar = (files: File[]) => {
+      const total = files.reduce((s, f) => s + f.size, 0);
+      const grande = files.find((f) => f.size > maxArchivo);
+      if (files.length > maxArchivos) {
+        avisar(`Puede adjuntar hasta ${maxArchivos} archivo${maxArchivos > 1 ? 's' : ''}.`);
+      } else if (grande) {
+        avisar(`"${grande.name}" pesa ${fmt(grande.size)}: el máximo por archivo es ${fmt(maxArchivo)}.`);
+      } else if (total > maxTotal) {
+        avisar(`Los archivos suman ${fmt(total)}: el máximo en total es ${fmt(maxTotal)}.`);
+      } else {
+        avisar('');
+      }
+    };
+
+    const mostrar = (items: { file: File; antes: number | null }[]) =>
+      lista.replaceChildren(
+        ...items.map(({ file, antes }) => {
+          const li = document.createElement('li');
+          li.textContent = `${file.name} · ${fmt(file.size)}${antes ? ` (achicada desde ${fmt(antes)})` : ''}`;
+          return li;
+        }),
+      );
+
+    input.addEventListener('change', async () => {
+      const originales = [...(input.files ?? [])];
+      if (!originales.length) {
+        mostrar([]);
+        avisar('');
+        return;
+      }
+      // mientras se achican las fotos, no se puede avanzar ni enviar
+      input.setCustomValidity('Espere un momento: estamos preparando sus archivos.');
+      lista.replaceChildren(Object.assign(document.createElement('li'), { textContent: 'Preparando archivos…' }));
+      const items = [];
+      for (const f of originales) items.push(conAchicar ? await achicar(f) : { file: f, antes: null });
+      if (items.some((i) => i.antes)) {
+        const dt = new DataTransfer();
+        items.forEach((i) => dt.items.add(i.file));
+        input.files = dt.files;
+      }
+      mostrar(items);
+      validar(items.map((i) => i.file));
+    });
+  });
+</script>

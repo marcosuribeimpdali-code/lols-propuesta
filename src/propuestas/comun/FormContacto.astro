@@ -6,6 +6,9 @@
 // Propuesta: NO envía ni guarda nada todavía (tampoco los archivos adjuntos).
 import Pendiente from './Pendiente.astro';
 import IconoServicio from './IconoServicio.astro';
+import Revisar from './Revisar.astro';
+import Adjuntos from './Adjuntos.astro';
+import { adjuntosProyecto as lim, mb } from '../../data/adjuntos';
 import { empresa } from '../../data/empresa';
 import { servicios } from '../../data/servicios';
 
@@ -89,11 +92,18 @@ const plazos = ['Lo antes posible', 'En 1 a 3 meses', 'En 3 a 6 meses', 'En más
       <textarea id="f-mensaje" name="mensaje" rows="5" required></textarea>
     </div>
 
+    <Adjuntos id="f-archivos" name="archivos" label="Planos o fotos" limites={lim} opcional>
+      Hasta {lim.maxArchivos} archivos de {mb(lim.maxArchivo)} cada uno ({mb(lim.maxTotal)} en total): PDF, fotos,
+      DWG o ZIP. Las fotos se achican solas antes de enviarse.{' '}
+      <Revisar nota="el límite depende de cómo se reciban las solicitudes" />
+    </Adjuntos>
+
     <div class="campo">
-      <label for="f-archivos">Planos o fotos <span class="campo__op">(opcional)</span></label>
-      <input id="f-archivos" class="adjuntos" name="archivos" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.dwg,.zip" aria-describedby="f-archivos-ayuda" />
-      <p id="f-archivos-ayuda" class="campo__ayuda">PDF, imágenes, DWG o ZIP. <Pendiente texto="tamaño máximo que aceptará el servidor" /></p>
-      <ul class="adjuntos__lista" data-adjuntos aria-live="polite"></ul>
+      <label for="f-enlace">Enlace a planos o fotos <span class="campo__op">(opcional)</span></label>
+      <input id="f-enlace" name="enlace" type="url" inputmode="url" aria-describedby="f-enlace-ayuda" />
+      <p id="f-enlace-ayuda" class="campo__ayuda">
+        ¿Pesan más de {mb(lim.maxTotal)}? Súbalos a Google Drive, WeTransfer o Dropbox y pegue aquí el enlace.
+      </p>
     </div>
   </fieldset>
 
@@ -193,20 +203,6 @@ const plazos = ['Lo antes posible', 'En 1 a 3 meses', 'En 3 a 6 meses', 'En más
         'Gracias. Esto es una propuesta: el formulario aún no envía la solicitud. En el sitio final, aquí se confirmaría la recepción y los próximos pasos.';
       estado.hidden = false;
       estado.focus();
-    });
-
-    // nombres de los archivos elegidos
-    const archivos = form.querySelector<HTMLInputElement>('#f-archivos');
-    const lista = form.querySelector<HTMLUListElement>('[data-adjuntos]');
-    archivos?.addEventListener('change', () => {
-      if (!lista) return;
-      lista.replaceChildren(
-        ...[...(archivos.files ?? [])].map((f) => {
-          const li = document.createElement('li');
-          li.textContent = `${f.name} · ${(f.size / 1024 / 1024).toFixed(1).replace('.', ',')} MB`;
-          return li;
-        }),
-      );
     });
   }
 </script>

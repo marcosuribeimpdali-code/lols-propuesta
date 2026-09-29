@@ -3,7 +3,9 @@
 // dato personal con otra finalidad (selección de personal) y otro plazo de guardado: la Ley
 // 21.719 pide un consentimiento propio. Propuesta: NO envía ni guarda nada todavía.
 import Pendiente from './Pendiente.astro';
+import Adjuntos from './Adjuntos.astro';
 import { empresa } from '../../data/empresa';
+import { adjuntoCv, mb } from '../../data/adjuntos';
 
 interface Props {
   privacidadHref: string;
@@ -69,11 +71,9 @@ const experiencia = ['Menos de 1 año', '1 a 3 años', '3 a 5 años', '5 a 10 a�
     <input id="cv-cargo" name="cargo" type="text" required aria-describedby="cv-cargo-ayuda" />
     <p id="cv-cargo-ayuda" class="campo__ayuda">Por ejemplo: maestro, eléctrico, jefe de obra, prevencionista.</p>
   </div>
-  <div class="campo">
-    <label for="cv-archivo">Su CV</label>
-    <input id="cv-archivo" class="adjuntos" name="cv" type="file" accept=".pdf,.doc,.docx" required aria-describedby="cv-archivo-ayuda" />
-    <p id="cv-archivo-ayuda" class="campo__ayuda">PDF o Word. <Pendiente texto="tamaño máximo que aceptará el servidor" /></p>
-  </div>
+  <Adjuntos id="cv-archivo" name="cv" label="Su CV" limites={adjuntoCv}>
+    PDF o Word, hasta {mb(adjuntoCv.maxArchivo)}.
+  </Adjuntos>
   <div class="campo">
     <label for="cv-mensaje">Algo más que quiera contarnos <span class="campo__op">(opcional)</span></label>
     <textarea id="cv-mensaje" name="mensaje" rows="4"></textarea>
