@@ -959,6 +959,7 @@ main:focus {
   z-index: 4;
   border-top: 1px solid rgb(255 255 255 / 0.18);
   background: rgb(6 18 9 / 0.55);
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
 .fundido__controles {
@@ -1132,22 +1133,9 @@ main:focus {
 }
 
 /* ---------- portada: obra anotada (opción G) ---------- */
-/* la cámara se mueve animando estas tres variables (registradas para que se puedan animar) */
-@property --obra-tx {
-  syntax: '<length>';
-  inherits: false;
-  initial-value: 0px;
-}
-@property --obra-ty {
-  syntax: '<length>';
-  inherits: false;
-  initial-value: 0px;
-}
-@property --obra-s {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 1;
-}
+/* la cámara se mueve con transform: así la anima la tarjeta de video del equipo y no el
+   procesador (animar variables CSS obligaba a recalcular estilos en cada cuadro y en los
+   Android de gama media se veía trabado) */
 .obra-hero {
   position: relative;
   height: max(600px, min(100svh - 36px, 960px));
@@ -1167,13 +1155,11 @@ main:focus {
   width: 100%;
   height: 100%;
   transform-origin: 0 0;
-  transform: translate(var(--obra-tx), var(--obra-ty)) scale(var(--obra-s));
-  transition:
-    --obra-tx 2.6s cubic-bezier(0.55, 0, 0.2, 1),
-    --obra-ty 2.6s cubic-bezier(0.55, 0, 0.2, 1),
-    --obra-s 2.6s cubic-bezier(0.55, 0, 0.2, 1);
+  will-change: transform;
+  transition: transform 2.6s cubic-bezier(0.55, 0, 0.2, 1);
 }
-.obra-hero.sin-viaje .obra-hero__cam {
+.obra-hero.sin-viaje .obra-hero__cam,
+.obra-hero.sin-viaje .obra-hero__pin {
   transition: none;
 }
 .obra-hero__img {
@@ -1199,8 +1185,9 @@ main:focus {
   top: calc(var(--py) * 1%);
   width: 0;
   height: 0;
-  transform: scale(calc(1 / var(--obra-s)));
-  transition: opacity 0.6s;
+  transition:
+    opacity 0.6s,
+    scale 2.6s cubic-bezier(0.55, 0, 0.2, 1);
 }
 .obra-hero:not(.cargada) .obra-hero__pin {
   opacity: 0;
@@ -1420,11 +1407,16 @@ main:focus {
 .obra-hero__ref {
   bottom: 86px;
 }
-@media (prefers-reduced-motion: no-preference) {
-  /* el dron "flota": un movimiento lento y leve, siempre */
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (min-width: 1025px) {
+  /* el dron "flota": un movimiento lento y leve, siempre (solo en computador: en celulares y
+     tablets la cámara ya se mueve y es trabajo de más para el equipo) */
   .obra-hero__deriva {
     animation: obra-deriva 11s ease-in-out infinite alternate;
   }
+}
+.obra-hero.fuera .obra-hero__deriva,
+.obra-hero.fuera .obra-hero__punto::after {
+  animation-play-state: paused;
 }
 @keyframes obra-deriva {
   from {
@@ -1435,7 +1427,8 @@ main:focus {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .obra-hero__cam {
+  .obra-hero__cam,
+  .obra-hero__pin {
     transition: none;
   }
   .obra-hero__pin.on .obra-hero__punto::after {
@@ -1445,6 +1438,25 @@ main:focus {
 @media (max-width: 960px) {
   .obra-hero__texto {
     padding-top: 90px;
+  }
+}
+@media (min-width: 761px) and (max-width: 960px) {
+  /* tablet vertical: las cinco paradas y la pausa en una sola fila (la pausa, solo con su ícono) */
+  .obra-hero__paradas button {
+    padding: 0 12px;
+  }
+  .obra-hero__pausa-txt {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .obra-hero__pausa {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
   }
 }
 @media (max-width: 760px) {
@@ -3254,6 +3266,18 @@ main:focus {
     padding-block: 12px;
   }
 }
+@media (min-width: 761px) and (max-width: 960px) {
+  /* tablet vertical (iPad): la foto y las etapas lado a lado; a todo el ancho la foto de 2018
+     quedaba enorme y borrosa */
+  .cmp {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 28px;
+  }
+  .cmp__marco {
+    max-height: none;
+    margin-inline: 0;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .cmp__capa--previa,
   .cmp__etapa {
@@ -4180,6 +4204,11 @@ html:not(.js) .form__siguiente {
   body.pn {
     padding-bottom: calc(68px + env(safe-area-inset-bottom));
   }
+  /* mientras se escribe en un formulario la barra se esconde: en algunos Android queda flotando
+     sobre el teclado y tapa el campo */
+  body.pn:has(:is(input, textarea, select):focus) .pn-barra-movil {
+    display: none;
+  }
 }
 
 /* grupo de opciones con su pregunta (fieldset + legend) */
@@ -4589,4 +4618,34 @@ fieldset.campo--grupo > legend {
   line-height: 1.02;
   letter-spacing: -0.005em;
   text-transform: none;
+}
+
+/* ---------- pantallas táctiles (celular, tablet): zonas de toque más grandes ----------
+   Enlaces de texto chicos (pie, "Ver en el mapa", "Todas las obras") y los puntos de la portada
+   crecen hacia afuera sin mover nada: el relleno agranda lo que se puede tocar y el margen
+   negativo lo compensa. */
+@media (pointer: coarse) {
+  .pn-footer ul {
+    gap: 2px;
+  }
+  .pn-footer li > a {
+    display: inline-block;
+    padding-block: 7px;
+  }
+  .pn-link {
+    padding-block: 9px;
+    margin-block: -9px;
+  }
+  .pn-link--wa {
+    margin-top: 1px;
+  }
+  .pn-obra-nav__todas {
+    padding-block: 12px;
+  }
+  .obra-hero__punto::before {
+    content: '';
+    position: absolute;
+    inset: -12px;
+    border-radius: 50%;
+  }
 }

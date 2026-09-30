@@ -193,20 +193,52 @@ const origen = (e: Foto) => (e.ejemplo ? 'Foto de ejemplo' : 'Foto real · lols.
     );
     obs.observe(marco);
 
-    // arrastre con mouse o dedo; en el celular el scroll vertical sigue funcionando (touch-action)
+    // arrastre con mouse o dedo; en el celular el scroll vertical sigue funcionando (touch-action).
+    // Con el dedo la línea recién se mueve al arrastrar de lado o al tocar sin mover: si no, al
+    // pasar el dedo por la foto para bajar la página la línea saltaba a donde se tocó
     const desde = (e: PointerEvent) => {
       const r = marco.getBoundingClientRect();
       return ((e.clientX - r.left) / r.width) * 100;
     };
+    let movio = false;
+    let x0 = 0;
+    let y0 = 0;
     marco.addEventListener('pointerdown', (e) => {
       e.preventDefault();
-      soltar();
       arrastrando = true;
+      movio = false;
+      x0 = e.clientX;
+      y0 = e.clientY;
       marco.setPointerCapture(e.pointerId);
+      if (e.pointerType === 'mouse') {
+        soltar();
+        poner(desde(e));
+      }
+    });
+    marco.addEventListener('pointermove', (e) => {
+      if (!arrastrando) return;
+      if (!movio && e.pointerType !== 'mouse') {
+        // con el dedo, se decide recién cuando se movió un poco: de lado es arrastre, vertical es
+        // bajar la página
+        const dx = Math.abs(e.clientX - x0);
+        const dy = Math.abs(e.clientY - y0);
+        if (dx < 6 && dy < 6) return;
+        if (dy > dx) {
+          arrastrando = false;
+          return;
+        }
+      }
+      if (!movio) soltar();
+      movio = true;
       poner(desde(e));
     });
-    marco.addEventListener('pointermove', (e) => arrastrando && poner(desde(e)));
-    marco.addEventListener('pointerup', () => (arrastrando = false));
+    marco.addEventListener('pointerup', (e) => {
+      if (arrastrando && !movio && e.pointerType !== 'mouse') {
+        soltar();
+        animar(desde(e), 500);
+      }
+      arrastrando = false;
+    });
     marco.addEventListener('pointercancel', () => (arrastrando = false));
     manija.addEventListener('keydown', (e) => {
       const k = e.key;

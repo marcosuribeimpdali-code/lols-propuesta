@@ -5,6 +5,9 @@
 // Accesibilidad: botón de pausa (WCAG 2.2.2), paradas con botones, se detiene con el mouse sobre
 // el texto, las paradas o una etiqueta y al enfocar un control; con "reducir movimiento" no avanza
 // sola y la cámara salta sin viaje. Datos y puntos en `portadaObra` de src/data/portada.ts.
+// Rendimiento (30-09-2026, se veía trabada en Android): la cámara se mueve con `transform` y los
+// puntos con `scale`, que anima el compositor sin pasar por el procesador; la foto del celular es
+// de 2000 px y no de 3200; y fuera de la pantalla se detiene todo.
 import { Image } from 'astro:assets';
 import { portadaObra } from '../../../data/portada';
 import { empresa } from '../../../data/empresa';
@@ -22,8 +25,8 @@ const n = (i: number) => String(i + 1).padStart(2, '0');
           class="obra-hero__img"
           src={img}
           alt={alt}
-          widths={[1280, 1920, 2560, 3200]}
-          sizes="(max-width: 760px) 300vw, 200vw"
+          widths={[1000, 1600, 2000, 2560, 3200]}
+          sizes="(max-width: 760px) 160vw, 200vw"
           quality={72}
           loading="eager"
           fetchpriority="high"
@@ -92,6 +95,7 @@ const n = (i: number) => String(i + 1).padStart(2, '0');
     let actual = -1; // -1 = vista general de la obra
     let pausadoPorUsuario = reducido;
     let enPausaTemporal = false;
+    let fuera = false; // la portada no está a la vista (se bajó por la página)
     let reloj: number | undefined;
     let llegada: number | undefined;
     let ancho = 0;
@@ -113,8 +117,9 @@ const n = (i: number) => String(i + 1).padStart(2, '0');
       cam.style.height = `${ch}px`;
     };
 
-    // encuadre: el punto queda a la derecha del texto (en el celular, arriba del texto), sin
-    // mostrar nunca el borde de la foto
+    // encuadre: el punto queda a la derecha del texto (en el celular, arriba del texto; en la tablet
+    // vertical, arriba a la derecha, porque el texto ocupa el centro), sin mostrar nunca el borde
+    // de la foto
     const encuadrar = (i: number) => {
       let s = 1;
       let tx = (ancho - cw) / 2;
@@ -122,17 +127,18 @@ const n = (i: number) => String(i + 1).padStart(2, '0');
       if (i >= 0) {
         const p = pins[i];
         const angosto = ancho < 760;
+        const tabletVertical = !angosto && ancho < 1100 && alto > ancho * 0.85;
         s = Number(p.dataset.zoom) * (angosto ? 0.8 : 1);
         const px = (parseFloat(p.style.getPropertyValue('--px')) / 100) * cw;
         const py = (parseFloat(p.style.getPropertyValue('--py')) / 100) * ch;
-        tx = (angosto ? ancho * 0.36 : ancho * 0.68) - s * px;
-        ty = (angosto ? alto * 0.3 : alto * 0.46) - s * py;
+        tx = (angosto ? ancho * 0.36 : tabletVertical ? ancho * 0.62 : ancho * 0.68) - s * px;
+        ty = (angosto ? alto * 0.3 : tabletVertical ? alto * 0.2 : alto * 0.46) - s * py;
         tx = Math.min(0, Math.max(ancho - s * cw, tx));
         ty = Math.min(0, Math.max(alto - s * ch, ty));
       }
-      cam.style.setProperty('--obra-tx', `${tx}px`);
-      cam.style.setProperty('--obra-ty', `${ty}px`);
-      cam.style.setProperty('--obra-s', String(s));
+      cam.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${s})`;
+      const contra = String(1 / s);
+      pins.forEach((p) => (p.style.scale = contra));
     };
 
     const sinViaje = (f: () => void) => {
@@ -144,7 +150,7 @@ const n = (i: number) => String(i + 1).padStart(2, '0');
 
     const programar = (ms: number) => {
       clearTimeout(reloj);
-      if (pausadoPorUsuario || enPausaTemporal) return;
+      if (pausadoPorUsuario || enPausaTemporal || fuera) return;
       reloj = window.setTimeout(() => ir(actual + 1 >= pins.length ? -1 : actual + 1), ms);
     };
 
@@ -187,15 +193,29 @@ const n = (i: number) => String(i + 1).padStart(2, '0');
     // pantalla y, si pausara con el mouse en cualquier parte, casi nunca avanzaría
     const zonas = [...raiz.querySelectorAll<HTMLElement>('.obra-hero__caja, .obra-hero__pie, .obra-hero__tag')];
     const sobreZona = () => zonas.some((z) => z.matches(':hover'));
-    zonas.forEach((z) => {
-      z.addEventListener('mouseenter', () => temporal(true));
-      z.addEventListener('mouseleave', () => temporal(raiz.contains(document.activeElement) && document.activeElement !== document.body));
+    const conTeclado = () => raiz.contains(document.activeElement) && !!document.activeElement?.matches(':focus-visible');
+    if (matchMedia('(hover: hover)').matches) {
+      zonas.forEach((z) => {
+        z.addEventListener('mouseenter', () => temporal(true));
+        z.addEventListener('mouseleave', () => temporal(conTeclado()));
+      });
+    }
+    // el foco pausa solo si viene del teclado: al tocar o hacer clic en una parada, Android y el
+    // computador dejan el botón enfocado y el recorrido quedaba detenido para siempre
+    raiz.addEventListener('focusin', (e) => {
+      if ((e.target as Element).matches(':focus-visible')) temporal(true);
     });
-    raiz.addEventListener('focusin', () => temporal(true));
     raiz.addEventListener('focusout', (e) => {
       if (!raiz.contains(e.relatedTarget as Node)) temporal(sobreZona());
     });
     document.addEventListener('visibilitychange', () => temporal(document.hidden));
+    new IntersectionObserver(([e]) => {
+      fuera = !e.isIntersecting;
+      raiz.classList.toggle('fuera', fuera);
+      if (fuera) clearTimeout(reloj);
+      // al volver a la vista sigue el recorrido (si ya había partido: antes espera la foto)
+      else if (partio) programar(1500);
+    }).observe(raiz);
 
     let tamano: number | undefined;
     addEventListener('resize', () => {
