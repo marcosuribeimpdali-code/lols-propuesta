@@ -1,12 +1,14 @@
 ---
 // Ficha de una obra: /proyectos-terminados/<slug>/ (el slug de su subpágina en el sitio de 2018) y
 // /proyectos-en-construccion/<slug>/. La arma la ruta única del sitio, una por cada obra con `slug`.
-// Arriba, el recorrido con scroll (RecorridoObra): Antes → Durante → Después en las finalizadas, y
-// el avance hasta el render ("Así quedará") en las que están en ejecución.
+// Arriba, en las finalizadas, el comparador de arrastre (ComparaObra): antes o durante contra el
+// después. En las que están en ejecución, el recorrido con scroll (RecorridoObra) con el avance hasta
+// el render ("Así quedará").
 import { Image } from 'astro:assets';
 import Base from '../Base.astro';
 import { r, rObra } from '../config';
 import TituloSeccion from '../components/TituloSeccion.astro';
+import ComparaObra from '../components/ComparaObra.astro';
 import RecorridoObra from '../components/RecorridoObra.astro';
 import VisorObra from '../components/VisorObra.astro';
 import CtaFoto from '../components/CtaFoto.astro';
@@ -73,7 +75,11 @@ const hayEjemplos = p.etapas.some((e) => e.ejemplo);
       </div>
       {resumen && <p class="pn-obra-top__resumen">{resumen}</p>}
 
-      <RecorridoObra etapas={p.etapas} titulo={terminada ? `Paso a paso de ${titulo}` : `Avance de ${titulo}`} />
+      {terminada && p.etapas.length > 1 ? (
+        <ComparaObra etapas={p.etapas} titulo={`Antes y después de ${titulo}`} />
+      ) : (
+        <RecorridoObra etapas={p.etapas} titulo={terminada ? `Paso a paso de ${titulo}` : `Avance de ${titulo}`} />
+      )}
 
       <dl class="pn-obra-ficha">
         {datos.map(([k, v]) => (
