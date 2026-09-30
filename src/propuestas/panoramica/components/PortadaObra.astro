@@ -1,0 +1,228 @@
+---
+// Portada "obra anotada" (opción G de la comparación, 30-09-2026): la cámara recorre una foto
+// aérea de una obra, como un dron, y se detiene en lo que hace LOLS; en cada punto aparece una
+// etiqueta que lleva a su página. Se mueve como un video, pero además explica la obra.
+// Accesibilidad: botón de pausa (WCAG 2.2.2), paradas con botones, se detiene con el mouse sobre
+// el texto, las paradas o una etiqueta y al enfocar un control; con "reducir movimiento" no avanza
+// sola y la cámara salta sin viaje. Datos y puntos en `portadaObra` de src/data/portada.ts.
+import { Image } from 'astro:assets';
+import { portadaObra } from '../../../data/portada';
+import { empresa } from '../../../data/empresa';
+import { listaServicios } from '../../../data/servicios';
+import { r } from '../config';
+
+const { img, alt, credito, puntos } = portadaObra;
+const n = (i: number) => String(i + 1).padStart(2, '0');
+---
+<section class="obra-hero" aria-label="Portada: recorrido por una obra">
+  <div class="obra-hero__escena">
+    <div class="obra-hero__deriva">
+      <div class="obra-hero__cam" style={`--proporcion: ${img.width / img.height}`}>
+        <Image
+          class="obra-hero__img"
+          src={img}
+          alt={alt}
+          widths={[1280, 1920, 2560, 3200]}
+          sizes="(max-width: 760px) 300vw, 200vw"
+          quality={72}
+          loading="eager"
+          fetchpriority="high"
+        />
+        {puntos.map((p, i) => (
+          <div class="obra-hero__pin" style={`--px: ${p.x}; --py: ${p.y}`} data-zoom={p.zoom}>
+            <button type="button" class="obra-hero__punto" data-i={i} aria-label={`Ver ${n(i)} · ${p.titulo}`}></button>
+            <a class="obra-hero__tag" href={r(p.pagina, p.ancla)} tabindex="-1">
+              <b>{n(i)} · {p.titulo}</b>
+              <span>{p.texto} <span aria-hidden="true">→</span></span>
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+  <div class="obra-hero__velo" aria-hidden="true"></div>
+
+  <div class="wrap obra-hero__texto">
+    <div class="obra-hero__caja">
+      <p class="obra-hero__ante">{empresa.razonSocial} · {empresa.anios} años</p>
+      <h1 class="obra-hero__titulo">{empresa.lema}</h1>
+      <p class="obra-hero__bajada">{listaServicios}</p>
+      <div class="obra-hero__acciones">
+        <a class="btn btn--blanco" href={r('contacto')}>Cotizar proyecto <span aria-hidden="true">→</span></a>
+        <a class="btn btn--linea-clara" href={r('terminados')}>Ver obras</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="obra-hero__pie">
+    <div class="wrap obra-hero__controles">
+      <div class="obra-hero__paradas" role="group" aria-label="Recorrer la obra">
+        {puntos.map((p, i) => (
+          <button type="button" data-i={i} aria-pressed="false">
+            <span class="obra-hero__parada-n" aria-hidden="true">{n(i)}</span>
+            <span class="obra-hero__parada-nombre">{p.corto}</span>
+          </button>
+        ))}
+      </div>
+      <button class="obra-hero__pausa" type="button" aria-pressed="false">
+        <span class="obra-hero__pausa-icono" aria-hidden="true"></span>
+        <span class="obra-hero__pausa-txt">Pausar</span>
+      </button>
+    </div>
+  </div>
+  <p class="visually-hidden" aria-live="polite" data-anuncio></p>
+  {credito && <p class="cubo__ref obra-hero__ref">Imagen referencial · {credito}</p>}
+</section>
+
+<script>
+  const raiz = document.querySelector<HTMLElement>('.obra-hero');
+  if (raiz) {
+    const cam = raiz.querySelector<HTMLElement>('.obra-hero__cam')!;
+    const pins = [...raiz.querySelectorAll<HTMLElement>('.obra-hero__pin')];
+    const paradas = [...raiz.querySelectorAll<HTMLButtonElement>('.obra-hero__paradas button')];
+    const pausa = raiz.querySelector<HTMLButtonElement>('.obra-hero__pausa')!;
+    const pausaTxt = raiz.querySelector<HTMLElement>('.obra-hero__pausa-txt')!;
+    const anuncio = raiz.querySelector<HTMLElement>('[data-anuncio]')!;
+    const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const proporcion = Number(getComputedStyle(cam).getPropertyValue('--proporcion')) || 1.6;
+    const VIAJE = 2600; // lo que tarda la cámara en ir de un punto a otro (igual que en el CSS)
+    const ESPERA = 6200; // cuánto se queda en cada punto, contando el viaje
+    const GENERAL = 3200; // cuánto dura la vista general antes de partir
+
+    let actual = -1; // -1 = vista general de la obra
+    let pausadoPorUsuario = reducido;
+    let enPausaTemporal = false;
+    let reloj: number | undefined;
+    let llegada: number | undefined;
+    let ancho = 0;
+    let alto = 0;
+    let cw = 0;
+    let ch = 0;
+
+    // la foto cubre la portada completa, con su proporción (los puntos van en % de la foto)
+    const medir = () => {
+      ancho = raiz.clientWidth;
+      alto = raiz.clientHeight;
+      cw = ancho;
+      ch = ancho / proporcion;
+      if (ch < alto) {
+        ch = alto;
+        cw = alto * proporcion;
+      }
+      cam.style.width = `${cw}px`;
+      cam.style.height = `${ch}px`;
+    };
+
+    // encuadre: el punto queda a la derecha del texto (en el celular, arriba del texto), sin
+    // mostrar nunca el borde de la foto
+    const encuadrar = (i: number) => {
+      let s = 1;
+      let tx = (ancho - cw) / 2;
+      let ty = (alto - ch) / 2;
+      if (i >= 0) {
+        const p = pins[i];
+        const angosto = ancho < 760;
+        s = Number(p.dataset.zoom) * (angosto ? 0.8 : 1);
+        const px = (parseFloat(p.style.getPropertyValue('--px')) / 100) * cw;
+        const py = (parseFloat(p.style.getPropertyValue('--py')) / 100) * ch;
+        tx = (angosto ? ancho * 0.36 : ancho * 0.68) - s * px;
+        ty = (angosto ? alto * 0.3 : alto * 0.46) - s * py;
+        tx = Math.min(0, Math.max(ancho - s * cw, tx));
+        ty = Math.min(0, Math.max(alto - s * ch, ty));
+      }
+      cam.style.setProperty('--obra-tx', `${tx}px`);
+      cam.style.setProperty('--obra-ty', `${ty}px`);
+      cam.style.setProperty('--obra-s', String(s));
+    };
+
+    const sinViaje = (f: () => void) => {
+      raiz.classList.add('sin-viaje');
+      f();
+      void cam.offsetWidth;
+      raiz.classList.remove('sin-viaje');
+    };
+
+    const programar = (ms: number) => {
+      clearTimeout(reloj);
+      if (pausadoPorUsuario || enPausaTemporal) return;
+      reloj = window.setTimeout(() => ir(actual + 1 >= pins.length ? -1 : actual + 1), ms);
+    };
+
+    const ir = (i: number, anunciar = false) => {
+      actual = i;
+      raiz.classList.remove('llego');
+      pins.forEach((p, k) => {
+        p.classList.toggle('on', k === i);
+        p.querySelector('a')!.tabIndex = k === i ? 0 : -1;
+      });
+      paradas.forEach((b, k) => b.setAttribute('aria-pressed', String(k === i)));
+      if (reducido) sinViaje(() => encuadrar(i));
+      else encuadrar(i);
+      clearTimeout(llegada);
+      llegada = window.setTimeout(() => raiz.classList.add('llego'), reducido ? 0 : VIAJE - 300);
+      if (anunciar && i >= 0) anuncio.textContent = `${paradas[i].textContent?.trim()}`;
+      programar(i === -1 ? GENERAL : ESPERA);
+    };
+
+    const mostrarPausa = () => {
+      pausa.setAttribute('aria-pressed', String(pausadoPorUsuario));
+      pausaTxt.textContent = pausadoPorUsuario ? 'Reproducir' : 'Pausar';
+      raiz.classList.toggle('is-pausado', pausadoPorUsuario);
+    };
+
+    pins.forEach((p, k) => p.querySelector('button')!.addEventListener('click', () => ir(k, true)));
+    paradas.forEach((b, k) => b.addEventListener('click', () => ir(k, true)));
+    pausa.addEventListener('click', () => {
+      pausadoPorUsuario = !pausadoPorUsuario;
+      mostrarPausa();
+      programar(1200);
+    });
+
+    const temporal = (v: boolean) => {
+      enPausaTemporal = v;
+      if (v) clearTimeout(reloj);
+      else programar(2500);
+    };
+    // el mouse pausa solo sobre el texto, las paradas y las etiquetas: la portada ocupa toda la
+    // pantalla y, si pausara con el mouse en cualquier parte, casi nunca avanzaría
+    const zonas = [...raiz.querySelectorAll<HTMLElement>('.obra-hero__caja, .obra-hero__pie, .obra-hero__tag')];
+    const sobreZona = () => zonas.some((z) => z.matches(':hover'));
+    zonas.forEach((z) => {
+      z.addEventListener('mouseenter', () => temporal(true));
+      z.addEventListener('mouseleave', () => temporal(raiz.contains(document.activeElement) && document.activeElement !== document.body));
+    });
+    raiz.addEventListener('focusin', () => temporal(true));
+    raiz.addEventListener('focusout', (e) => {
+      if (!raiz.contains(e.relatedTarget as Node)) temporal(sobreZona());
+    });
+    document.addEventListener('visibilitychange', () => temporal(document.hidden));
+
+    let tamano: number | undefined;
+    addEventListener('resize', () => {
+      clearTimeout(tamano);
+      tamano = window.setTimeout(() => {
+        medir();
+        sinViaje(() => encuadrar(actual));
+      }, 120);
+    });
+
+    medir();
+    sinViaje(() => encuadrar(-1));
+    mostrarPausa();
+    // el recorrido parte cuando la foto ya cargó (antes, los puntos quedarían sobre un fondo negro)
+    const foto = raiz.querySelector<HTMLImageElement>('.obra-hero__img')!;
+    let partio = false;
+    const partir = () => {
+      if (partio) return;
+      partio = true;
+      raiz.classList.add('cargada');
+      if (reducido) ir(0);
+      else programar(1600);
+    };
+    if (foto.complete && foto.naturalWidth) partir();
+    else {
+      foto.addEventListener('load', partir, { once: true });
+      window.setTimeout(partir, 5000);
+    }
+  }
+</script>

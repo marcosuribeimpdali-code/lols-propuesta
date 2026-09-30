@@ -13,13 +13,13 @@ const { proyecto: p, numero, nivel: H = 'h3' } = Astro.props;
 
 const n = String(numero).padStart(2, '0');
 // obras con ficha: toda la tarjeta lleva a ella (enlace "estirado" sobre la tarjeta)
-const href = p.slug ? rObra(p.slug) : null;
+const href = p.slug ? rObra(p.slug, p.estado) : null;
 // mismos rótulos que usaba el sitio de 2018 sobre cada obra
 const cinta = p.estado === 'terminado' ? 'Entregado' : 'Próxima entrega';
 const campos: [string, string | null][] = [
   ['Mandante', p.mandante],
   ['Comuna', p.comuna],
-  ['Año', p.anio],
+  p.estado === 'terminado' ? ['Año', p.anio] : ['Entrega estimada', p.entregaEstimada],
   ['Servicios', p.servicios?.join(' · ') ?? null],
   ['Magnitud', p.magnitud],
 ];
@@ -32,7 +32,7 @@ const campos: [string, string | null][] = [
       <div class="pn-obra__vacia" role="img" aria-label={`Foto pendiente de la obra ${n}`}><Pendiente texto="foto de la obra" /></div>
     )}
     <span class:list={['pn-obra__cinta', `pn-obra__cinta--${p.estado}`]}>{cinta}</span>
-    {href && <span class="pn-obra__hover" aria-hidden="true">Ver antes y después</span>}
+    {href && <span class="pn-obra__hover" aria-hidden="true">{p.estado === 'terminado' ? 'Ver el paso a paso' : 'Ver el avance'}</span>}
     {p.imagen && <span class="pn-obra__origen">{p.imagen.tipo === 'render' ? 'Render' : 'Foto'} · {p.imagen.origen}</span>}
   </div>
   <div class="pn-obra__cuerpo">
@@ -52,6 +52,12 @@ const campos: [string, string | null][] = [
         </div>
       ))}
     </dl>
+    {p.avance !== null && (
+      <div class="pn-obra__avance">
+        <span class="pn-obra__avance-txt">Avance {p.avance} %</span>
+        <span class="pn-obra__avance-barra" aria-hidden="true"><span style={`width: ${p.avance}%`}></span></span>
+      </div>
+    )}
     {href && <span class="pn-link pn-obra__ver" aria-hidden="true">Ver obra →</span>}
   </div>
 </article>

@@ -7,4 +7,6 @@ export const BASE = principal === SLUG ? '' : `/${SLUG}`;
 export const r = enlazador(BASE);
 
 /** ficha de una obra finalizada (misma URL que su subpágina del sitio de 2018) */
-export const rObra = (slug: string) => r('terminados', `${slug}/`);
+/** ficha de una obra: /proyectos-terminados/<slug>/ o /proyectos-en-construccion/<slug>/ */
+export const rObra = (slug: string, estado: 'terminado' | 'en-construccion' = 'terminado') =>
+  r(estado === 'terminado' ? 'terminados' : 'construccion', `${slug}/`);

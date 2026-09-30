@@ -16,6 +16,7 @@ import tablero from '../assets/portada/04-tablero-electrico.jpg';
 import fierros from '../assets/portada/05-enfierradura.jpg';
 import fotoMantencion from '../assets/servicios/mantencion.jpg';
 import fotoVozDatos from '../assets/servicios/voz-y-datos.jpg';
+import obraAerea from '../assets/portada/obra-aerea.jpg';
 import { dron } from './dron';
 
 export interface Diapositiva {
@@ -148,3 +149,37 @@ export const portadaServicios: PasoPortada[] = [
     credito: 'Wonderlane / Unsplash',
   },
 ];
+
+// ---------- portada "obra anotada" (opción G, 30-09-2026) ----------
+// La cámara recorre una foto aérea de una obra, como un dron, y se detiene en lo que hace LOLS.
+// Los puntos van en % de la foto (0-100, desde arriba a la izquierda). `zoom`: cuánto se acerca
+// la cámara; los puntos a la izquierda de la foto necesitan más zoom para quedar a la derecha del
+// texto. Con una foto aérea real de LOLS: reemplazar el archivo y volver a ubicar los puntos.
+// Reemplaza al fundido con pestañas (PortadaFundido.astro sigue en el repositorio).
+
+
+export interface PuntoObra {
+  x: number;
+  y: number;
+  zoom: number;
+  titulo: string;
+  /** nombre corto para el botón de la parada */
+  corto: string;
+  /** texto del enlace de la etiqueta */
+  texto: string;
+  pagina: Pagina;
+  ancla?: string;
+}
+
+export const portadaObra = {
+  img: obraAerea,
+  alt: 'Vista aérea de una obra en construcción con grúa torre, moldajes y acopio de materiales',
+  credito: 'Centar MURID / Unsplash' as string | null,
+  puntos: [
+    { x: 47, y: 60, zoom: 1.8, titulo: 'Obra gruesa', corto: 'Obra gruesa', texto: 'Construcción', pagina: 'servicios', ancla: '#construccion' },
+    { x: 52, y: 41, zoom: 1.9, titulo: 'Moldaje de muros', corto: 'Moldajes', texto: 'Moldajes propios', pagina: 'maquinaria', ancla: '#moldajes' },
+    { x: 72.5, y: 64, zoom: 1.8, titulo: 'Alzaprimas y vigas', corto: 'Alzaprimas', texto: 'Más de 7.000 alzaprimas', pagina: 'maquinaria', ancla: '#losas' },
+    { x: 29.5, y: 71, zoom: 2, titulo: 'Flota propia', corto: 'Flota', texto: 'Más de 25 vehículos', pagina: 'maquinaria', ancla: '#flota' },
+    { x: 23, y: 46, zoom: 2.3, titulo: 'Edificio terminado', corto: 'Terminado', texto: 'Ver proyectos', pagina: 'terminados' },
+  ] satisfies PuntoObra[],
+};

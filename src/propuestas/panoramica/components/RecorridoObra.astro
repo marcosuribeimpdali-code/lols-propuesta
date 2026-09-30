@@ -1,0 +1,91 @@
+---
+// Recorrido de una obra con scroll (opción I de la comparación de portadas, 30-09-2026): la foto de
+// la etapa queda fija a un lado y, al bajar, los textos de cada etapa van pasando al otro; la foto
+// cambia a la etapa que está a la vista y la línea de abajo marca en cuál va.
+//   obras finalizadas: Antes → Durante → Después
+//   obras en ejecución: Inicio de obra → Obra gruesa → Avance actual → Así quedará (el render)
+// En el celular la foto queda arriba y los textos pasan debajo. Sin JS se ve la primera foto y
+// todos los textos, uno bajo otro.
+import { Image } from 'astro:assets';
+import Pendiente from '../../comun/Pendiente.astro';
+import type { Foto } from '../../../data/proyectos';
+
+interface Props {
+  etapas: Foto[];
+  /** texto para lectores de pantalla, por ejemplo "Paso a paso de Edificio Cam" */
+  titulo: string;
+}
+const { etapas, titulo } = Astro.props;
+const n = (i: number) => String(i + 1).padStart(2, '0');
+---
+<section class="rec" data-rec aria-labelledby="rec-t">
+  <h2 id="rec-t" class="visually-hidden">{titulo}</h2>
+  <div class="rec__media">
+    <div class="rec__marco">
+      {etapas.map((e, i) => {
+        // foto chica o vertical (las de 2018 son de 372 px): se muestra entera sobre un fondo
+        // desenfocado de sí misma, en vez de estirarla y que se vea pixelada
+        const chica = e.src.width < 1000;
+        return (
+          <figure class:list={['rec__foto', { 'is-activa': i === 0, 'rec__foto--chica': chica }]} data-i={i}>
+            {chica && <Image class="rec__fondo" src={e.src} alt="" widths={[400]} sizes="400px" />}
+            <Image
+              class="rec__img"
+              src={e.src}
+              alt={e.alt}
+              widths={[640, 1024, 1600]}
+              sizes="(max-width: 960px) 100vw, 760px"
+              loading={i === 0 ? 'eager' : 'lazy'}
+            />
+            <span class="rec__rotulo">{e.etapa}</span>
+            <span class="cubo__ref">{e.ejemplo ? 'Foto de ejemplo' : e.etapa === 'Así quedará' ? 'Render · sitio lols.cl de 2018' : 'Foto real · sitio lols.cl de 2018'}</span>
+          </figure>
+        );
+      })}
+      <div class="rec__linea" aria-hidden="true">
+        {etapas.map((e, i) => (
+          <span class:list={['rec__tramo', { 'is-hecho': i === 0 }]}><span>{e.etapa}</span></span>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <ol class="rec__pasos">
+    {etapas.map((e, i) => (
+      <li class:list={['rec__paso', { 'is-activo': i === 0 }]} data-i={i}>
+        <span class="rec__n" aria-hidden="true">{n(i)}</span>
+        <h3 class="rec__t">{e.etapa}</h3>
+        <p class="rec__fecha">{e.fecha ?? <Pendiente texto="fecha" />}</p>
+        <p class="rec__desc">{e.descripcion ?? <Pendiente texto={`qué se hizo en la etapa "${e.etapa.toLowerCase()}"`} />}</p>
+        {i === 0 && etapas.length > 1 && <p class="rec__guia" aria-hidden="true">Baje para ver la obra avanzar ↓</p>}
+      </li>
+    ))}
+  </ol>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-rec]').forEach((raiz) => {
+    const fotos = [...raiz.querySelectorAll<HTMLElement>('.rec__foto')];
+    const pasos = [...raiz.querySelectorAll<HTMLElement>('.rec__paso')];
+    const tramos = [...raiz.querySelectorAll<HTMLElement>('.rec__tramo')];
+    raiz.classList.add('rec--js');
+    let actual = 0;
+    const activar = (i: number) => {
+      if (i === actual) return;
+      actual = i;
+      fotos.forEach((f, k) => f.classList.toggle('is-activa', k === i));
+      pasos.forEach((p, k) => p.classList.toggle('is-activo', k === i));
+      tramos.forEach((t, k) => t.classList.toggle('is-hecho', k <= i));
+    };
+    // la etapa activa es la que cruza la franja central de la pantalla
+    const obs = new IntersectionObserver(
+      (entradas) => {
+        entradas.forEach((en) => {
+          if (en.isIntersecting) activar(Number((en.target as HTMLElement).dataset.i));
+        });
+      },
+      { rootMargin: '-45% 0px -45% 0px' },
+    );
+    pasos.forEach((p) => obs.observe(p));
+  });
+</script>

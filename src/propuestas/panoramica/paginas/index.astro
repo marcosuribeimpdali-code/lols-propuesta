@@ -2,9 +2,9 @@
 import { Image } from 'astro:assets';
 import Base from '../Base.astro';
 import { r, rObra } from '../config';
-// portada: fundido con pestañas de servicios (opción C). Para volver al cubo 3D, usar
-// PortadaCubo en su lugar (sigue en components/).
-import PortadaFundido from '../components/PortadaFundido.astro';
+// portada: obra anotada (opción G). Las anteriores siguen en components/: PortadaFundido
+// (fundido con pestañas, opción C) y PortadaCubo (cubo 3D); para volver, usar una de ellas.
+import PortadaObra from '../components/PortadaObra.astro';
 import TituloSeccion from '../components/TituloSeccion.astro';
 import CtaFoto from '../components/CtaFoto.astro';
 import IconoServicio from '../../comun/IconoServicio.astro';
@@ -31,7 +31,7 @@ const cifras = [
 ];
 ---
 <Base>
-  <PortadaFundido />
+  <PortadaObra />
 
   <section class="pn-cifras" aria-label={`${empresa.nombreCorto} en cifras`}>
     <div class="wrap">
@@ -112,7 +112,7 @@ const cifras = [
       <ul class="pn-galeria">
         {terminados.map((p, i) => p.imagen && (
           <li>
-            <a class="pn-galeria__item" href={p.slug ? rObra(p.slug) : r('terminados')}>
+            <a class="pn-galeria__item" href={p.slug ? rObra(p.slug, p.estado) : r('terminados')}>
               <Image src={p.imagen.src} alt={altObra(p, i + 1)} widths={[300, 600]} sizes="(max-width: 640px) 50vw, 300px" />
               <span class="pn-galeria__velo" aria-hidden="true">
                 <span class="pn-galeria__n">Obra {String(i + 1).padStart(2, '0')}</span>

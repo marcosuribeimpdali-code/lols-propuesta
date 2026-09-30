@@ -2,8 +2,8 @@
 // Ruta única del sitio: arma todas las páginas según `principal` (src/propuestas/registro.ts).
 //   principal = 'panoramica' → /, /quienes-somos/, /contacto/… con esa propuesta
 //   principal = null         → / (portada para elegir) + /plano/…, /panoramica/…
-// Más una ficha por obra finalizada: /proyectos-terminados/<slug>/ (en las propuestas que la
-// tienen, ver fichasDe en src/propuestas/paginas.ts).
+// Más una ficha por obra: /proyectos-terminados/<slug>/ y /proyectos-en-construccion/<slug>/ (en
+// las propuestas que la tienen, ver fichasDe en src/propuestas/paginas.ts).
 import type { GetStaticPaths } from 'astro';
 import Portada from '../propuestas/selector/Portada.astro';
 import { principal, propuestas } from '../propuestas/registro';
@@ -18,9 +18,9 @@ export const getStaticPaths = (() => {
   // fichas de obra de una propuesta, bajo su prefijo
   const fichas = (slug: string, prefijo: string) =>
     fichasDe[slug]
-      ? conFicha().map((o, indice) => ({
-          params: { ruta: ruta(prefijo, paginas.terminados, o.slug!) },
-          props: { slug, clave: 'ficha' as const, indice },
+      ? conFicha().map((o) => ({
+          params: { ruta: ruta(prefijo, paginas[o.estado === 'terminado' ? 'terminados' : 'construccion'], o.slug!) },
+          props: { slug, clave: 'ficha' as const, obra: o.slug! },
         }))
       : [];
 
@@ -39,11 +39,11 @@ export const getStaticPaths = (() => {
   ];
 }) satisfies GetStaticPaths;
 
-const { slug, clave, indice } = Astro.props as {
+const { slug, clave, obra } = Astro.props as {
   slug: string | null;
   clave: Pagina | 'ficha' | null;
-  indice?: number;
+  obra?: string;
 };
 const Pagina = slug && clave ? (clave === 'ficha' ? fichasDe[slug] : paginasDe[slug][clave]) : null;
 ---
-{Pagina ? <Pagina indice={indice} /> : <Portada />}
+{Pagina ? <Pagina obra={obra} /> : <Portada />}

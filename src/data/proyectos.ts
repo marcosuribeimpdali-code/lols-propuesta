@@ -37,8 +37,9 @@ export interface Imagen {
 export interface Foto {
   src: ImageMetadata;
   alt: string;
-  /** etapa a la que pertenece, se muestra como rótulo */
-  etapa: 'Antes' | 'Durante' | 'Después';
+  /** etapa a la que pertenece, se muestra como rótulo: Antes, Durante, Después (obras
+   *  finalizadas) o Inicio de obra, Obra gruesa, Avance actual, Así quedará (en ejecución) */
+  etapa: string;
   /** true = foto de stock que se reemplaza por una real de la obra */
   ejemplo: boolean;
   fecha: string | null;
@@ -61,8 +62,13 @@ export interface Proyecto {
   imagen: Imagen | null;
   /** true = nombre y datos inventados, para ver cómo se ve la ficha (el sitio lo marca) */
   datosEjemplo: boolean;
-  /** paso a paso: Antes → Durante → Después */
+  /** paso a paso: Antes → Durante → Después; en las obras en ejecución, Inicio → Obra gruesa →
+   *  Avance actual → Así quedará (el render) */
   etapas: Foto[];
+  /** obras en ejecución: % de avance, inicio y entrega estimada (null en las finalizadas) */
+  avance: number | null;
+  inicio: string | null;
+  entregaEstimada: string | null;
   /** fotos extra para la galería de la ficha */
   galeria: Foto[];
 }
@@ -160,6 +166,76 @@ const ficha = (estado: Estado, img: Imagen | null, slug: string | null = null, i
     datosEjemplo: !!e,
     etapas,
     galeria,
+    avance: null,
+    inicio: null,
+    entregaEstimada: null,
+  };
+};
+
+// ---------- obras en ejecución: datos de ejemplo (inventados, como los de las finalizadas) ----------
+// Los nombres salen del nombre de archivo de cada render de 2018. El avance es de ejemplo y se
+// cuenta a septiembre de 2026 (HOY). Son obras de 2018: falta confirmar si siguen en ejecución.
+interface EjemploEjecucion {
+  nombre: string;
+  mandante: string;
+  comuna: string;
+  inicio: [mes: number, anio: number];
+  /** entrega estimada */
+  entrega: [mes: number, anio: number];
+  m2: number;
+  servicios: string[];
+  pisos: number;
+  uso: string;
+  /** % de avance */
+  avance: number;
+}
+const HOY: [number, number] = [9, 2026];
+const ejemplosEjecucion: Record<string, EjemploEjecucion> = {
+  zhu_sa: { nombre: 'Edificio Zhu', mandante: 'Importadora privada', comuna: 'Santiago', inicio: [3, 2026], entrega: [4, 2027], m2: 2100, servicios: ['Construcción', 'Electricidad', 'Voz y datos'], pisos: 4, uso: 'bodegas y oficinas', avance: 45 },
+  xia: { nombre: 'Edificio Xia', mandante: 'Inmobiliaria privada', comuna: 'Estación Central', inicio: [11, 2025], entrega: [12, 2026], m2: 1600, servicios: ['Construcción', 'Electricidad'], pisos: 3, uso: 'locales comerciales', avance: 75 },
+  altomaipu: { nombre: 'Alto Maipú', mandante: 'Inmobiliaria privada', comuna: 'Maipú', inicio: [6, 2025], entrega: [2, 2027], m2: 3800, servicios: ['Construcción', 'Electricidad', 'Voz y datos'], pisos: 6, uso: 'departamentos', avance: 60 },
+  zhu_gay: { nombre: 'Edificio Gay', mandante: 'Importadora privada', comuna: 'Santiago', inicio: [5, 2026], entrega: [7, 2027], m2: 1300, servicios: ['Construcción', 'Montaje industrial', 'Electricidad'], pisos: 3, uso: 'bodegas y sala de ventas', avance: 25 },
+  sazie2642: { nombre: 'Sazié 2642', mandante: 'Inmobiliaria privada', comuna: 'Santiago', inicio: [1, 2026], entrega: [3, 2027], m2: 1900, servicios: ['Construcción', 'Electricidad'], pisos: 5, uso: 'departamentos y locales', avance: 40 },
+  broncerias: { nombre: 'Broncerías', mandante: 'Empresa industrial', comuna: 'Quinta Normal', inicio: [9, 2025], entrega: [11, 2026], m2: 2600, servicios: ['Construcción', 'Montaje industrial', 'Electricidad'], pisos: 2, uso: 'galpón industrial y oficinas', avance: 85 },
+  ula444: { nombre: 'Ula 444', mandante: 'Inmobiliaria privada', comuna: 'Independencia', inicio: [4, 2026], entrega: [6, 2027], m2: 1450, servicios: ['Construcción', 'Electricidad', 'Voz y datos'], pisos: 4, uso: 'oficinas', avance: 30 },
+};
+const meses = ([m1, a1]: [number, number], [m2x, a2]: [number, number]) => a2 * 12 + m2x - (a1 * 12 + m1);
+const queSeHace = (avance: number) =>
+  avance >= 70 ? 'terminaciones e instalaciones' : avance >= 40 ? 'obra gruesa de los pisos superiores' : 'fundaciones y primeros pisos';
+
+const fichaEjecucion = (img: Imagen | null, slug: string, i: number): Proyecto => {
+  const e = ejemplosEjecucion[slug];
+  const plazo = meses(e.inicio, e.entrega);
+  // meses desde el inicio hasta la obra gruesa (un tercio del plazo)
+  const alTercio = Math.round(plazo / 3);
+  const inicio = mesAnio(e.inicio);
+  const obraGruesa = mesAnio(e.inicio, -alTercio);
+  const etapas: Foto[] = [
+    { ...antes[(i + 1) % 2], etapa: 'Inicio de obra', fecha: inicio, descripcion: 'Instalación de faena, excavación y fundaciones.' },
+    { ...durante[(i + 1) % 4], etapa: 'Obra gruesa', fecha: obraGruesa, descripcion: `Estructura y losas de los ${e.pisos} pisos.` },
+    { ...durante[(i + 3) % 4], etapa: 'Avance actual', fecha: mesAnio(HOY), descripcion: `${e.avance} % de avance: ${queSeHace(e.avance)}.` },
+    ...(img
+      ? [{ src: img.src, alt: `Render de ${e.nombre} terminado`, etapa: 'Así quedará', ejemplo: false, fecha: `Entrega estimada: ${mesAnio(e.entrega)}`, descripcion: `Edificio de ${e.uso}.` }]
+      : []),
+  ];
+  return {
+    slug,
+    nombre: e.nombre,
+    mandante: e.mandante,
+    comuna: e.comuna,
+    anio: String(e.entrega[1]),
+    servicios: e.servicios,
+    superficie: m2(e.m2),
+    plazo: `${plazo} meses`,
+    magnitud: `${m2(e.m2)} · ${plazo} meses`,
+    estado: 'en-construccion',
+    imagen: img,
+    datosEjemplo: true,
+    etapas,
+    galeria: [],
+    avance: e.avance,
+    inicio,
+    entregaEstimada: mesAnio(e.entrega),
   };
 };
 
@@ -175,24 +251,25 @@ const terminados: [string, string][] = [
   ['t08-zhu_am.jpg', 'zhu_am'],
 ];
 
-const enConstruccion = [
-  'c01-zhu_sa.jpg',
-  'c02-xia.jpg',
-  'c03-altomaipu.jpg',
-  'c04-zhu_gay.jpg',
-  'c05-sazie2642.jpg',
-  'c06-broncerias.jpg',
-  'c07-ula444.jpg',
+// [archivo del render, slug de su ficha (el nombre del render de 2018)]
+const enConstruccion: [string, string][] = [
+  ['c01-zhu_sa.jpg', 'zhu_sa'],
+  ['c02-xia.jpg', 'xia'],
+  ['c03-altomaipu.jpg', 'altomaipu'],
+  ['c04-zhu_gay.jpg', 'zhu_gay'],
+  ['c05-sazie2642.jpg', 'sazie2642'],
+  ['c06-broncerias.jpg', 'broncerias'],
+  ['c07-ula444.jpg', 'ula444'],
 ];
 
 export const proyectos: Proyecto[] = [
   ...terminados.map(([a, slug], i) => ficha('terminado', imagen(`2018/${a}`, 'foto'), slug, i)),
-  ...enConstruccion.map((a) => ficha('en-construccion', imagen(`2018/${a}`, 'render'))),
+  ...enConstruccion.map(([a, slug], i) => fichaEjecucion(imagen(`2018/${a}`, 'render'), slug, i)),
 ];
 
 export const porEstado = (estado: Estado) => proyectos.filter((p) => p.estado === estado);
 
-/** obras que tienen ficha propia */
+/** obras que tienen ficha propia (finalizadas y en ejecución) */
 export const conFicha = () => proyectos.filter((p) => p.slug);
 
 /** texto alternativo cuando la obra todavía no tiene nombre */

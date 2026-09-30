@@ -16,7 +16,7 @@ solo el diseño. **Hoy se publica solo Panorámica**, en la raíz de `new.lols.c
 | # | Propuesta | Idea |
 |---|---|---|
 | 1 | Plano técnico | Sobria y oscura: grilla de plano, rótulos técnicos, verde de marca |
-| 2 | Panorámica ✅ | Fotográfica: portada con fundido y pestañas de servicios, verde de la marca |
+| 2 | Panorámica ✅ | Fotográfica: portada con recorrido aéreo de una obra, verde de la marca |
 
 **Qué se publica** lo decide una línea en `src/propuestas/registro.ts`:
 
@@ -81,10 +81,15 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
 
 ### Imágenes
 
-- **Portada (opción C, 30-09-2026)**: una foto por servicio que se funde con la siguiente, con una
-  pestaña por servicio y una barra de avance (`PortadaFundido.astro`, datos en `portadaServicios`
-  de `src/data/portada.ts`). Reemplazó al cubo 3D, que sigue en `PortadaCubo.astro`: para volver,
-  cambiar el componente en `src/propuestas/panoramica/paginas/index.astro`.
+- **Portada: obra anotada (opción G, 30-09-2026)**: la cámara recorre una foto aérea de una obra,
+  como un dron, y se detiene en cinco puntos (obra gruesa, moldajes, alzaprimas, flota, edificio
+  terminado), cada uno con su enlace (`PortadaObra.astro`, datos en `portadaObra` de
+  `src/data/portada.ts`, foto en `src/assets/portada/obra-aerea.jpg`). Con una foto aérea real de
+  LOLS: reemplazar el archivo (misma proporción) y volver a ubicar los puntos (en % de la foto). Las
+  portadas anteriores siguen en `components/`: `PortadaFundido` (opción C) y `PortadaCubo`.
+- **Contacto: del plano a la obra (opción H)**: la cabecera muestra una obra terminada y su plano
+  de líneas, con una línea que el visitante arrastra (`BannerPlano.astro`). El plano sale de la
+  misma foto: `node scripts/plano.mjs <foto> <plano>` (fotos en `src/assets/contacto/`).
 - **Colores**: el verde de lols.cl (#168D3A) con sus tonos oscuros, negro y blanco. El lima
   (#81D742) del sitio 2018 se sacó (30-09-2026): no combinaba con el verde. Sobre fondo claro los
   acentos van en verde; sobre fotos o fondos oscuros, en blanco.
@@ -97,8 +102,11 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
   Autores: Frames For Your Heart, Jason Richard, Etienne Girardet, Toolmash Expo y Michael Bader.
 - **Fichas de obra**: cada obra finalizada tiene su página en `/proyectos-terminados/<slug>/`,
   con el mismo slug que usaba en el sitio de 2018 (`bro_cam`, `renacer_bas`…), así esos links
-  siguen funcionando. Muestran el paso a paso **Antes → Durante → Después** con botones y una
-  galería con visor a pantalla completa. "Después" es la foto real de la obra; "Antes" y "Durante"
+  siguen funcionando. Muestran el paso a paso **Antes → Durante → Después** como un recorrido
+  con scroll (opción I, `RecorridoObra.astro`: la foto queda fija y cambia con la etapa que está a
+  la vista) y una galería con visor a pantalla completa. Las obras **en ejecución** también tienen
+  ficha (`/proyectos-en-construccion/<slug>/`) con su avance: Inicio de obra → Obra gruesa →
+  Avance actual → Así quedará (el render de 2018), el % de avance y datos de ejemplo. "Después" es la foto real de la obra; "Antes" y "Durante"
   son fotos de ejemplo (`src/assets/ejemplo/` y `src/assets/portada/`, marcadas "Foto de
   ejemplo"): reemplazarlas por las de cada obra en `etapas` de `src/data/proyectos.ts`, idealmente
   una foto por etapa tomada desde un ángulo parecido. Autores de las de ejemplo: Billy Freeman e

@@ -1131,6 +1131,379 @@ main:focus {
   }
 }
 
+/* ---------- portada: obra anotada (opción G) ---------- */
+/* la cámara se mueve animando estas tres variables (registradas para que se puedan animar) */
+@property --obra-tx {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+@property --obra-ty {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+@property --obra-s {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+.obra-hero {
+  position: relative;
+  height: max(600px, min(100svh - 36px, 960px));
+  overflow: hidden;
+  background: #0a0f0b;
+  color: #fff;
+}
+.obra-hero__escena,
+.obra-hero__deriva {
+  position: absolute;
+  inset: 0;
+}
+.obra-hero__cam {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: 0 0;
+  transform: translate(var(--obra-tx), var(--obra-ty)) scale(var(--obra-s));
+  transition:
+    --obra-tx 2.6s cubic-bezier(0.55, 0, 0.2, 1),
+    --obra-ty 2.6s cubic-bezier(0.55, 0, 0.2, 1),
+    --obra-s 2.6s cubic-bezier(0.55, 0, 0.2, 1);
+}
+.obra-hero.sin-viaje .obra-hero__cam {
+  transition: none;
+}
+.obra-hero__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+/* arriba oscuro para la cabecera, a la izquierda para el texto y abajo para las paradas */
+.obra-hero__velo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(6 10 7 / 0.7) 0%, rgb(6 10 7 / 0) 24%),
+    linear-gradient(0deg, rgb(6 10 7 / 0.72) 0%, rgb(6 10 7 / 0) 28%),
+    linear-gradient(90deg, rgb(6 18 9 / 0.88) 0%, rgb(6 18 9 / 0.52) 38%, rgb(6 18 9 / 0) 62%);
+}
+/* puntos: siguen a la foto, pero con tamaño fijo en pantalla (se achican lo que la cámara acerca) */
+.obra-hero__pin {
+  position: absolute;
+  left: calc(var(--px) * 1%);
+  top: calc(var(--py) * 1%);
+  width: 0;
+  height: 0;
+  transform: scale(calc(1 / var(--obra-s)));
+  transition: opacity 0.6s;
+}
+.obra-hero:not(.cargada) .obra-hero__pin {
+  opacity: 0;
+}
+.obra-hero__punto {
+  position: absolute;
+  left: -12px;
+  top: -12px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 3px solid var(--verde-osc);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 0.55), 0 4px 14px rgb(0 0 0 / 0.45);
+  cursor: pointer;
+}
+.obra-hero__pin.on .obra-hero__punto {
+  background: var(--verde);
+  border-color: #fff;
+}
+.obra-hero__pin.on .obra-hero__punto::after {
+  content: '';
+  position: absolute;
+  inset: -13px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  animation: obra-onda 1.7s ease-out infinite;
+}
+@keyframes obra-onda {
+  from {
+    transform: scale(0.55);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+.obra-hero__punto:focus-visible,
+.obra-hero__tag:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+.obra-hero__tag {
+  position: absolute;
+  left: 26px;
+  top: 0;
+  translate: 0 -50%;
+  display: grid;
+  gap: 3px;
+  width: max-content;
+  max-width: 260px;
+  padding: 10px 14px 11px;
+  border-left: 4px solid #fff;
+  background: rgb(9 26 15 / 0.9);
+  color: #fff;
+  text-decoration: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s,
+    visibility 0s linear 0.3s;
+}
+.obra-hero.llego .obra-hero__pin.on .obra-hero__tag {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.45s;
+}
+.obra-hero__tag b {
+  font: 700 1.05rem/1.1 var(--cond);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.obra-hero__tag > span {
+  font-size: 0.92rem;
+  color: rgb(255 255 255 / 0.85);
+}
+.obra-hero__tag:hover > span {
+  text-decoration: underline;
+}
+/* texto fijo a la izquierda */
+.obra-hero__texto {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+  padding-top: 130px;
+  padding-bottom: 150px;
+  pointer-events: none;
+}
+.obra-hero__caja {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  max-width: 600px;
+  pointer-events: auto;
+}
+.obra-hero__ante {
+  font: 600 1rem/1.2 var(--cond);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.85);
+}
+.obra-hero__titulo {
+  max-width: 15ch;
+  font: 700 clamp(2.7rem, 1.2rem + 5vw, 5.6rem) / 1 var(--titular);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  text-shadow: 0 2px 30px rgb(0 0 0 / 0.35);
+}
+.obra-hero__bajada {
+  max-width: 32em;
+  font-size: clamp(1.05rem, 0.95rem + 0.45vw, 1.3rem);
+  line-height: 1.5;
+  color: rgb(255 255 255 / 0.9);
+}
+.obra-hero__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+/* paradas del recorrido y pausa */
+.obra-hero__pie {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  padding-block: 14px 18px;
+}
+.obra-hero__controles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+.obra-hero__paradas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.obra-hero__paradas button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid rgb(255 255 255 / 0.4);
+  background: rgb(6 18 9 / 0.55);
+  color: rgb(255 255 255 / 0.85);
+  font: 700 0.95rem var(--cond);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+.obra-hero__paradas button:hover {
+  border-color: #fff;
+  color: #fff;
+}
+.obra-hero__parada-n {
+  color: rgb(255 255 255 / 0.6);
+}
+.obra-hero__paradas button[aria-pressed='true'] {
+  border-color: #fff;
+  background: #fff;
+  color: var(--verde-osc);
+}
+.obra-hero__paradas button[aria-pressed='true'] .obra-hero__parada-n {
+  color: var(--verde);
+}
+.obra-hero__paradas button:focus-visible,
+.obra-hero__pausa:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+.obra-hero__pausa {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.4);
+  color: #fff;
+  font: 600 0.9rem var(--cond);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.obra-hero__pausa:hover {
+  background: rgb(0 0 0 / 0.65);
+}
+.obra-hero__pausa-icono {
+  width: 10px;
+  height: 12px;
+  border-inline: 3px solid currentColor;
+}
+.obra-hero.is-pausado .obra-hero__pausa-icono {
+  width: 0;
+  height: 0;
+  border-inline: 0;
+  border-left: 11px solid currentColor;
+  border-block: 7px solid transparent;
+}
+.obra-hero__ref {
+  bottom: 86px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* el dron "flota": un movimiento lento y leve, siempre */
+  .obra-hero__deriva {
+    animation: obra-deriva 11s ease-in-out infinite alternate;
+  }
+}
+@keyframes obra-deriva {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(-0.8%, 0.5%) scale(1.015);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .obra-hero__cam {
+    transition: none;
+  }
+  .obra-hero__pin.on .obra-hero__punto::after {
+    animation: none;
+  }
+}
+@media (max-width: 960px) {
+  .obra-hero__texto {
+    padding-top: 90px;
+  }
+}
+@media (max-width: 760px) {
+  /* en celular la barra fija de Llamar/WhatsApp/Cotizar tapa el borde inferior: la portada
+     termina justo encima; el texto va abajo y el punto, arriba */
+  .obra-hero {
+    height: max(560px, min(100svh - 68px, 780px));
+  }
+  .obra-hero__velo {
+    background:
+      linear-gradient(180deg, rgb(6 10 7 / 0.7) 0%, rgb(6 10 7 / 0) 22%),
+      linear-gradient(0deg, rgb(6 18 9 / 0.94) 0%, rgb(6 18 9 / 0.55) 40%, rgb(6 18 9 / 0) 62%);
+  }
+  .obra-hero__texto {
+    justify-content: flex-end;
+    padding-bottom: 92px;
+  }
+  .obra-hero__caja {
+    gap: 12px;
+  }
+  .obra-hero__ante {
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+  }
+  .obra-hero__bajada {
+    display: none;
+  }
+  .obra-hero__paradas {
+    gap: 6px;
+  }
+  .obra-hero__paradas button {
+    min-width: 44px;
+    justify-content: center;
+    padding: 0 10px;
+  }
+  .obra-hero__parada-nombre,
+  .obra-hero__pausa-txt {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .obra-hero__pausa {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+  .obra-hero__tag {
+    max-width: 180px;
+    padding: 8px 11px 9px;
+  }
+  .obra-hero__ref {
+    top: 76px;
+    bottom: auto;
+  }
+}
+
 /* ---------- cifras bajo la portada ---------- */
 .pn-cifras {
   background: #fff;
@@ -2336,9 +2709,30 @@ main:focus {
 .pn-obra__ver {
   margin-top: 8px;
 }
+.pn-obra__avance {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+}
+.pn-obra__avance-txt {
+  font: 700 0.9rem var(--cond);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--verde-osc);
+}
+.pn-obra__avance-barra {
+  display: block;
+  height: 6px;
+  background: var(--linea);
+}
+.pn-obra__avance-barra > span {
+  display: block;
+  height: 100%;
+  background: var(--verde);
+}
 
-/* ficha de la obra: título corto y, de inmediato, el antes / durante / después con sus datos
-   al pie. La foto se limita al alto de la pantalla para que se vea entera sin bajar. */
+/* ficha de la obra: título corto y, de inmediato, el recorrido de la obra (la primera foto se ve
+   sin bajar y cabe en la pantalla); los datos van al final del recorrido */
 .pn-obra-top {
   padding-block: 22px clamp(48px, 6vw, 80px);
 }
@@ -2367,12 +2761,29 @@ main:focus {
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-.pn-obra-top .pap__tabs {
-  margin: 0 0 14px;
+.pn-obra-top__estado--ejecucion {
+  background: #fff;
+  color: var(--verde-osc);
+  box-shadow: inset 0 0 0 2px var(--verde-osc);
 }
-.pn-obra-top .pap__media {
-  aspect-ratio: auto;
-  height: clamp(260px, calc(100vh - 390px), 620px);
+.pn-obra-top__resumen {
+  margin: -6px 0 18px;
+  font: 600 1rem var(--cond);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-2);
+}
+.pn-obra-ficha__avance {
+  grid-column: 1 / -1;
+}
+.pn-obra-ficha__avance dd {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.pn-obra-ficha__avance .pn-obra__avance-barra {
+  flex: 1;
+  max-width: 420px;
 }
 .pn-obra-ficha {
   display: grid;
@@ -2409,10 +2820,6 @@ main:focus {
   }
 }
 @media (max-width: 640px) {
-  .pn-obra-top .pap__media {
-    height: auto;
-    aspect-ratio: 4 / 3;
-  }
   .pn-obra-ficha {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     padding: 18px;
@@ -2426,161 +2833,190 @@ main:focus {
   margin-bottom: 28px;
 }
 
-/* paso a paso: Antes → Durante → Después (pestañas) */
-.pap__tabs {
-  display: flex;
-  width: fit-content;
-  margin: 0 auto 24px;
-  border: 2px solid var(--verde-osc);
-}
-.pap:not(.pap--js) .pap__tabs {
-  display: none;
-}
-.pap__tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 54px;
-  padding: 0 30px;
-  border: 0;
-  background: #fff;
-  color: var(--verde-osc);
-  font: 700 1.12rem/1 var(--cond);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition:
-    background-color 0.2s,
-    color 0.2s;
-}
-.pap__tab + .pap__tab {
-  border-left: 2px solid var(--verde-osc);
-}
-.pap__tab:hover {
-  background: var(--gris);
-}
-.pap__tab[aria-selected='true'] {
-  background: var(--verde-osc);
-  color: #fff;
-}
-.pap__tab-n {
-  font-size: 0.85rem;
-  opacity: 0.75;
-}
-.pap__escena {
+/* recorrido de la obra con scroll (opción I): la foto de la etapa fija a la izquierda y los
+   textos de cada etapa a la derecha; al bajar, la foto cambia a la etapa que está a la vista */
+.rec {
   display: grid;
-  gap: 40px;
+  grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(24px, 4vw, 56px);
 }
-.pap--js .pap__escena {
-  gap: 0;
+.rec__media {
+  position: sticky;
+  top: 20px;
 }
-.pap--js .pap__panel {
-  grid-area: 1 / 1;
-  transition:
-    opacity 0.45s ease,
-    visibility 0.45s;
-}
-.pap--js .pap__panel:not(.is-activo) {
-  opacity: 0;
-  visibility: hidden;
-}
-.pap__panel {
-  margin: 0;
-}
-.pap__media {
+.rec__marco {
   position: relative;
-  aspect-ratio: 16 / 9;
+  height: min(calc(100vh - 40px), 620px);
   overflow: hidden;
-  background: var(--negro);
+  background: var(--verde-noche);
 }
-.pap__img {
+.rec__foto {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+.rec__foto.is-activa {
+  z-index: 1;
+  opacity: 1;
+}
+.rec__img {
   position: relative;
   z-index: 1;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.pap__panel--chica .pap__img {
+/* foto chica o vertical: entera, sobre un fondo desenfocado de sí misma */
+.rec__foto--chica .rec__img {
   object-fit: contain;
 }
-.pap__fondo {
+.rec__fondo {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  inset: -24px;
+  width: calc(100% + 48px);
+  height: calc(100% + 48px);
   object-fit: cover;
-  filter: blur(28px) brightness(0.55) saturate(1.1);
-  transform: scale(1.15);
+  filter: blur(18px) brightness(0.7);
 }
-.pap__rotulo {
+.rec__rotulo {
   position: absolute;
-  left: 0;
-  bottom: 26px;
   z-index: 2;
+  left: 0;
+  top: 18px;
   padding: 0.45em 1.1em;
   background: #fff;
   color: var(--verde-osc);
-  font: 800 1.2rem/1.1 var(--cond);
+  font: 800 1.1rem/1.1 var(--cond);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-.pap__media .cubo__ref {
+.rec__foto .cubo__ref {
   z-index: 2;
+  bottom: 58px;
 }
-.pap__texto {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px 18px;
-  padding-top: 16px;
-  color: var(--tinta-2);
+.rec__linea {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 6px;
+  padding: 26px 16px 14px;
+  background: linear-gradient(0deg, rgb(6 10 7 / 0.8), rgb(6 10 7 / 0));
 }
-.pap__fecha {
+.rec__tramo {
+  display: grid;
+  gap: 6px;
+  color: rgb(255 255 255 / 0.6);
+  font: 700 0.8rem/1.1 var(--cond);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.rec__tramo::before {
+  content: '';
+  height: 4px;
+  background: rgb(255 255 255 / 0.3);
+  transition: background-color 0.3s;
+}
+.rec__tramo.is-hecho {
+  color: #fff;
+}
+.rec__tramo.is-hecho::before {
+  background: #fff;
+}
+.rec__pasos {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rec__paso {
+  min-height: 70vh;
+  padding: 26px 0 26px 26px;
+  border-left: 3px solid var(--linea);
+  transition:
+    opacity 0.4s,
+    border-color 0.4s;
+}
+.js .rec__paso {
+  opacity: 0.4;
+}
+.js .rec__paso.is-activo {
+  border-left-color: var(--verde);
+  opacity: 1;
+}
+.rec__paso:last-child {
+  min-height: 56vh;
+}
+.rec__n {
+  display: block;
+  font: 800 clamp(2.4rem, 1.8rem + 2vw, 3.4rem) / 1 var(--cond);
+  color: var(--verde);
+}
+.rec__t {
+  margin-top: 6px;
+  font: 700 clamp(1.8rem, 1.3rem + 1.4vw, 2.5rem) / 1.02 var(--titular);
+}
+.rec__fecha {
+  margin-top: 10px;
   font: 700 1rem var(--cond);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--verde-osc);
 }
-.pap__barras {
-  display: flex;
-  gap: 8px;
-  margin-top: 18px;
+.rec__desc {
+  max-width: 36ch;
+  margin-top: 8px;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: var(--tinta-2);
 }
-.pap:not(.pap--js) .pap__barras {
-  display: none;
+.rec__guia {
+  margin-top: 24px;
+  font: 600 0.85rem var(--cond);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tinta-2);
 }
-.pap__barra {
-  flex: 1;
-  height: 6px;
-  background: var(--linea);
-  transition: background-color 0.3s;
-}
-.pap__barra.is-hecha {
-  background: var(--verde);
-}
-@media (max-width: 640px) {
-  .pap__tabs {
-    width: 100%;
+@media (max-width: 960px) {
+  /* celular y tablet: la foto arriba, de borde a borde, y los textos pasan debajo */
+  .rec {
+    grid-template-columns: 1fr;
+    gap: 0;
   }
-  .pap__tab {
-    flex: 1;
-    justify-content: center;
-    padding: 0 8px;
-    font-size: 1rem;
+  .rec__media {
+    top: 0;
+    z-index: 5;
+    margin-inline: calc(var(--gutter) * -1);
   }
-  .pap__tab-n {
-    display: none;
+  .rec__marco {
+    height: 46vh;
+    min-height: 260px;
   }
-  .pap__media {
-    aspect-ratio: 4 / 3;
+  .rec__rotulo {
+    top: 12px;
+    font-size: 0.95rem;
   }
-  .pap__rotulo {
-    bottom: 16px;
-    font-size: 1rem;
+  .rec__paso {
+    min-height: 50vh;
+    padding: 22px 0 22px 18px;
+  }
+  .rec__paso:last-child {
+    min-height: 42vh;
+  }
+  .rec__tramo {
+    font-size: 0.7rem;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .pap--js .pap__panel {
+  .rec__foto,
+  .rec__paso {
     transition: none;
   }
 }
@@ -3612,6 +4048,155 @@ fieldset.campo--grupo > legend {
 @media (min-width: 1001px) {
   html:not(.con-marcas) .pn-datos {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ---------- cabecera "del plano a la obra" (Contacto, opción H) ---------- */
+@property --corte {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 100%;
+}
+.pn-banner--plano {
+  min-height: clamp(380px, 42vw, 560px);
+  cursor: ew-resize;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.pn-banner--plano.suave {
+  transition: --corte 2.2s cubic-bezier(0.65, 0, 0.25, 1);
+}
+.pn-banner__img--plano {
+  clip-path: inset(0 calc(100% - var(--corte)) 0 0);
+}
+/* las fotos no reciben el mouse: si no, el navegador empieza a "arrastrar la imagen" y corta el
+   arrastre de la línea */
+.pn-banner--plano .pn-banner__img {
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+/* velo solo a la izquierda y abajo: la obra de la derecha se ve limpia */
+.pn-banner--plano .pn-banner__velo {
+  pointer-events: none;
+  background:
+    linear-gradient(0deg, rgb(6 18 9 / 0.78) 0%, rgb(6 18 9 / 0) 48%),
+    linear-gradient(90deg, rgb(6 18 9 / 0.55) 0%, rgb(6 18 9 / 0.15) 45%, rgb(6 18 9 / 0) 60%);
+}
+.pn-banner--plano .pn-banner__in {
+  pointer-events: none;
+}
+.pn-banner--plano .pn-migas a {
+  pointer-events: auto;
+}
+.pn-banner__ante {
+  margin-top: 16px;
+  font: 700 0.98rem/1.2 var(--cond);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.85);
+}
+.pn-banner--plano h1 {
+  margin-top: 8px;
+}
+.pn-banner__linea {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: var(--corte);
+  width: 2px;
+  margin-left: -1px;
+  background: #fff;
+  box-shadow: 0 0 14px rgb(0 0 0 / 0.45);
+  pointer-events: none;
+}
+.pn-banner__manija {
+  position: absolute;
+  z-index: 3;
+  left: var(--corte);
+  top: 46%;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--verde-osc);
+  box-shadow: 0 4px 18px rgb(0 0 0 / 0.45);
+  cursor: ew-resize;
+}
+.pn-banner__manija svg {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pn-banner__manija:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 4px;
+}
+.pn-banner__pista {
+  position: absolute;
+  z-index: 3;
+  left: var(--corte);
+  top: calc(46% + 38px);
+  translate: -50% 0;
+  padding: 2px 10px;
+  background: rgb(0 0 0 / 0.6);
+  color: #fff;
+  font: 600 0.8rem var(--cond);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.pn-banner--plano.tocado .pn-banner__pista {
+  opacity: 0;
+}
+.pn-banner__rot {
+  position: absolute;
+  z-index: 2;
+  top: 20px;
+  padding: 3px 10px;
+  font: 700 0.8rem var(--cond);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.pn-banner__rot--plano {
+  right: calc(100% - var(--corte) + 10px);
+  border: 1px solid rgb(214 240 196 / 0.55);
+  background: rgb(11 45 24 / 0.85);
+  color: #d6f0c4;
+}
+.pn-banner__rot--obra {
+  left: calc(var(--corte) + 10px);
+  background: #fff;
+  color: var(--verde-osc);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pn-banner--plano.suave {
+    transition: none;
+  }
+}
+@media (max-width: 760px) {
+  .pn-banner__manija {
+    top: 34%;
+    width: 50px;
+    height: 50px;
+  }
+  .pn-banner__pista {
+    top: calc(34% + 34px);
+  }
+  .pn-banner--plano .pn-banner__velo {
+    background: linear-gradient(0deg, rgb(6 18 9 / 0.9) 0%, rgb(6 18 9 / 0.35) 50%, rgb(6 18 9 / 0) 70%);
   }
 }
 

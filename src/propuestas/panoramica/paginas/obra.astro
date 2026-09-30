@@ -1,56 +1,79 @@
 ---
-// Ficha de una obra finalizada: /proyectos-terminados/<slug>/ (el slug de su subpágina en el
-// sitio de 2018). La arma la ruta única del sitio, una por cada obra con `slug`.
+// Ficha de una obra: /proyectos-terminados/<slug>/ (el slug de su subpágina en el sitio de 2018) y
+// /proyectos-en-construccion/<slug>/. La arma la ruta única del sitio, una por cada obra con `slug`.
+// Arriba, el recorrido con scroll (RecorridoObra): Antes → Durante → Después en las finalizadas, y
+// el avance hasta el render ("Así quedará") en las que están en ejecución.
 import { Image } from 'astro:assets';
 import Base from '../Base.astro';
 import { r, rObra } from '../config';
 import TituloSeccion from '../components/TituloSeccion.astro';
-import PasoAPaso from '../components/PasoAPaso.astro';
+import RecorridoObra from '../components/RecorridoObra.astro';
 import VisorObra from '../components/VisorObra.astro';
 import CtaFoto from '../components/CtaFoto.astro';
 import Pendiente from '../../comun/Pendiente.astro';
-import { conFicha } from '../../../data/proyectos';
+import { conFicha, type Proyecto } from '../../../data/proyectos';
 
 interface Props {
-  indice: number;
+  obra: string;
 }
-const { indice } = Astro.props;
-const lista = conFicha();
-const p = lista[indice];
+const { obra } = Astro.props;
+const p = conFicha().find((o) => o.slug === obra)!;
+const terminada = p.estado === 'terminado';
+// anterior y siguiente, dentro de la misma sección
+const lista = conFicha().filter((o) => o.estado === p.estado);
+const indice = lista.indexOf(p);
 const n = String(indice + 1).padStart(2, '0');
 const titulo = p.nombre ?? `Obra ${n}`;
 const anterior = lista[(indice - 1 + lista.length) % lista.length];
 const siguiente = lista[(indice + 1) % lista.length];
-const numero = (o: typeof p) => String(lista.indexOf(o) + 1).padStart(2, '0');
+const numero = (o: Proyecto) => String(lista.indexOf(o) + 1).padStart(2, '0');
+const seccion = terminada ? 'terminados' : 'construccion';
+const nombreSeccion = terminada ? 'Proyectos finalizados' : 'Proyectos en ejecución';
 
-// ficha de la obra, al pie de las fotos
-const datos: [string, string | null][] = [
-  ['Obra', p.nombre],
-  ['Mandante', p.mandante],
-  ['Año de entrega', p.anio],
-  ['Plazo', p.plazo],
-  ['Comuna', p.comuna],
-  ['Superficie', p.superficie],
-  ['Servicios', p.servicios?.join(' · ') ?? null],
-];
+// ficha de la obra, al pie del recorrido
+const datos: [string, string | null][] = terminada
+  ? [
+      ['Obra', p.nombre],
+      ['Mandante', p.mandante],
+      ['Año de entrega', p.anio],
+      ['Plazo', p.plazo],
+      ['Comuna', p.comuna],
+      ['Superficie', p.superficie],
+      ['Servicios', p.servicios?.join(' · ') ?? null],
+    ]
+  : [
+      ['Obra', p.nombre],
+      ['Mandante', p.mandante],
+      ['Inicio', p.inicio],
+      ['Entrega estimada', p.entregaEstimada],
+      ['Comuna', p.comuna],
+      ['Superficie', p.superficie],
+      ['Servicios', p.servicios?.join(' · ') ?? null],
+    ];
+const resumen = [p.comuna, terminada ? p.anio : p.entregaEstimada && `Entrega estimada: ${p.entregaEstimada}`, p.superficie].filter(Boolean).join(' · ');
 const hayEjemplos = p.etapas.some((e) => e.ejemplo);
 ---
-<Base title={`${titulo} · Proyectos finalizados`} description={`Ficha de la obra ${titulo} de LOLS Ingeniería: antes, durante y después.`}>
-  <!-- al entrar se ve de inmediato el antes, durante y después; los datos van justo debajo -->
+<Base
+  title={`${titulo} · ${nombreSeccion}`}
+  description={terminada ? `Ficha de la obra ${titulo} de LOLS Ingeniería: antes, durante y después.` : `Avance de la obra ${titulo} de LOLS Ingeniería.`}
+>
   <section class="pn-obra-top" aria-labelledby="obra-t">
     <div class="wrap">
       <nav aria-label="Migas de pan" class="pn-migas">
         <a href={r('inicio')}>Inicio</a> <span aria-hidden="true">›</span>
-        <a href={r('terminados')}>Proyectos finalizados</a> <span aria-hidden="true">›</span>
+        <a href={r(seccion)}>{nombreSeccion}</a> <span aria-hidden="true">›</span>
         <span aria-current="page">{titulo}</span>
       </nav>
       <div class="pn-obra-top__cab">
         <h1 id="obra-t">{titulo}</h1>
-        <span class="pn-obra-top__estado">Finalizado</span>
+        <span class:list={['pn-obra-top__estado', { 'pn-obra-top__estado--ejecucion': !terminada }]}>
+          {terminada ? 'Finalizado' : `En ejecución · ${p.avance} % de avance`}
+        </span>
         {p.datosEjemplo && <span class="pn-ej">Datos de ejemplo</span>}
       </div>
+      {resumen && <p class="pn-obra-top__resumen">{resumen}</p>}
 
-      <PasoAPaso etapas={p.etapas} id={`obra-${n}`} />
+      <RecorridoObra etapas={p.etapas} titulo={terminada ? `Paso a paso de ${titulo}` : `Avance de ${titulo}`} />
 
       <dl class="pn-obra-ficha">
         {datos.map(([k, v]) => (
@@ -59,10 +82,19 @@ const hayEjemplos = p.etapas.some((e) => e.ejemplo);
             <dd>{v ?? <span class="pendiente pendiente--mini">pendiente</span>}</dd>
           </div>
         ))}
+        {!terminada && (
+          <div class="pn-obra-ficha__avance">
+            <dt>Avance</dt>
+            <dd>
+              <span>{p.avance} %</span>
+              <span class="pn-obra__avance-barra" aria-hidden="true"><span style={`width: ${p.avance}%`}></span></span>
+            </dd>
+          </div>
+        )}
       </dl>
       <div class="pn-obra-top__notas">
         {p.datosEjemplo && <Pendiente texto="los datos reales de esta obra: los de ahora son de ejemplo" />}
-        {hayEjemplos && <Pendiente texto="fotos reales de Antes y Durante: las de ahora son de ejemplo" />}
+        {hayEjemplos && <Pendiente texto={terminada ? 'fotos reales de Antes y Durante: las de ahora son de ejemplo' : 'fotos reales del avance: las de ahora son de ejemplo'} />}
       </div>
     </div>
   </section>
@@ -77,12 +109,12 @@ const hayEjemplos = p.etapas.some((e) => e.ejemplo);
   </section>
 
   <nav class="wrap pn-obra-nav" aria-label="Otras obras">
-    <a href={rObra(anterior.slug!)} class="pn-obra-nav__link">
+    <a href={rObra(anterior.slug!, anterior.estado)} class="pn-obra-nav__link">
       {anterior.imagen && <Image src={anterior.imagen.src} alt="" widths={[120]} sizes="96px" />}
       <span><span class="pn-obra-nav__dir">← Obra anterior</span><span class="pn-obra-nav__nombre">{anterior.nombre ?? `Obra ${numero(anterior)}`}</span></span>
     </a>
-    <a href={r('terminados')} class="pn-obra-nav__todas">Todas las obras</a>
-    <a href={rObra(siguiente.slug!)} class="pn-obra-nav__link pn-obra-nav__link--sig">
+    <a href={r(seccion)} class="pn-obra-nav__todas">Todas las obras</a>
+    <a href={rObra(siguiente.slug!, siguiente.estado)} class="pn-obra-nav__link pn-obra-nav__link--sig">
       <span><span class="pn-obra-nav__dir">Obra siguiente →</span><span class="pn-obra-nav__nombre">{siguiente.nombre ?? `Obra ${numero(siguiente)}`}</span></span>
       {siguiente.imagen && <Image src={siguiente.imagen.src} alt="" widths={[120]} sizes="96px" />}
     </a>
