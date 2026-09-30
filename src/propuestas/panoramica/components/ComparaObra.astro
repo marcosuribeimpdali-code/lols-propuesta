@@ -1,12 +1,16 @@
 ---
 // Comparador de una obra finalizada (30-09-2026): la foto del "después" y, encima, la de una etapa
-// anterior (antes o durante), separadas por una línea que el visitante arrastra. Es la vista de
-// arrastre que estuvo en Contacto ("del plano a la obra"); reemplazó al recorrido con scroll en las
-// obras finalizadas. Al lado, las etapas con su fecha: al tocar una, la foto pasa a esa etapa, y al
+// anterior (antes o durante), separadas por una línea que el visitante arrastra. Es la misma idea
+// de arrastre de Contacto ("del plano a la obra"); reemplazó al recorrido con scroll en las obras
+// finalizadas. Al lado, las etapas con su fecha: al tocar una, la foto pasa a esa etapa, y al
 // arrastrar se marca la que ocupa más foto. Al cargar, la línea recorre la foto sola hasta que
 // alguien la toma.
 // El marco toma la proporción de la foto del después: las de 2018 son verticales y chicas, así no
 // se recortan ni se estiran de más. Sin JS queda a la mitad: se ven las dos fotos.
+// Rendimiento: la foto de arriba se recorta con una "ventana" que se corre de lado mientras su
+// contenido se corre al revés (queda quieto), y la línea y la manija también se mueven con
+// transform. Así lo mueve la tarjeta de video: recortar con clip-path y mover con `left`
+// obligaba a redibujar y recalcular la página en cada cuadro, y en Android se trababa.
 import { Image } from 'astro:assets';
 import Pendiente from '../../comun/Pendiente.astro';
 import type { Foto } from '../../../data/proyectos';
@@ -26,7 +30,7 @@ const origen = (e: Foto) => (e.ejemplo ? 'Foto de ejemplo' : 'Foto real · lols.
 ---
 <section class="cmp" data-cmp style={`--proporcion: ${proporcion.toFixed(3)}`} aria-labelledby="cmp-t">
   <h2 id="cmp-t" class="visually-hidden">{titulo}</h2>
-  <div class="cmp__marco" id="cmp-marco" style="--corte: 50%">
+  <div class="cmp__marco" id="cmp-marco">
     <figure class="cmp__capa">
       <Image
         class="cmp__img"
@@ -42,17 +46,19 @@ const origen = (e: Foto) => (e.ejemplo ? 'Foto de ejemplo' : 'Foto real · lols.
     </figure>
     {previas.map((e, i) => (
       <figure class:list={['cmp__capa', 'cmp__capa--previa', { 'is-activa': i === 0 }]} data-i={i}>
-        <Image
-          class="cmp__img"
-          src={e.src}
-          alt={e.alt}
-          widths={[640, 1024, 1400]}
-          sizes="(max-width: 960px) 100vw, 640px"
-          loading={i === 0 ? 'eager' : 'lazy'}
-          draggable="false"
-        />
-        <span class="cmp__rot">{e.etapa}{e.fecha && <small>{e.fecha}</small>}</span>
-        <span class="cubo__ref cmp__ref--izq">{origen(e)}</span>
+        <div class="cmp__dentro">
+          <Image
+            class="cmp__img"
+            src={e.src}
+            alt={e.alt}
+            widths={[640, 1024, 1400]}
+            sizes="(max-width: 960px) 100vw, 640px"
+            loading={i === 0 ? 'eager' : 'lazy'}
+            draggable="false"
+          />
+          <span class="cmp__rot">{e.etapa}{e.fecha && <small>{e.fecha}</small>}</span>
+          <span class="cubo__ref cmp__ref--izq">{origen(e)}</span>
+        </div>
       </figure>
     ))}
     <div class="cmp__linea" aria-hidden="true"></div>
@@ -93,38 +99,57 @@ const origen = (e: Foto) => (e.ejemplo ? 'Foto de ejemplo' : 'Foto real · lols.
   document.querySelectorAll<HTMLElement>('[data-cmp]').forEach((raiz) => {
     const marco = raiz.querySelector<HTMLElement>('.cmp__marco')!;
     const manija = raiz.querySelector<HTMLElement>('.cmp__manija')!;
+    const linea = raiz.querySelector<HTMLElement>('.cmp__linea')!;
+    const pista = raiz.querySelector<HTMLElement>('.cmp__pista')!;
     const previas = [...raiz.querySelectorAll<HTMLElement>('.cmp__capa--previa')];
+    const dentros = previas.map((f) => f.querySelector<HTMLElement>('.cmp__dentro')!);
     const botones = [...raiz.querySelectorAll<HTMLButtonElement>('.cmp__etapa')];
     const nombres = botones.map((b) => b.querySelector('.cmp__t')!.textContent!.toLowerCase());
     const ultima = botones.length - 1;
     const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const REPOSO = 50;
     let corte = REPOSO;
+    let ancho = marco.clientWidth;
     let izq = 0; // etapa que está a la izquierda de la línea (antes o durante)
+    let vista = 0; // etapa marcada al lado
     let tocado = false;
     let arrastrando = false;
     let cuadro = 0;
     const relojes: number[] = [];
+    raiz.classList.add('cmp--js');
 
-    // la etapa marcada al lado es la que ocupa más foto
+    // la etapa marcada al lado es la que ocupa más foto (el DOM se toca solo cuando cambia)
     const marcar = () => {
-      const vista = corte >= 50 ? izq : ultima;
+      const v = corte >= 50 ? izq : ultima;
+      if (v === vista) return;
+      vista = v;
       botones.forEach((b, k) => {
-        b.classList.toggle('is-vista', k === vista);
-        if (k === vista) b.setAttribute('aria-current', 'step');
+        b.classList.toggle('is-vista', k === v);
+        if (k === v) b.setAttribute('aria-current', 'step');
         else b.removeAttribute('aria-current');
       });
     };
-    const poner = (v: number) => {
-      corte = Math.max(0, Math.min(100, v));
-      marco.style.setProperty('--corte', `${corte}%`);
+    const avisar = () => {
       const p = Math.round(corte);
       manija.setAttribute('aria-valuenow', String(p));
       manija.setAttribute(
         'aria-valuetext',
         p >= 100 ? `Todo ${nombres[izq]}` : p <= 0 ? 'Todo después' : `${p} % ${nombres[izq]}, ${100 - p} % después`,
       );
+    };
+    // todo se mueve con transform: la ventana de la foto de arriba hacia un lado y su contenido
+    // hacia el otro; la línea y la manija (que no se sale del marco) a la altura del corte
+    const poner = (v: number, conAviso = true) => {
+      corte = Math.max(0, Math.min(100, v));
+      const x = (corte / 100) * ancho;
+      const m = Math.min(ancho - 30, Math.max(30, x));
+      previas.forEach((f) => (f.style.transform = `translate3d(${x - ancho}px, 0, 0)`));
+      dentros.forEach((d) => (d.style.transform = `translate3d(${ancho - x}px, 0, 0)`));
+      linea.style.transform = `translate3d(${x}px, 0, 0)`;
+      manija.style.transform = `translate3d(${m}px, 0, 0)`;
+      pista.style.transform = `translate3d(${m}px, 0, 0)`;
       marcar();
+      if (conAviso) avisar();
     };
     // movimiento suave hecho a mano (y no con transición CSS) para que la etapa marcada cambie
     // justo cuando la línea cruza la mitad
@@ -136,7 +161,7 @@ const origen = (e: Foto) => (e.ejemplo ? 'Foto de ejemplo' : 'Foto real · lols.
       const paso = (t: number) => {
         const x = Math.min(1, (t - t0) / ms);
         const e = x < 0.5 ? 4 * x * x * x : 1 - (-2 * x + 2) ** 3 / 2;
-        poner(desde + (hasta - desde) * e);
+        poner(desde + (hasta - desde) * e, x >= 1);
         if (x < 1) cuadro = requestAnimationFrame(paso);
       };
       cuadro = requestAnimationFrame(paso);
@@ -152,11 +177,19 @@ const origen = (e: Foto) => (e.ejemplo ? 'Foto de ejemplo' : 'Foto real · lols.
       if (i === ultima) return animar(0, 900);
       if (i !== izq) {
         izq = i;
+        vista = -1;
         previas.forEach((f, k) => f.classList.toggle('is-activa', k === i));
         manija.setAttribute('aria-label', `Comparar ${nombres[i]} y después`);
       }
       animar(100, 900);
     };
+    poner(REPOSO);
+    // si el marco cambia de ancho (girar la tablet, achicar la ventana), se reubica todo
+    new ResizeObserver(() => {
+      if (marco.clientWidth === ancho) return;
+      ancho = marco.clientWidth;
+      poner(corte, false);
+    }).observe(marco);
 
     // barrido de entrada (todo antes → todo después → mitad) y, mientras nadie la toque, un
     // vaivén cada tanto para invitar a probarla; parte cuando la foto ya cargó y está a la vista
@@ -165,7 +198,7 @@ const origen = (e: Foto) => (e.ejemplo ? 'Foto de ejemplo' : 'Foto real · lols.
       if (empezado || tocado) return;
       empezado = true;
       if (reducido) return;
-      poner(100);
+      poner(100, false);
       luego(500, () => animar(0, 2200));
       luego(3200, () => animar(REPOSO, 1400));
       let vueltas = 0;
@@ -230,13 +263,13 @@ const origen = (e: Foto) => (e.ejemplo ? 'Foto de ejemplo' : 'Foto real · lols.
       }
       if (!movio) soltar();
       movio = true;
-      poner(desde(e));
+      poner(desde(e), false);
     });
     marco.addEventListener('pointerup', (e) => {
       if (arrastrando && !movio && e.pointerType !== 'mouse') {
         soltar();
         animar(desde(e), 500);
-      }
+      } else if (arrastrando) avisar();
       arrastrando = false;
     });
     marco.addEventListener('pointercancel', () => (arrastrando = false));

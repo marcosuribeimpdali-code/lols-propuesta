@@ -1,18 +1,17 @@
 ---
 import Base from '../Base.astro';
 import { r } from '../config';
-import BannerMuro from '../components/BannerMuro.astro';
+import BannerPlano from '../components/BannerPlano.astro';
 import FormContacto from '../../comun/FormContacto.astro';
 import Mapa from '../../comun/Mapa.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import IconoWhatsapp from '../../comun/IconoWhatsapp.astro';
 import TituloSeccion from '../components/TituloSeccion.astro';
 import { empresa, mapas, whatsappHref, areas, correoArea } from '../../../data/empresa';
-import { porEstado } from '../../../data/proyectos';
-
-// cabecera "muro de obras": las fotos reales de las obras finalizadas (sitio de 2018) pasando detrás
-// del título, para que el que viene a cotizar vea lo que ya se construyó
-const fotosObras = porEstado('terminado').flatMap((p) => (p.imagen ? [p.imagen.src] : []));
+// cabecera "del plano a la obra" (opción H): foto de una obra terminada y su plano, que sale de
+// la misma foto con scripts/plano.mjs. Stock (Unsplash) hasta tener una obra real de LOLS.
+import fotoObra from '../../../assets/contacto/obra-terminada.jpg';
+import planoObra from '../../../assets/contacto/obra-terminada-plano.jpg';
 
 // íconos de línea de cada área (mismo trazo que los de arriba)
 const iconosArea = [
@@ -22,9 +21,16 @@ const iconosArea = [
 ];
 ---
 <Base title="Contacto" description="Contacte a LOLS Ingeniería: dirección, teléfono y correo.">
-  <BannerMuro titulo="Contacto" antetitulo={`${empresa.anios} años · más de ${empresa.cifras.obras} obras entregadas`} fotos={fotosObras}>
-    <p>Cuéntenos de su proyecto. Estas son algunas de las obras que ya entregamos: la suya puede ser la próxima.</p>
-  </BannerMuro>
+  <BannerPlano
+    titulo="Contacto"
+    antetitulo="Del plano a la obra"
+    foto={fotoObra}
+    plano={planoObra}
+    alt="Edificio de oficinas terminado, con fachada de paneles y jardines"
+    referencial="Iracema Navarro / Unsplash"
+  >
+    <p>Cuéntenos de su proyecto: nosotros lo llevamos del plano a la obra terminada.</p>
+  </BannerPlano>
 
   <section class="pn-sec">
     <div class="wrap">

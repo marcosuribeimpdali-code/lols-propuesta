@@ -1,10 +1,13 @@
 ---
 // Cabecera "del plano a la obra" (opción H de la comparación de portadas, 30-09-2026): la foto de
 // una obra terminada y su plano de líneas, separados por una línea que el visitante arrastra. Al
-// cargar, la línea recorre la foto sola hasta que alguien la toma. Estuvo en Contacto; desde el
-// 30-09-2026 está guardada sin uso: el arrastre pasó a las fichas de obras finalizadas (ComparaObra)
-// y Contacto usa el muro de obras (BannerMuro). El plano sale de la misma foto con scripts/plano.mjs.
+// cargar, la línea recorre la foto sola hasta que alguien la toma. Se usa en Contacto, donde el
+// visitante viene a cotizar. El plano sale de la misma foto con scripts/plano.mjs (mismo tamaño).
 // El único <h1> de la página vive aquí, como en PageBanner.
+// Rendimiento: el plano se ve por una "ventana" que se corre de lado mientras la imagen se corre al
+// revés (queda quieta); la línea, la manija y los rótulos también se mueven con transform, y los
+// barridos solos son transiciones de transform. Así lo mueve la tarjeta de video: con clip-path y
+// `left` se redibujaba y recalculaba la página en cada cuadro, y en Android se trababa.
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { r } from '../config';
@@ -22,7 +25,9 @@ const { titulo, antetitulo, foto, plano, alt, referencial } = Astro.props;
 ---
 <section class="pn-banner pn-banner--plano" data-plano>
   <Image class="pn-banner__img" src={foto} alt={alt} widths={[640, 1280, 2000]} sizes="100vw" loading="eager" draggable="false" />
-  <Image class="pn-banner__img pn-banner__img--plano" src={plano} alt="" widths={[640, 1280, 2000]} sizes="100vw" loading="eager" draggable="false" />
+  <div class="pn-banner__ventana" aria-hidden="true">
+    <Image class="pn-banner__img pn-banner__img--plano" src={plano} alt="" widths={[640, 1280, 2000]} sizes="100vw" loading="eager" draggable="false" />
+  </div>
   <div class="pn-banner__velo" aria-hidden="true"></div>
   <div class="pn-banner__linea" aria-hidden="true"></div>
   <span class="pn-banner__rot pn-banner__rot--plano" aria-hidden="true">Plano</span>
@@ -55,18 +60,38 @@ const { titulo, antetitulo, foto, plano, alt, referencial } = Astro.props;
 <script>
   const raiz = document.querySelector<HTMLElement>('[data-plano]');
   if (raiz) {
-    const manija = raiz.querySelector<HTMLElement>('.pn-banner__manija')!;
+    const $ = (s: string) => raiz.querySelector<HTMLElement>(s)!;
+    const manija = $('.pn-banner__manija');
+    const ventana = $('.pn-banner__ventana');
+    const plano = $('.pn-banner__img--plano');
+    const linea = $('.pn-banner__linea');
+    const pista = $('.pn-banner__pista');
+    const rotPlano = $('.pn-banner__rot--plano');
+    const rotObra = $('.pn-banner__rot--obra');
     const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const REPOSO = 58; // dónde queda la línea después del barrido: plano a la izquierda, obra a la derecha
     let corte = 100;
+    let ancho = raiz.clientWidth;
     let tocado = false;
     let arrastrando = false;
     const relojes: number[] = [];
+    raiz.classList.add('plano-js');
 
-    const poner = (v: number, suave = false) => {
+    // con `ms`, el cambio es una transición de transform de esa duración (la anima la tarjeta de
+    // video); sin `ms`, es inmediato (arrastre, teclado)
+    const poner = (v: number, ms = 0) => {
       corte = Math.max(0, Math.min(100, v));
-      raiz.classList.toggle('suave', suave);
-      raiz.style.setProperty('--corte', `${corte}%`);
+      raiz.classList.toggle('suave', ms > 0);
+      if (ms) raiz.style.setProperty('--dur', `${ms}ms`);
+      const x = (corte / 100) * ancho;
+      const m = Math.min(ancho - 28, Math.max(28, x));
+      ventana.style.transform = `translate3d(${x - ancho}px, 0, 0)`;
+      plano.style.transform = `translate3d(${ancho - x}px, 0, 0)`;
+      linea.style.transform = `translate3d(${x}px, 0, 0)`;
+      manija.style.transform = `translate3d(${m}px, 0, 0)`;
+      pista.style.transform = `translate3d(${m}px, 0, 0)`;
+      rotPlano.style.transform = `translate3d(${x - 10}px, 0, 0)`;
+      rotObra.style.transform = `translate3d(${x + 10}px, 0, 0)`;
       const n = Math.round(corte);
       manija.setAttribute('aria-valuenow', String(n));
       manija.setAttribute('aria-valuetext', n >= 100 ? 'Todo plano' : n <= 0 ? 'Toda la obra' : `${n} % plano, ${100 - n} % obra`);
@@ -82,30 +107,66 @@ const { titulo, antetitulo, foto, plano, alt, referencial } = Astro.props;
     poner(100);
     if (reducido) poner(REPOSO);
     else {
-      luego(900, () => poner(0, true));
-      luego(3600, () => poner(REPOSO, true));
+      luego(900, () => poner(0, 2200));
+      luego(3600, () => poner(REPOSO, 2200));
       const vaiven = (t: number) => {
-        luego(t, () => poner(22, true));
-        luego(t + 2600, () => poner(REPOSO, true));
+        luego(t, () => poner(22, 2200));
+        luego(t + 2600, () => poner(REPOSO, 2200));
         luego(t + 5200, () => vaiven(6000));
       };
       vaiven(10000);
     }
+    // si cambia el ancho (girar la tablet, achicar la ventana), se reubica todo sin animación
+    new ResizeObserver(() => {
+      if (raiz.clientWidth === ancho) return;
+      ancho = raiz.clientWidth;
+      poner(corte);
+    }).observe(raiz);
 
     const desde = (e: PointerEvent) => {
       const r = raiz.getBoundingClientRect();
       return ((e.clientX - r.left) / r.width) * 100;
     };
+    // con el dedo, la línea se mueve al arrastrar de lado o al tocar sin mover; pasar el dedo en
+    // vertical para bajar la página no la mueve
+    let movio = false;
+    let x0 = 0;
+    let y0 = 0;
     raiz.addEventListener('pointerdown', (e) => {
       if ((e.target as Element).closest('a, button')) return;
       e.preventDefault();
-      soltar();
       arrastrando = true;
+      movio = false;
+      x0 = e.clientX;
+      y0 = e.clientY;
       raiz.setPointerCapture(e.pointerId);
+      if (e.pointerType === 'mouse') {
+        soltar();
+        poner(desde(e));
+      }
+    });
+    raiz.addEventListener('pointermove', (e) => {
+      if (!arrastrando) return;
+      if (!movio && e.pointerType !== 'mouse') {
+        const dx = Math.abs(e.clientX - x0);
+        const dy = Math.abs(e.clientY - y0);
+        if (dx < 6 && dy < 6) return;
+        if (dy > dx) {
+          arrastrando = false;
+          return;
+        }
+      }
+      if (!movio) soltar();
+      movio = true;
       poner(desde(e));
     });
-    raiz.addEventListener('pointermove', (e) => arrastrando && poner(desde(e)));
-    raiz.addEventListener('pointerup', () => (arrastrando = false));
+    raiz.addEventListener('pointerup', (e) => {
+      if (arrastrando && !movio && e.pointerType !== 'mouse') {
+        soltar();
+        poner(desde(e), 500);
+      }
+      arrastrando = false;
+    });
     raiz.addEventListener('pointercancel', () => (arrastrando = false));
     manija.addEventListener('keydown', (e) => {
       const k = e.key;

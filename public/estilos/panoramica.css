@@ -3057,11 +3057,21 @@ main:focus {
   inset: 0;
   margin: 0;
 }
+/* la foto de arriba se ve por una ventana que se corre de lado; su contenido (.cmp__dentro) se corre
+   al revés y queda quieto. Lo mueve el JS con transform (sin JS, a la mitad) */
 .cmp__capa--previa {
   z-index: 1;
-  clip-path: inset(0 calc(100% - var(--corte)) 0 0);
+  overflow: hidden;
   opacity: 0;
+  transform: translateX(-50%);
   transition: opacity 0.5s ease;
+  will-change: transform;
+}
+.cmp__dentro {
+  position: absolute;
+  inset: 0;
+  transform: translateX(50%);
+  will-change: transform;
 }
 .cmp__capa--previa.is-activa {
   z-index: 2;
@@ -3109,7 +3119,7 @@ main:focus {
   z-index: 3;
   top: 0;
   bottom: 0;
-  left: var(--corte);
+  left: 50%;
   width: 2px;
   margin-left: -1px;
   background: #fff;
@@ -3119,7 +3129,7 @@ main:focus {
 .cmp__manija {
   position: absolute;
   z-index: 4;
-  left: clamp(30px, var(--corte), calc(100% - 30px));
+  left: 50%;
   top: 50%;
   display: grid;
   place-items: center;
@@ -3148,7 +3158,7 @@ main:focus {
 .cmp__pista {
   position: absolute;
   z-index: 4;
-  left: clamp(30px, var(--corte), calc(100% - 30px));
+  left: 50%;
   top: calc(50% + 38px);
   translate: -50% 0;
   padding: 2px 10px;
@@ -3163,6 +3173,11 @@ main:focus {
 }
 .cmp.tocado .cmp__pista {
   opacity: 0;
+}
+/* con JS, la línea, la manija y la pista parten del borde y el JS las corre con transform */
+.cmp--js :is(.cmp__linea, .cmp__manija, .cmp__pista) {
+  left: 0;
+  will-change: transform;
 }
 .cmp__ante {
   font: 700 0.98rem/1.2 var(--cond);
@@ -4320,13 +4335,11 @@ fieldset.campo--grupo > legend {
   }
 }
 
-/* ---------- cabecera "del plano a la obra" (opción H; guardada, hoy sin uso: su arrastre pasó a
-   las fichas de las obras finalizadas, ver .cmp). --corte también lo usa el comparador ---------- */
-@property --corte {
-  syntax: '<percentage>';
-  inherits: true;
-  initial-value: 100%;
-}
+/* ---------- cabecera "del plano a la obra" (Contacto, opción H) ----------
+   El plano se ve por una ventana que se corre de lado mientras la imagen se corre al revés; todo lo
+   que se mueve (ventana, imagen, línea, manija, rótulos) lo mueve el JS con transform, y los
+   barridos solos son transiciones de transform (clase .suave, duración en --dur). Sin JS se ve el
+   plano completo, con la línea en el borde derecho. */
 .pn-banner--plano {
   min-height: clamp(380px, 42vw, 560px);
   cursor: ew-resize;
@@ -4334,11 +4347,27 @@ fieldset.campo--grupo > legend {
   user-select: none;
   -webkit-user-select: none;
 }
-.pn-banner--plano.suave {
-  transition: --corte 2.2s cubic-bezier(0.65, 0, 0.25, 1);
+.pn-banner__ventana {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  will-change: transform;
 }
-.pn-banner__img--plano {
-  clip-path: inset(0 calc(100% - var(--corte)) 0 0);
+.pn-banner__ventana .pn-banner__img--plano {
+  will-change: transform;
+}
+.plano-js :is(.pn-banner__linea, .pn-banner__manija, .pn-banner__pista, .pn-banner__rot) {
+  left: 0;
+  will-change: transform;
+}
+.pn-banner--plano.suave :is(.pn-banner__ventana, .pn-banner__img--plano, .pn-banner__linea, .pn-banner__manija, .pn-banner__rot) {
+  transition: transform var(--dur, 2.2s) cubic-bezier(0.65, 0, 0.25, 1);
+}
+.pn-banner--plano.suave .pn-banner__pista {
+  transition:
+    transform var(--dur, 2.2s) cubic-bezier(0.65, 0, 0.25, 1),
+    opacity 0.4s;
 }
 /* las fotos no reciben el mouse: si no, el navegador empieza a "arrastrar la imagen" y corta el
    arrastre de la línea */
@@ -4374,7 +4403,7 @@ fieldset.campo--grupo > legend {
   z-index: 2;
   top: 0;
   bottom: 0;
-  left: var(--corte);
+  left: 100%;
   width: 2px;
   margin-left: -1px;
   background: #fff;
@@ -4384,7 +4413,7 @@ fieldset.campo--grupo > legend {
 .pn-banner__manija {
   position: absolute;
   z-index: 3;
-  left: var(--corte);
+  left: calc(100% - 28px);
   top: 46%;
   display: grid;
   place-items: center;
@@ -4413,7 +4442,7 @@ fieldset.campo--grupo > legend {
 .pn-banner__pista {
   position: absolute;
   z-index: 3;
-  left: var(--corte);
+  left: calc(100% - 28px);
   top: calc(46% + 38px);
   translate: -50% 0;
   padding: 2px 10px;
@@ -4441,18 +4470,19 @@ fieldset.campo--grupo > legend {
   pointer-events: none;
 }
 .pn-banner__rot--plano {
-  right: calc(100% - var(--corte) + 10px);
+  left: calc(100% - 10px);
+  translate: -100% 0;
   border: 1px solid rgb(214 240 196 / 0.55);
   background: rgb(11 45 24 / 0.85);
   color: #d6f0c4;
 }
 .pn-banner__rot--obra {
-  left: calc(var(--corte) + 10px);
+  left: calc(100% + 10px);
   background: #fff;
   color: var(--verde-osc);
 }
 @media (prefers-reduced-motion: reduce) {
-  .pn-banner--plano.suave {
+  .pn-banner--plano.suave :is(.pn-banner__ventana, .pn-banner__img--plano, .pn-banner__linea, .pn-banner__manija, .pn-banner__pista, .pn-banner__rot) {
     transition: none;
   }
 }
@@ -4467,136 +4497,6 @@ fieldset.campo--grupo > legend {
   }
   .pn-banner--plano .pn-banner__velo {
     background: linear-gradient(0deg, rgb(6 18 9 / 0.9) 0%, rgb(6 18 9 / 0.35) 50%, rgb(6 18 9 / 0) 70%);
-  }
-}
-
-/* ---------- cabecera de Contacto: muro de obras (30-09-2026) ----------
-   Columnas con las fotos de las obras finalizadas que suben y bajan sin fin a la derecha; el
-   título queda a la izquierda sobre un velo verde oscuro. */
-.pn-banner--muro {
-  align-items: center;
-  min-height: clamp(440px, 40vw, 580px);
-}
-.pn-muro {
-  position: absolute;
-  inset: -14% -3% -14% 36%;
-  display: grid;
-  --hueco: 12px;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: var(--hueco);
-  rotate: -6deg;
-}
-.pn-muro__col {
-  display: grid;
-  align-self: start;
-  gap: var(--hueco);
-  animation: pn-muro-subir var(--dur, 64s) linear infinite;
-}
-.pn-muro__col:nth-child(even) {
-  animation-name: pn-muro-bajar;
-}
-.pn-muro__foto {
-  width: 100%;
-  aspect-ratio: 0.865;
-  object-fit: cover;
-  pointer-events: none;
-}
-.pn-banner--muro.is-pausado .pn-muro__col {
-  animation-play-state: paused;
-}
-@keyframes pn-muro-subir {
-  from {
-    translate: 0 0;
-  }
-  to {
-    translate: 0 calc(-50% - var(--hueco) / 2);
-  }
-}
-@keyframes pn-muro-bajar {
-  from {
-    translate: 0 calc(-50% - var(--hueco) / 2);
-  }
-  to {
-    translate: 0 0;
-  }
-}
-/* velo: oscuro detrás del texto y casi nada sobre las fotos de la derecha */
-.pn-banner--muro .pn-banner__velo {
-  background:
-    linear-gradient(90deg, rgb(6 18 9 / 0.96) 0%, rgb(6 18 9 / 0.9) 34%, rgb(6 18 9 / 0.35) 58%, rgb(6 18 9 / 0.08) 78%),
-    linear-gradient(0deg, rgb(6 18 9 / 0.45) 0%, rgb(6 18 9 / 0) 30%);
-}
-.pn-banner--muro .pn-banner__in {
-  max-width: var(--wrap);
-}
-.pn-banner--muro .pn-banner__in > * {
-  max-width: 34rem;
-}
-.pn-muro__pausa {
-  position: absolute;
-  z-index: 3;
-  right: var(--gutter);
-  bottom: 16px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 40px;
-  padding: 0 14px;
-  border: 0;
-  border-radius: 999px;
-  background: rgb(0 0 0 / 0.45);
-  color: #fff;
-  font: 600 0.85rem var(--cond);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-.pn-muro__pausa:hover {
-  background: rgb(0 0 0 / 0.7);
-}
-.pn-muro__pausa:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 3px;
-}
-.pn-muro__pausa-icono {
-  width: 10px;
-  height: 12px;
-  border-inline: 3px solid currentColor;
-}
-.pn-banner--muro.is-pausado .pn-muro__pausa-icono {
-  width: 0;
-  height: 0;
-  border-inline: 0;
-  border-left: 11px solid currentColor;
-  border-block: 7px solid transparent;
-}
-@media (max-width: 760px) {
-  /* celular: el muro detrás de todo el texto, con tres columnas y más velo */
-  .pn-banner--muro {
-    align-items: flex-end;
-    min-height: 480px;
-  }
-  .pn-muro {
-    inset: -20% -24% -20% -8%;
-    --hueco: 10px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .pn-muro__col:nth-child(n + 4) {
-    display: none;
-  }
-  .pn-banner--muro .pn-banner__velo {
-    background: linear-gradient(0deg, rgb(6 18 9 / 0.95) 0%, rgb(6 18 9 / 0.78) 50%, rgb(6 18 9 / 0.5) 100%);
-  }
-  .pn-banner--muro .pn-banner__in {
-    padding-bottom: 72px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .pn-muro__col {
-    animation: none;
-  }
-  .pn-muro__pausa {
-    display: none;
   }
 }
 

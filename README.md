@@ -87,11 +87,10 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
   `src/data/portada.ts`, foto en `src/assets/portada/obra-aerea.jpg`). Con una foto aérea real de
   LOLS: reemplazar el archivo (misma proporción) y volver a ubicar los puntos (en % de la foto). Las
   portadas anteriores siguen en `components/`: `PortadaFundido` (opción C) y `PortadaCubo`.
-- **Contacto: muro de obras (30-09-2026)**: la cabecera tiene de fondo columnas con las fotos
-  reales de las obras finalizadas que suben y bajan sin parar, con botón de pausa
-  (`BannerMuro.astro`; toma las fotos de `proyectos.ts`, así que cada obra nueva aparece sola).
-  La cabecera anterior, "del plano a la obra" (opción H, `BannerPlano.astro`), queda guardada: el
-  plano sale de la misma foto con `node scripts/plano.mjs <foto> <plano>`.
+- **Contacto: del plano a la obra (opción H)**: la cabecera muestra una obra terminada y su plano
+  de líneas, con una línea que el visitante arrastra (`BannerPlano.astro`). El plano sale de la
+  misma foto: `node scripts/plano.mjs <foto> <plano>` (fotos en `src/assets/contacto/`). Se probó
+  un "muro de obras" con las fotos de 2018 (30-09-2026) y no gustó: quedó en el historial de git.
 - **Colores**: el verde de lols.cl (#168D3A) con sus tonos oscuros, negro y blanco. El lima
   (#81D742) del sitio 2018 se sacó (30-09-2026): no combinaba con el verde. Sobre fondo claro los
   acentos van en verde; sobre fotos o fondos oscuros, en blanco.
