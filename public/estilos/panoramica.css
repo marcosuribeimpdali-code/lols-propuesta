@@ -22,6 +22,8 @@
   --campo: #7a847e;
   --font: 'Barlow', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --cond: 'Barlow Condensed', 'Barlow', 'Arial Narrow', sans-serif;
+  /* títulos grandes, en minúsculas (tipo oración): la misma familia, semicondensada */
+  --titular: 'Barlow Semi Condensed', 'Barlow', 'Arial Narrow', sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
   --wrap: 1240px;
   --gutter: clamp(16px, 4vw, 40px);
@@ -795,6 +797,317 @@ main:focus {
   }
   .cubo__punto {
     width: 20px;
+  }
+}
+
+/* ---------- portada: fundido con pestañas de servicios (opción C) ---------- */
+.fundido {
+  position: relative;
+  height: max(580px, min(100svh - 36px, 960px));
+  overflow: hidden;
+  background: #0a0f0b;
+  color: #fff;
+  touch-action: pan-y;
+}
+.fundido__escena {
+  position: absolute;
+  inset: 0;
+}
+.fundido__panel {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 1.1s ease,
+    visibility 0s linear 1.1s;
+}
+.fundido__panel.is-activa {
+  z-index: 1;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 1.1s ease,
+    visibility 0s;
+}
+.fundido__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* arriba oscuro para la cabecera, a la izquierda para el texto y abajo para las pestañas */
+.fundido__velo {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgb(6 10 7 / 0.7) 0%, rgb(6 10 7 / 0) 26%),
+    linear-gradient(0deg, rgb(6 10 7 / 0.7) 0%, rgb(6 10 7 / 0) 30%),
+    linear-gradient(90deg, rgb(6 18 9 / 0.86) 0%, rgb(6 18 9 / 0.55) 45%, rgb(6 18 9 / 0.08) 100%);
+}
+.fundido__texto {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+  padding-top: 130px;
+  padding-bottom: 150px;
+}
+/* el bloque de texto mide lo que su contenido: el mouse encima pausa el cambio */
+.fundido__caja {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  max-width: 760px;
+}
+.fundido__ante {
+  font: 600 1rem/1.2 var(--cond);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--lima);
+}
+.fundido__titulo {
+  max-width: 13ch;
+  font: 700 clamp(2.7rem, 1.2rem + 5.4vw, 6rem) / 1 var(--titular);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  text-shadow: 0 2px 30px rgb(0 0 0 / 0.35);
+}
+.fundido__bajada {
+  max-width: 34em;
+  font-size: clamp(1.05rem, 0.95rem + 0.45vw, 1.35rem);
+  line-height: 1.5;
+  color: rgb(255 255 255 / 0.9);
+}
+.fundido__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+.fundido__ref {
+  bottom: 84px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fundido__panel.is-activa .fundido__img {
+    animation: fundido-zoom 10s ease-out both;
+  }
+  /* el texto que sale se va rápido; el que entra aparece cuando la foto ya se fundió a medias */
+  .fundido__panel .fundido__caja > * {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+  .fundido__panel.is-activa .fundido__caja > * {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.7s ease 0.45s,
+      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.45s;
+  }
+  .fundido__panel.is-activa .fundido__caja > :nth-child(2) {
+    transition-delay: 0.55s;
+  }
+  .fundido__panel.is-activa .fundido__caja > :nth-child(3) {
+    transition-delay: 0.65s;
+  }
+  .fundido__panel.is-activa .fundido__caja > :nth-child(4) {
+    transition-delay: 0.75s;
+  }
+}
+@keyframes fundido-zoom {
+  from {
+    transform: scale(1.07);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+/* pestañas: una por servicio, con la barra de avance encima de la activa */
+.fundido__pie {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  border-top: 1px solid rgb(255 255 255 / 0.18);
+  background: rgb(6 18 9 / 0.55);
+  backdrop-filter: blur(6px);
+}
+.fundido__controles {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+}
+.fundido__tabs {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.fundido__tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 64px;
+  padding: 12px 16px;
+  border: 0;
+  background: none;
+  color: rgb(255 255 255 / 0.68);
+  font: 700 1rem/1.15 var(--cond);
+  letter-spacing: 0.07em;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.fundido__tab + .fundido__tab {
+  border-left: 1px solid rgb(255 255 255 / 0.14);
+}
+.fundido__tab:hover,
+.fundido__tab[aria-selected="true"] {
+  color: #fff;
+}
+.fundido__tab .icono {
+  flex: none;
+  width: 22px;
+  height: 22px;
+}
+.fundido__tab[aria-selected="true"] .icono {
+  color: var(--lima);
+}
+.fundido__tab-n {
+  font-size: 0.85rem;
+  color: var(--lima);
+}
+.fundido__tab-barra {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 3px;
+}
+.fundido__tab-barra span {
+  display: block;
+  height: 100%;
+  background: var(--lima);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+/* pausada, la pestaña activa se marca con la barra entera, sin avanzar */
+.fundido.is-pausado .fundido__tab[aria-selected="true"] .fundido__tab-barra span {
+  transform: scaleX(1);
+}
+.fundido__tab:focus-visible,
+.fundido__pausa:focus-visible {
+  outline: 2px solid var(--lima);
+  outline-offset: -4px;
+}
+.fundido__pausa {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.35);
+  color: #fff;
+  font: 600 0.9rem var(--cond);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.fundido__pausa:hover {
+  background: rgb(0 0 0 / 0.6);
+}
+.fundido__pausa-icono {
+  width: 10px;
+  height: 12px;
+  border-inline: 3px solid currentColor;
+}
+.fundido.is-pausado .fundido__pausa-icono {
+  width: 0;
+  height: 0;
+  border-inline: 0;
+  border-left: 11px solid currentColor;
+  border-block: 7px solid transparent;
+}
+/* notebook: el número sobra; tablet y celular: solo número e ícono (el nombre queda para lectores) */
+@media (max-width: 1240px) {
+  .fundido__tab-n {
+    display: none;
+  }
+}
+@media (max-width: 960px) {
+  .fundido__texto {
+    padding-top: 90px;
+  }
+  .fundido__tab {
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 4px;
+  }
+  .fundido__tab-n {
+    display: block;
+  }
+  .fundido__tab-nombre {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .fundido__pausa-txt {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .fundido__pausa {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+}
+@media (max-width: 760px) {
+  /* en celular la barra fija de Llamar/WhatsApp/Cotizar tapa el borde inferior: la portada
+     termina justo encima, para que las pestañas se vean */
+  .fundido {
+    height: max(540px, min(100svh - 68px, 760px));
+  }
+  .fundido__velo {
+    background: linear-gradient(180deg, rgb(6 10 7 / 0.72) 0%, rgb(6 10 7 / 0.2) 30%, rgb(6 10 7 / 0.35) 55%, rgb(6 10 7 / 0.88) 100%);
+  }
+  .fundido__texto {
+    justify-content: flex-end;
+    padding-bottom: 104px;
+  }
+  .fundido__caja {
+    gap: 14px;
+  }
+  .fundido__ante {
+    font-size: 0.85rem;
+    letter-spacing: 0.16em;
+  }
+  .fundido__ref {
+    top: 88px;
+    bottom: auto;
+  }
+  .fundido__controles {
+    gap: 4px;
   }
 }
 
@@ -3267,4 +3580,24 @@ fieldset.campo--grupo > legend {
   html:not(.con-marcas) .pn-datos {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+/* ---------- títulos grandes en minúsculas (30-09-2026) ----------
+   Los títulos de cabeceras, secciones y franjas van en tipo oración con Barlow Semi Condensed (la
+   misma familia). Los rótulos chicos (antetítulos, botones, menú, tarjetas) siguen en mayúsculas.
+   Va al final para ganarle a la regla de cada componente. */
+.pn-banner h1,
+.pn-tit h2,
+.pn-cta h2,
+.pn-franja__t,
+.pn-mapa h2,
+.form__t,
+.prosa h2,
+.pn-obra-top__cab h1,
+.eq-licita__t {
+  font-family: var(--titular);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.005em;
+  text-transform: none;
 }

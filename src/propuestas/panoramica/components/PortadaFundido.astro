@@ -1,0 +1,198 @@
+---
+// Portada a pantalla completa, opción C de la comparación de portadas (30-09-2026): una foto por
+// servicio que se funde con la siguiente y, abajo, una pestaña por servicio con una barra que
+// muestra cuánto falta para el cambio (como Mortenson o Liebherr). Reemplaza al cubo 3D.
+// Accesibilidad (patrón "carrusel con pestañas"): botón de pausa (WCAG 2.2.2), pestañas con
+// flechas del teclado, deslizar con el dedo; se detiene con el mouse sobre el texto o las pestañas
+// y al enfocar un control;
+// con "reducir movimiento" no avanza sola ni hace zoom.
+import { Image } from 'astro:assets';
+import IconoServicio from '../../comun/IconoServicio.astro';
+import { portadaServicios } from '../../../data/portada';
+import { servicios } from '../../../data/servicios';
+import { empresa } from '../../../data/empresa';
+import { r } from '../config';
+
+const pasos = portadaServicios.map((p) => ({ ...p, servicio: servicios.find((s) => s.slug === p.slug)! }));
+---
+<section class="fundido" aria-roledescription="carrusel" aria-label="Portada: nuestros servicios">
+  <h1 class="visually-hidden">{empresa.nombreCorto}: {empresa.lema}</h1>
+  <div class="fundido__escena" aria-live="off">
+    {pasos.map((p, i) => (
+      <div
+        class:list={['fundido__panel', { 'is-activa': i === 0 }]}
+        id={`portada-${p.slug}`}
+        role="tabpanel"
+        aria-roledescription="diapositiva"
+        aria-labelledby={`portada-tab-${p.slug}`}
+        inert={i !== 0}
+      >
+        <Image
+          class="fundido__img"
+          src={p.img}
+          alt={p.alt}
+          widths={[640, 1024, 1440, 2000]}
+          sizes="100vw"
+          loading="eager"
+          fetchpriority={i === 0 ? 'high' : 'low'}
+        />
+        <div class="fundido__velo" aria-hidden="true"></div>
+        <div class="wrap fundido__texto">
+          <div class="fundido__caja">
+          <p class="fundido__ante">{empresa.lema}</p>
+          <p class="fundido__titulo">{p.titulo}</p>
+          <p class="fundido__bajada">{p.texto}</p>
+          <div class="fundido__acciones">
+            <a class="btn btn--lima" href={r('servicios', `#${p.slug}`)}>
+              Ver servicio<span class="visually-hidden">: {p.servicio.nombre}</span> <span aria-hidden="true">→</span>
+            </a>
+            <a class="btn btn--linea-clara" href={r('contacto')}>Cotizar proyecto</a>
+          </div>
+          </div>
+        </div>
+        {p.credito && <p class="cubo__ref fundido__ref">Imagen referencial · {p.credito}</p>}
+      </div>
+    ))}
+  </div>
+
+  <div class="fundido__pie">
+    <div class="wrap fundido__controles">
+      <div class="fundido__tabs" role="tablist" aria-label="Elegir servicio">
+        {pasos.map((p, i) => (
+          <button
+            type="button"
+            class="fundido__tab"
+            role="tab"
+            id={`portada-tab-${p.slug}`}
+            aria-controls={`portada-${p.slug}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+          >
+            <span class="fundido__tab-barra" aria-hidden="true"><span></span></span>
+            <span class="fundido__tab-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <IconoServicio nombre={p.servicio.icono} />
+            <span class="fundido__tab-nombre">{p.servicio.nombre}</span>
+          </button>
+        ))}
+      </div>
+      <button class="fundido__pausa" type="button" aria-pressed="false">
+        <span class="fundido__pausa-icono" aria-hidden="true"></span>
+        <span class="fundido__pausa-txt">Pausar</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+  const raiz = document.querySelector<HTMLElement>('.fundido');
+  if (raiz) {
+    const paneles = [...raiz.querySelectorAll<HTMLElement>('.fundido__panel')];
+    const tabs = [...raiz.querySelectorAll<HTMLButtonElement>('.fundido__tab')];
+    const escena = raiz.querySelector<HTMLElement>('.fundido__escena')!;
+    const pausa = raiz.querySelector<HTMLButtonElement>('.fundido__pausa')!;
+    const pausaTxt = raiz.querySelector<HTMLElement>('.fundido__pausa-txt')!;
+    const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const INTERVALO = 7000;
+
+    let actual = 0;
+    let pausadoPorUsuario = reducido; // con "reducir movimiento" no avanza sola
+    let enPausaTemporal = false; // mouse encima, foco dentro o pestaña del navegador oculta
+    let timer: number | undefined;
+    let pedido = 0; // descarta cambios viejos si se pide otro mientras se decodifica una foto
+
+    const barraDe = (i: number) => tabs[i].querySelector<HTMLElement>('.fundido__tab-barra span')!;
+    const fotoDe = (i: number) => paneles[i].querySelector<HTMLImageElement>('.fundido__img');
+
+    const ir = async (destino: number, enfocar = false) => {
+      destino = (destino + paneles.length) % paneles.length;
+      if (destino === actual) return;
+      const este = ++pedido;
+      // la foto que entra, ya decodificada: si no, se ve un instante en negro, "como cargando"
+      await fotoDe(destino)?.decode().catch(() => {});
+      if (este !== pedido) return;
+      const antes = actual;
+      actual = destino;
+      paneles.forEach((p, i) => {
+        p.classList.toggle('is-activa', i === actual);
+        p.inert = i !== actual;
+      });
+      tabs.forEach((t, i) => {
+        t.setAttribute('aria-selected', String(i === actual));
+        t.tabIndex = i === actual ? 0 : -1;
+      });
+      barraDe(antes).getAnimations().forEach((a) => a.cancel());
+      if (enfocar) tabs[actual].focus();
+      programar();
+    };
+
+    const programar = () => {
+      clearTimeout(timer);
+      const barra = barraDe(actual);
+      barra.getAnimations().forEach((a) => a.cancel());
+      const quieto = pausadoPorUsuario || enPausaTemporal;
+      escena.setAttribute('aria-live', quieto ? 'polite' : 'off');
+      if (quieto) return;
+      barra.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: INTERVALO, fill: 'forwards' });
+      timer = window.setTimeout(() => ir(actual + 1), INTERVALO);
+    };
+
+    const mostrarPausa = () => {
+      pausa.setAttribute('aria-pressed', String(pausadoPorUsuario));
+      pausaTxt.textContent = pausadoPorUsuario ? 'Reproducir' : 'Pausar';
+      raiz.classList.toggle('is-pausado', pausadoPorUsuario);
+    };
+
+    tabs.forEach((t, i) => t.addEventListener('click', () => ir(i)));
+    // pestañas: flechas, Inicio y Fin mueven el foco y cambian el servicio
+    raiz.querySelector('[role="tablist"]')!.addEventListener('keydown', (e) => {
+      const k = (e as KeyboardEvent).key;
+      const destino = k === 'ArrowRight' ? actual + 1 : k === 'ArrowLeft' ? actual - 1 : k === 'Home' ? 0 : k === 'End' ? tabs.length - 1 : null;
+      if (destino === null) return;
+      e.preventDefault();
+      ir(destino, true);
+    });
+    pausa.addEventListener('click', () => {
+      pausadoPorUsuario = !pausadoPorUsuario;
+      mostrarPausa();
+      programar();
+    });
+
+    const temporal = (v: boolean) => {
+      enPausaTemporal = v;
+      programar();
+    };
+    // el mouse pausa solo sobre el texto y las pestañas: la portada ocupa toda la pantalla y, si
+    // pausara con el mouse en cualquier parte, en el computador casi nunca avanzaría
+    const zonas = [raiz.querySelector<HTMLElement>('.fundido__pie')!, ...raiz.querySelectorAll<HTMLElement>('.fundido__caja')];
+    const sobreZona = () => zonas.some((z) => z.matches(':hover'));
+    zonas.forEach((z) => {
+      z.addEventListener('mouseenter', () => temporal(true));
+      z.addEventListener('mouseleave', () => temporal(raiz.contains(document.activeElement)));
+    });
+    raiz.addEventListener('focusin', () => temporal(true));
+    raiz.addEventListener('focusout', (e) => {
+      if (!raiz.contains(e.relatedTarget as Node)) temporal(sobreZona());
+    });
+    document.addEventListener('visibilitychange', () => temporal(document.hidden));
+
+    // deslizar con el dedo
+    let x0: number | null = null;
+    raiz.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse') x0 = e.clientX;
+    });
+    raiz.addEventListener('pointerup', (e) => {
+      if (x0 === null) return;
+      const dx = e.clientX - x0;
+      x0 = null;
+      if (Math.abs(dx) > 50) ir(actual + (dx < 0 ? 1 : -1));
+    });
+
+    mostrarPausa();
+    programar();
+
+    // con la página ya cargada, se preparan de antemano las otras fotos
+    const precargar = () => paneles.slice(1).forEach((_, i) => fotoDe(i + 1)?.decode().catch(() => {}));
+    if ('requestIdleCallback' in window) requestIdleCallback(precargar, { timeout: 3000 });
+    else setTimeout(precargar, 1500);
+  }
+</script>

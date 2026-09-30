@@ -16,7 +16,7 @@ solo el diseño. **Hoy se publica solo Panorámica**, en la raíz de `new.lols.c
 | # | Propuesta | Idea |
 |---|---|---|
 | 1 | Plano técnico | Sobria y oscura: grilla de plano, rótulos técnicos, verde de marca |
-| 2 | Panorámica ✅ | Fotográfica: portada que gira en cubo 3D, colores del sitio 2018 |
+| 2 | Panorámica ✅ | Fotográfica: portada con fundido y pestañas de servicios, colores del sitio 2018 |
 
 **Qué se publica** lo decide una línea en `src/propuestas/registro.ts`:
 
@@ -81,6 +81,12 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
 
 ### Imágenes
 
+- **Portada (opción C, 30-09-2026)**: una foto por servicio que se funde con la siguiente, con una
+  pestaña por servicio y una barra de avance (`PortadaFundido.astro`, datos en `portadaServicios`
+  de `src/data/portada.ts`). Reemplazó al cubo 3D, que sigue en `PortadaCubo.astro`: para volver,
+  cambiar el componente en `src/propuestas/panoramica/paginas/index.astro`.
+- **Tipografía**: Barlow (la misma de Bouygues Construction). Los títulos grandes van en minúsculas
+  con Barlow Semi Condensed; antetítulos, botones, menú y rótulos siguen en mayúsculas condensadas.
 - **Portada giratoria y fondos (`src/assets/portada/`)**: fotos de stock de
   [Unsplash](https://unsplash.com/license) (licencia libre), marcadas en el sitio como "Imagen
   referencial". Para usar fotos reales de LOLS: reemplazar el archivo con el mismo nombre (mín.

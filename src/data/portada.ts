@@ -14,6 +14,9 @@ import soldador from '../assets/portada/02-soldador-estructura.jpg';
 import losa from '../assets/portada/03-trabajadores-losa.jpg';
 import tablero from '../assets/portada/04-tablero-electrico.jpg';
 import fierros from '../assets/portada/05-enfierradura.jpg';
+import fotoMantencion from '../assets/servicios/mantencion.jpg';
+import fotoVozDatos from '../assets/servicios/voz-y-datos.jpg';
+import { dron } from './dron';
 
 export interface Diapositiva {
   img: ImageMetadata;
@@ -84,5 +87,64 @@ export const diapositivas: Diapositiva[] = [
     credito: 'Michael Bader / Unsplash',
     // los años ya están en la banda de cifras, justo bajo el cubo
     enCubo: false,
+  },
+];
+
+// ---------- portada con fundido y pestañas de servicios (opción C, 30-09-2026) ----------
+// Una foto por servicio que se funde con la siguiente; abajo, una pestaña por servicio con una
+// barra que muestra cuánto falta para el cambio. El lema de la empresa queda fijo arriba del título.
+// Reemplaza al cubo 3D (PortadaCubo.astro sigue en el repositorio por si se quiere volver).
+
+export interface PasoPortada {
+  /** slug del servicio (nombre e ícono salen de servicios.ts) */
+  slug: string;
+  titulo: string;
+  texto: string;
+  img: ImageMetadata;
+  alt: string;
+  /** autor si es de stock (se marca "Imagen referencial"); null = foto de LOLS */
+  credito: string | null;
+}
+
+export const portadaServicios: PasoPortada[] = [
+  {
+    slug: 'construccion',
+    titulo: 'Obra gruesa y terminaciones',
+    texto: 'De las fundaciones y la estructura a los revestimientos y la entrega de la obra.',
+    img: dron.obraGrua.img,
+    alt: dron.obraGrua.alt,
+    credito: dron.obraGrua.credito,
+  },
+  {
+    slug: 'montaje-industrial',
+    titulo: 'Estructuras metálicas y equipos',
+    texto: 'Soportes, pasarelas, galpones y montaje de equipos en plantas e instalaciones industriales.',
+    img: soldador,
+    alt: 'Soldador trabajando sobre una viga de una estructura metálica',
+    credito: 'Jason Richard / Unsplash',
+  },
+  {
+    slug: 'mantencion',
+    titulo: 'Mantención preventiva y correctiva',
+    texto: 'Para que edificios e instalaciones sigan funcionando de forma segura.',
+    img: fotoMantencion,
+    alt: 'Técnico con casco y chaleco trabajando en las instalaciones del cielo de un edificio',
+    credito: 'Valentin Lacoste / Unsplash',
+  },
+  {
+    slug: 'electricidad',
+    titulo: 'Alumbrado, fuerza y tableros',
+    texto: 'Instalaciones eléctricas para obras nuevas, ampliaciones y regularizaciones, según la normativa vigente.',
+    img: tablero,
+    alt: 'Tablero eléctrico con cableado y contactores',
+    credito: 'Toolmash Expo / Unsplash',
+  },
+  {
+    slug: 'voz-y-datos',
+    titulo: 'Cableado estructurado y redes',
+    texto: 'Puntos de red y telefonía, racks ordenados y certificación de cada punto.',
+    img: fotoVozDatos,
+    alt: 'Bandeja portacables con cableado de red ordenado por colores',
+    credito: 'Wonderlane / Unsplash',
   },
 ];

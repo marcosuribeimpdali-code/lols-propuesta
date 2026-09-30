@@ -2,7 +2,9 @@
 import { Image } from 'astro:assets';
 import Base from '../Base.astro';
 import { r, rObra } from '../config';
-import PortadaCubo from '../components/PortadaCubo.astro';
+// portada: fundido con pestañas de servicios (opción C). Para volver al cubo 3D, usar
+// PortadaCubo en su lugar (sigue en components/).
+import PortadaFundido from '../components/PortadaFundido.astro';
 import TituloSeccion from '../components/TituloSeccion.astro';
 import CtaFoto from '../components/CtaFoto.astro';
 import IconoServicio from '../../comun/IconoServicio.astro';
@@ -29,7 +31,7 @@ const cifras = [
 ];
 ---
 <Base>
-  <PortadaCubo />
+  <PortadaFundido />
 
   <section class="pn-cifras" aria-label={`${empresa.nombreCorto} en cifras`}>
     <div class="wrap">

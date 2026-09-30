@@ -11,6 +11,7 @@ import '@fontsource/barlow/latin-600.css';
 import '@fontsource/barlow-condensed/latin-600.css';
 import '@fontsource/barlow-condensed/latin-700.css';
 import '@fontsource/barlow-condensed/latin-800.css';
+import '@fontsource/barlow-semi-condensed/latin-700.css';
 import '@fontsource/ibm-plex-mono/latin-500.css';
 import '@fontsource-variable/dm-sans';
 import { Image } from 'astro:assets';
@@ -226,6 +227,8 @@ const total = 6;
     --font: 'Barlow', system-ui, sans-serif;
     --cond: 'Barlow Condensed', 'Barlow', sans-serif;
     --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    /* títulos grandes en minúsculas, como en el sitio */
+    --titular: 'Barlow Semi Condensed', 'Barlow', sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font); color: var(--tinta); background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -237,7 +240,8 @@ const total = 6;
   .ante { font: 700 10pt/1 var(--cond); letter-spacing: 0.18em; text-transform: uppercase; color: var(--verde-osc); }
   .ante--claro { color: var(--lima); }
   h1, h2, h3 { font-family: var(--cond); text-transform: uppercase; }
-  h2 { margin-top: 3mm; font-weight: 800; font-size: 30pt; line-height: 0.95; }
+  h1, h2 { font-family: var(--titular); text-transform: none; letter-spacing: -0.005em; }
+  h2 { margin-top: 3mm; font-weight: 700; font-size: 30pt; line-height: 1; }
 
   /* ---------- vista previa al compartir: 1200 × 630 ---------- */
   body.compartir { width: 1200px; height: 630px; overflow: hidden; }
@@ -245,7 +249,7 @@ const total = 6;
   .tarjeta__velo { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(11 61 28 / 0.96) 0%, rgb(15 107 43 / 0.86) 46%, rgb(11 61 28 / 0.15) 100%); }
   .tarjeta__txt { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; height: 100%; max-width: 720px; padding: 0 72px; color: #fff; }
   .tarjeta__logo { width: 240px; height: auto; color: #fff; }
-  .tarjeta__lema { margin-top: 44px; font: 800 74px/0.95 var(--cond); text-transform: uppercase; }
+  .tarjeta__lema { margin-top: 44px; font: 700 76px/1 var(--titular); letter-spacing: -0.01em; }
   .tarjeta .raya { width: 90px; height: 7px; margin-top: 26px; }
   .tarjeta__sub { margin-top: 26px; font: 500 30px/1.2 var(--font); }
   .tarjeta__serv { margin-top: 12px; font: 700 21px/1.3 var(--cond); letter-spacing: 0.08em; text-transform: uppercase; color: var(--lima); }
@@ -261,7 +265,7 @@ const total = 6;
   .portada__velo { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(11 61 28 / 0.95) 0%, rgb(15 107 43 / 0.82) 48%, rgb(11 61 28 / 0.1) 100%); }
   .portada__txt { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; height: 100%; max-width: 175mm; padding: 0 20mm; }
   .portada__logo { width: 62mm; height: auto; margin-bottom: 16mm; color: #fff; }
-  .hoja--portada h1 { margin-top: 5mm; font-weight: 800; font-size: 46pt; line-height: 0.95; }
+  .hoja--portada h1 { margin-top: 5mm; font-weight: 700; font-size: 48pt; line-height: 1; }
   .portada__sub { margin-top: 6mm; font: 500 13pt/1.4 var(--font); color: rgb(255 255 255 / 0.92); }
   .portada__borrador { position: absolute; left: 20mm; bottom: 12mm; z-index: 2; padding: 1.2mm 3mm; background: var(--lima); color: var(--negro); font: 700 9pt var(--cond); letter-spacing: 0.1em; text-transform: uppercase; }
 
