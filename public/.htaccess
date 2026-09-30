@@ -14,3 +14,13 @@ ErrorDocument 404 /404.html
 <IfModule mod_alias.c>
   RedirectMatch 301 ^/maquinaria-y-equipos/?$ /capacidad-tecnica/
 </IfModule>
+
+# Caché del navegador (30-09-2026): las páginas se revisan con el servidor en cada visita (si no
+# cambiaron, responde "sin cambios" y no se bajan de nuevo). Así lo publicado se ve al tiro, sin
+# Ctrl + F5: antes el navegador podía mostrar una versión guardada por un buen rato. Hojas de
+# estilo, imágenes y scripts llevan versión o código en su dirección, así que no necesitan esto.
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

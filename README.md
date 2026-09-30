@@ -117,7 +117,7 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
   Las obras **en ejecución** también tienen ficha (`/proyectos-en-construccion/<slug>/`) con su
   avance en el mismo recorrido: Inicio de obra → Obra gruesa → Avance actual → Así quedará (el
   render de 2018), el % de avance y datos de ejemplo.
-- **Futuros proyectos (30-09-2026)**: `/proyectos-futuros/`, tercera pestaña de Proyectos, con
+- **Próximos proyectos (30-09-2026)**: `/proyectos-futuros/`, tercera pestaña de Proyectos, con
   dos obras de EJEMPLO (inventadas y marcadas) que parten en 2027: Bodegas Cerrillos y Oficinas San
   Miguel (`ejemplosFuturos` en `src/data/proyectos.ts`). Cada ficha tiene el arrastre del plano a
   "así será" (`ComparaObra.astro`; imagen referencial de Unsplash —Esphera ArqEng y Matt Reames—

@@ -8,7 +8,7 @@
 // Los mandantes son genéricos a propósito ("Inmobiliaria privada"): no se le atribuye una obra
 // inventada a una empresa real.
 //
-// Futuros proyectos (30-09-2026, pedido de Marcos para mostrar a futuros clientes que vienen más
+// Próximos proyectos (30-09-2026, primero "futuros"; pedido de Marcos para mostrar a futuros clientes que vienen más
 // obras): dos obras de EJEMPLO en Santiago que parten en 2027, inventadas y marcadas igual que las
 // demás. Su "foto" es una imagen referencial (Unsplash) y su plano sale de ella con scripts/plano.mjs.
 //
@@ -424,6 +424,6 @@ export const conFicha = () => proyectos.filter((p) => p.slug);
 export const altObra = (p: Proyecto, numero: number) => {
   const n = String(numero).padStart(2, '0');
   const que = p.imagen?.tipo === 'render' ? 'Render' : p.imagen?.tipo === 'referencial' ? 'Imagen referencial' : 'Foto';
-  const estado = p.estado === 'terminado' ? 'obra finalizada' : p.estado === 'futuro' ? 'futuro proyecto' : 'obra en ejecución';
+  const estado = p.estado === 'terminado' ? 'obra finalizada' : p.estado === 'futuro' ? 'próximo proyecto' : 'obra en ejecución';
   return p.nombre ? `${que} de ${p.nombre}` : `${que} de la ${estado} ${n}`;
 };

@@ -14,8 +14,9 @@ const { proyecto: p, numero, nivel: H = 'h3' } = Astro.props;
 const n = String(numero).padStart(2, '0');
 // obras con ficha: toda la tarjeta lleva a ella (enlace "estirado" sobre la tarjeta)
 const href = p.slug ? rObra(p.slug, p.estado) : null;
-// mismos rótulos que usaba el sitio de 2018 sobre cada obra (y el mes de inicio en las futuras)
-const cinta = p.estado === 'terminado' ? 'Entregado' : p.estado === 'futuro' ? `Inicio ${p.inicio}` : 'Próxima entrega';
+// rótulo sobre la foto: "Próxima entrega" en las en ejecución (como en el sitio de 2018) y el mes de
+// inicio en las próximas. Las finalizadas no llevan: "Entregado" repetía lo que ya dice la pestaña.
+const cinta = p.estado === 'terminado' ? null : p.estado === 'futuro' ? `Inicio ${p.inicio}` : 'Próxima entrega';
 const campos: [string, string | null][] = [
   ['Mandante', p.mandante],
   ['Comuna', p.comuna],
@@ -31,7 +32,7 @@ const campos: [string, string | null][] = [
     ) : (
       <div class="pn-obra__vacia" role="img" aria-label={`Foto pendiente de la obra ${n}`}><Pendiente texto="foto de la obra" /></div>
     )}
-    <span class:list={['pn-obra__cinta', `pn-obra__cinta--${p.estado}`]}>{cinta}</span>
+    {cinta && <span class:list={['pn-obra__cinta', `pn-obra__cinta--${p.estado}`]}>{cinta}</span>}
     {href && <span class="pn-obra__hover" aria-hidden="true">{p.estado === 'terminado' ? 'Ver el paso a paso' : p.estado === 'futuro' ? 'Ver el proyecto' : 'Ver el avance'}</span>}
     {p.imagen && <span class="pn-obra__origen">{p.imagen.tipo === 'render' ? 'Render' : p.imagen.tipo === 'referencial' ? 'Imagen referencial' : 'Foto'} · {p.imagen.origen}</span>}
   </div>

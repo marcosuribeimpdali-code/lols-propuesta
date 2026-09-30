@@ -34,7 +34,7 @@ const anterior = lista[(indice - 1 + lista.length) % lista.length];
 const siguiente = lista[(indice + 1) % lista.length];
 const numero = (o: Proyecto) => String(lista.indexOf(o) + 1).padStart(2, '0');
 const seccion = paginaDe[p.estado];
-const nombreSeccion = terminada ? 'Proyectos finalizados' : futura ? 'Futuros proyectos' : 'Proyectos en ejecución';
+const nombreSeccion = terminada ? 'Proyectos finalizados' : futura ? 'Próximos proyectos' : 'Proyectos en ejecución';
 const calendario = futura ? calendarioPrevisto(p) : [];
 
 // ficha de la obra, al pie del recorrido
@@ -86,7 +86,7 @@ const hayEjemplos = p.etapas.some((e) => e.ejemplo);
       <div class="pn-obra-top__cab">
         <h1 id="obra-t">{titulo}</h1>
         <span class:list={['pn-obra-top__estado', { 'pn-obra-top__estado--ejecucion': p.estado === 'en-construccion', 'pn-obra-top__estado--futuro': futura }]}>
-          {terminada ? 'Finalizado' : futura ? `Futuro proyecto · inicio ${p.inicio}` : `En ejecución · ${p.avance} % de avance`}
+          {terminada ? 'Finalizado' : futura ? `Próximo proyecto · inicio ${p.inicio}` : `En ejecución · ${p.avance} % de avance`}
         </span>
         {p.datosEjemplo && <span class="pn-ej">Datos de ejemplo</span>}
       </div>

@@ -14,7 +14,7 @@ const lista = porEstado(estado);
 const tabs = [
   { href: r('terminados'), label: 'Finalizados', n: porEstado('terminado').length, activo: estado === 'terminado' },
   { href: r('construccion'), label: 'En ejecución', n: porEstado('en-construccion').length, activo: estado === 'en-construccion' },
-  { href: r('futuros'), label: 'Futuros proyectos', n: porEstado('futuro').length, activo: estado === 'futuro' },
+  { href: r('futuros'), label: 'Próximos proyectos', n: porEstado('futuro').length, activo: estado === 'futuro' },
 ];
 ---
 <section class="pn-sec">
