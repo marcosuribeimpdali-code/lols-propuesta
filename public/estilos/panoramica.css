@@ -2911,13 +2911,18 @@ main:focus {
   align-items: start;
   gap: clamp(24px, 4vw, 56px);
 }
+/* la foto queda fija justo debajo de la cabecera (que también es fija: 124 px en computador, 70 en
+   tablet y celular); antes quedaba medio tapada por ella */
+.rec {
+  --cabecera: 124px;
+}
 .rec__media {
   position: sticky;
-  top: 20px;
+  top: calc(var(--cabecera) + 16px);
 }
 .rec__marco {
   position: relative;
-  height: min(calc(100vh - 40px), 620px);
+  height: min(calc(100vh - var(--cabecera) - 40px), 620px);
   overflow: hidden;
   background: var(--verde-noche);
 }
@@ -3007,7 +3012,7 @@ main:focus {
   list-style: none;
 }
 .rec__paso {
-  min-height: 70vh;
+  min-height: 54vh;
   padding: 26px 0 26px 26px;
   border-left: 3px solid var(--linea);
   transition: border-color 0.4s;
@@ -3057,8 +3062,11 @@ main:focus {
     grid-template-columns: 1fr;
     gap: 0;
   }
+  .rec {
+    --cabecera: 70px;
+  }
   .rec__media {
-    top: 0;
+    top: var(--cabecera);
     z-index: 5;
     margin-inline: calc(var(--gutter) * -1);
   }
@@ -3079,6 +3087,18 @@ main:focus {
   }
   .rec__tramo {
     font-size: 0.7rem;
+  }
+  .rec__paso {
+    min-height: 46vh;
+  }
+}
+@media (max-width: 700px) {
+  /* con muchas etapas los nombres no caben bajo cada tramo: quedan las rayas y el rótulo de la foto */
+  .rec--largo .rec__tramo > span {
+    display: none;
+  }
+  .rec--largo .rec__linea {
+    padding-top: 18px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

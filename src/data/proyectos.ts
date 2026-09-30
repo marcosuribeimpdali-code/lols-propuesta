@@ -13,9 +13,10 @@
 // demás. Su "foto" es una imagen referencial (Unsplash) y su plano sale de ella con scripts/plano.mjs.
 //
 // Cada obra finalizada tiene su ficha en /proyectos-terminados/<slug>/, con el mismo slug que
-// usaba su subpágina en el sitio de 2018 (así esos links siguen funcionando), y un paso a paso
-// Antes → Durante → Después. "Después" es la foto real de la obra; "Antes" y "Durante" son fotos
-// de ejemplo (stock) hasta que lleguen las de cada obra: reemplazarlas en `etapas`.
+// usaba su subpágina en el sitio de 2018 (así esos links siguen funcionando), y un paso a paso del
+// terreno a la entrega (30-09-2026): Terreno → Excavación → Fundaciones → Obra gruesa → Terminaciones
+// → Entrega. "Entrega" es la foto real de la obra; las otras cinco son fotos de ejemplo (stock, ver
+// `pasos`) que se alternan entre obras hasta que lleguen las de cada una: reemplazarlas en `etapas`.
 //
 // Para cambiar una imagen: reemplazar el archivo en src/assets/ (mismo nombre) o apuntar a uno
 // nuevo. Para cargar una obra: completar sus campos.
@@ -31,6 +32,20 @@ import bodegas from '../assets/futuros/bodegas-cerrillos.jpg';
 import bodegasPlano from '../assets/futuros/bodegas-cerrillos-plano.jpg';
 import oficinas from '../assets/futuros/oficinas-san-miguel.jpg';
 import oficinasPlano from '../assets/futuros/oficinas-san-miguel-plano.jpg';
+import terrenoUrbano from '../assets/etapas/terreno-sitio-urbano.jpg';
+import terrenoNivelado from '../assets/etapas/terreno-nivelado.jpg';
+import excavacionUrbana from '../assets/etapas/excavacion-urbana.jpg';
+import fundacionesLosa from '../assets/etapas/fundaciones-losa.jpg';
+import enfierraduraPilares from '../assets/etapas/obra-gruesa-enfierradura.jpg';
+import fachada from '../assets/etapas/terminaciones-fachada.jpg';
+import interior from '../assets/etapas/terminaciones-interior.jpg';
+import ventanales from '../assets/etapas/terminaciones-ventanales.jpg';
+import bomba from '../assets/capacidad/bomba-hormigon.jpg';
+import moldaje from '../assets/capacidad/moldaje-muros.jpg';
+import alzaprimas from '../assets/capacidad/losa-alzaprimas.jpg';
+import andamio from '../assets/capacidad/andamio-fachada.jpg';
+import tablero from '../assets/portada/04-tablero-electrico.jpg';
+import obraGrua from '../assets/dron/obra-grua.jpg';
 
 export type Estado = 'terminado' | 'en-construccion' | 'futuro';
 
@@ -114,6 +129,43 @@ const durante = [
   ejemplo(soldador, 'Durante', 'Soldador trabajando en una estructura metálica'),
 ];
 
+// paso a paso de las obras finalizadas, del terreno a la entrega: fotos de ejemplo por etapa. Cada
+// obra toma una distinta de cada lista (se corren según la obra), así ninguna ficha repite la
+// secuencia de otra. Autores (Unsplash): ver README.
+const pasos: [etapa: string, fotos: [ImageMetadata, string][]][] = [
+  ['Terreno', [
+    [terrenoUrbano, 'Vista aérea de un terreno baldío entre calles y árboles'],
+    [terrenoNivelado, 'Terreno despejado y nivelado con una motoniveladora'],
+  ]],
+  ['Excavación', [
+    [excavadora, 'Excavadora trabajando en un terreno'],
+    [excavacion, 'Excavación de un terreno vista desde arriba'],
+    [excavacionUrbana, 'Excavadora en una faena urbana bajo un viaducto'],
+  ]],
+  ['Fundaciones', [
+    [fundacionesLosa, 'Trabajadores armando la enfierradura de una losa de fundación'],
+    [fierros, 'Enfierradura de un pilar vista desde abajo'],
+    [bomba, 'Trabajador junto a una bomba de hormigón remolcable'],
+    [moldaje, 'Moldaje metálico de muros y pilares armado en la obra'],
+  ]],
+  ['Obra gruesa', [
+    [losa, 'Trabajadores sobre una losa con enfierradura'],
+    [alzaprimas, 'Apuntalamiento de una losa con alzaprimas y trípodes'],
+    [gruas, 'Grúas junto a un edificio en obra gruesa'],
+    [enfierraduraPilares, 'Enfierradura de pilares sobre una losa, vista desde arriba'],
+    [obraGrua, 'Vista aérea de una obra con grúa torre'],
+  ]],
+  ['Terminaciones', [
+    [fachada, 'Trabajador en un elevador instalando los paneles de la fachada'],
+    [interior, 'Trabajador en una escalera haciendo terminaciones interiores'],
+    [andamio, 'Trabajadores con arnés sobre un andamio de fachada'],
+    [ventanales, 'Edificio en terminaciones con sus ventanales instalados'],
+    [tablero, 'Instalación de un tablero eléctrico'],
+  ]],
+];
+/** cuándo va cada etapa (menos la entrega), como fracción del plazo de la obra */
+const avanceEtapa = [0, 0.12, 0.25, 0.5, 0.8];
+
 // ---------- datos de ejemplo de las obras finalizadas (inventados) ----------
 interface Ejemplo {
   nombre: string;
@@ -151,16 +203,30 @@ const ficha = (estado: Estado, img: Imagen | null, slug: string | null = null, i
   const n = String(i + 1).padStart(2, '0');
   const e = slug ? ejemplos[slug] : undefined;
   const despues: Foto[] = img
-    ? [{ src: img.src, alt: `${e?.nombre ?? `Obra ${n}`} terminado`, etapa: 'Después', ejemplo: false, fecha: null, descripcion: null }]
+    ? [{ src: img.src, alt: `${e?.nombre ?? `Obra ${n}`} terminado`, etapa: 'Entrega', ejemplo: false, fecha: null, descripcion: null }]
     : [];
-  // se alternan las fotos de ejemplo para que las fichas no se vean todas iguales
-  const etapas = slug ? [antes[i % 2], durante[i % 4], ...despues] : [];
-  const galeria = slug ? [durante[(i + 1) % 4], durante[(i + 2) % 4]] : [];
-  if (e && etapas.length === 3) {
-    const [a, d, z] = etapas;
-    etapas[0] = { ...a, fecha: mesAnio(e.entrega, e.plazoMeses), descripcion: i % 2 ? 'Demolición de la construcción antigua y excavación para las fundaciones.' : 'Terreno despejado y excavación para las fundaciones.' };
-    etapas[1] = { ...d, fecha: mesAnio(e.entrega, Math.round(e.plazoMeses / 2)), descripcion: `Obra gruesa: fundaciones, estructura y losas de los ${e.pisos} pisos.` };
-    etapas[2] = { ...z, fecha: mesAnio(e.entrega), descripcion: `Edificio de ${e.uso} terminado y entregado.` };
+  // del terreno a la entrega: una foto de ejemplo por etapa (corrida según la obra) y la real al final
+  const previas = pasos.map(([etapa, lista], k) => {
+    const [src, alt] = lista[(i + k) % lista.length];
+    return ejemplo(src, etapa, alt);
+  });
+  const etapas = slug ? [...previas, ...despues] : [];
+  const galeria: Foto[] = [];
+  if (e && etapas.length === pasos.length + 1) {
+    const instalaciones = e.servicios.includes('Voz y datos') ? 'instalaciones eléctricas y de voz y datos' : 'instalaciones eléctricas';
+    const textos = [
+      i % 2 ? 'Demolición de la construcción antigua y despeje del terreno.' : 'Recepción del terreno, cierre perimetral e instalación de faena.',
+      'Excavación y trazado de las fundaciones.',
+      'Enfierradura y hormigonado de las fundaciones.',
+      `Estructura y losas de los ${e.pisos} pisos.`,
+      `Fachada, ${instalaciones} y terminaciones interiores.`,
+    ];
+    textos.forEach((t, k) => {
+      const mes = Math.round(e.plazoMeses * avanceEtapa[k]);
+      etapas[k] = { ...etapas[k], fecha: mesAnio(e.entrega, e.plazoMeses - mes), descripcion: t };
+    });
+    const z = etapas.length - 1;
+    etapas[z] = { ...etapas[z], fecha: mesAnio(e.entrega), descripcion: `Edificio de ${e.uso} terminado y entregado.` };
   }
   return {
     slug,

@@ -1,8 +1,9 @@
 ---
 // Ficha de una obra: /proyectos-terminados/<slug>/ (el slug de su subpágina en el sitio de 2018),
 // /proyectos-en-construccion/<slug>/ y /proyectos-futuros/<slug>/. La arma la ruta única del sitio,
-// una por cada obra con `slug`. Los futuros proyectos muestran el arrastre del plano a "así será" y,
-// en vez de galería, el calendario previsto de la obra.
+// una por cada obra con `slug`. Las finalizadas y las en ejecución muestran el recorrido con scroll
+// (del terreno a la entrega, y el avance hasta el render); los futuros proyectos, el arrastre del
+// plano a "así será" y, en vez de galería, el calendario previsto de la obra.
 // Arriba, en las finalizadas, el comparador de arrastre (ComparaObra): antes o durante contra el
 // después. En las que están en ejecución, el recorrido con scroll (RecorridoObra) con el avance hasta
 // el render ("Así quedará").
@@ -69,7 +70,7 @@ const hayEjemplos = p.etapas.some((e) => e.ejemplo);
   title={`${titulo} · ${nombreSeccion}`}
   description={
     terminada
-      ? `Ficha de la obra ${titulo} de LOLS Ingeniería: antes, durante y después.`
+      ? `Ficha de la obra ${titulo} de LOLS Ingeniería: del terreno a la entrega.`
       : futura
         ? `${titulo}, proyecto de LOLS Ingeniería que comienza en ${p.inicio}.`
         : `Avance de la obra ${titulo} de LOLS Ingeniería.`
@@ -91,14 +92,10 @@ const hayEjemplos = p.etapas.some((e) => e.ejemplo);
       </div>
       {resumen && <p class="pn-obra-top__resumen">{resumen}</p>}
 
-      {(terminada || futura) && p.etapas.length > 1 ? (
-        <ComparaObra
-          etapas={p.etapas}
-          titulo={futura ? `Del plano a ${titulo}` : `Antes y después de ${titulo}`}
-          antetitulo={futura ? 'Del plano a la obra' : undefined}
-        />
+      {futura && p.etapas.length > 1 ? (
+        <ComparaObra etapas={p.etapas} titulo={`Del plano a ${titulo}`} antetitulo="Del plano a la obra" />
       ) : (
-        <RecorridoObra etapas={p.etapas} titulo={terminada ? `Paso a paso de ${titulo}` : `Avance de ${titulo}`} />
+        <RecorridoObra etapas={p.etapas} titulo={terminada ? `Paso a paso de ${titulo}: del terreno a la entrega` : `Avance de ${titulo}`} />
       )}
 
       <dl class="pn-obra-ficha">
@@ -124,7 +121,7 @@ const hayEjemplos = p.etapas.some((e) => e.ejemplo);
           <Pendiente
             texto={
               terminada
-                ? 'fotos reales de Antes y Durante: las de ahora son de ejemplo'
+                ? 'fotos reales de cada etapa: las de ahora son de ejemplo (menos la de la entrega)'
                 : futura
                   ? 'plano e imagen del proyecto real: los de ahora son de ejemplo'
                   : 'fotos reales del avance: las de ahora son de ejemplo'

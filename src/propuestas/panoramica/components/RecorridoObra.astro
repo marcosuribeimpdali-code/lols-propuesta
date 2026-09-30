@@ -2,7 +2,7 @@
 // Recorrido de una obra con scroll (opción I de la comparación de portadas, 30-09-2026): la foto de
 // la etapa queda fija a un lado y, al bajar, los textos de cada etapa van pasando al otro; la foto
 // cambia a la etapa que está a la vista y la línea de abajo marca en cuál va.
-//   obras finalizadas: Antes → Durante → Después
+//   obras finalizadas: Terreno → Excavación → Fundaciones → Obra gruesa → Terminaciones → Entrega
 //   obras en ejecución: Inicio de obra → Obra gruesa → Avance actual → Así quedará (el render)
 // En el celular la foto queda arriba y los textos pasan debajo. Sin JS se ve la primera foto y
 // todos los textos, uno bajo otro.
@@ -18,7 +18,7 @@ interface Props {
 const { etapas, titulo } = Astro.props;
 const n = (i: number) => String(i + 1).padStart(2, '0');
 ---
-<section class="rec" data-rec aria-labelledby="rec-t">
+<section class:list={['rec', { 'rec--largo': etapas.length > 4 }]} data-rec aria-labelledby="rec-t">
   <h2 id="rec-t" class="visually-hidden">{titulo}</h2>
   <div class="rec__media">
     <div class="rec__marco">
@@ -38,7 +38,7 @@ const n = (i: number) => String(i + 1).padStart(2, '0');
               loading={i === 0 ? 'eager' : 'lazy'}
             />
             <span class="rec__rotulo">{e.etapa}</span>
-            <span class="cubo__ref">{e.ejemplo ? 'Foto de ejemplo' : e.etapa === 'Así quedará' ? 'Render · sitio lols.cl de 2018' : 'Foto real · sitio lols.cl de 2018'}</span>
+            <span class="cubo__ref">{e.origen ?? (e.ejemplo ? 'Foto de ejemplo' : e.etapa === 'Así quedará' ? 'Render · sitio lols.cl de 2018' : 'Foto real · sitio lols.cl de 2018')}</span>
           </figure>
         );
       })}

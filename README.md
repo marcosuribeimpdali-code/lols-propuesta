@@ -103,26 +103,30 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
   Autores: Frames For Your Heart, Jason Richard, Etienne Girardet, Toolmash Expo y Michael Bader.
 - **Fichas de obra**: cada obra finalizada tiene su página en `/proyectos-terminados/<slug>/`,
   con el mismo slug que usaba en el sitio de 2018 (`bro_cam`, `renacer_bas`…), así esos links
-  siguen funcionando. Muestran el **Antes → Durante → Después** con un comparador de arrastre
-  (`ComparaObra.astro`, 30-09-2026): la foto de una etapa sobre la del después y una línea que
-  se arrastra; al lado, las etapas con su fecha (al tocar una, la foto pasa a esa etapa). El
-  marco toma la proporción de la foto del después. Abajo, una galería con visor a pantalla
-  completa. Las obras **en ejecución** también tienen ficha (`/proyectos-en-construccion/<slug>/`)
-  con su avance como recorrido con scroll (opción I, `RecorridoObra.astro`): Inicio de obra →
-  Obra gruesa → Avance actual → Así quedará (el render de 2018), el % de avance y datos de ejemplo.
+  siguen funcionando. Muestran el paso a paso **del terreno a la entrega** como un recorrido con
+  scroll (`RecorridoObra.astro`): Terreno → Excavación → Fundaciones → Obra gruesa → Terminaciones
+  → Entrega. La foto queda fija bajo la cabecera y cambia con la etapa que está a la vista; abajo,
+  los datos y una galería con visor a pantalla completa. "Entrega" es la foto real de la obra
+  (2018); las otras cinco son fotos de ejemplo (`pasos` en `src/data/proyectos.ts`, fotos en
+  `src/assets/etapas/`, `src/assets/ejemplo/`, `src/assets/capacidad/` y `src/assets/portada/`,
+  marcadas "Foto de ejemplo"). Cada obra toma una foto distinta por etapa, así ninguna repite la
+  secuencia de otra. Para cargar las reales: reemplazarlas en `etapas`, idealmente una por etapa
+  desde un ángulo parecido. Autores de las de ejemplo (Unsplash): Billy Freeman, Iain,
+  Fotografías inmobiliarias, Troy Mortier, Maarten van den Heuvel, Fons Heijnsbroek, Glenov
+  Brankovic, Tianlei Wu, H&CO, kai muro, más las de Capacidad técnica y la portada.
+  Las obras **en ejecución** también tienen ficha (`/proyectos-en-construccion/<slug>/`) con su
+  avance en el mismo recorrido: Inicio de obra → Obra gruesa → Avance actual → Así quedará (el
+  render de 2018), el % de avance y datos de ejemplo.
 - **Futuros proyectos (30-09-2026)**: `/proyectos-futuros/`, tercera pestaña de Proyectos, con
   dos obras de EJEMPLO (inventadas y marcadas) que parten en 2027: Bodegas Cerrillos y Oficinas San
   Miguel (`ejemplosFuturos` en `src/data/proyectos.ts`). Cada ficha tiene el arrastre del plano a
-  "así será" (imagen referencial de Unsplash en `src/assets/futuros/`; el plano sale de ella con
-  `scripts/plano.mjs`), sus datos y un calendario previsto. Para cargar uno real: agregarlo a
-  `ejemplosFuturos` con su foto o render, y generar su plano.
+  "así será" (`ComparaObra.astro`; imagen referencial de Unsplash —Esphera ArqEng y Matt Reames—
+  en `src/assets/futuros/`, y el plano sale de ella con `scripts/plano.mjs`), sus datos y un
+  calendario previsto. Para cargar uno real: agregarlo a `ejemplosFuturos` con su foto o render,
+  y generar su plano.
 - **F5 en la portada**: al recargar, la portada vuelve siempre arriba (Chrome a veces la dejaba a
   media altura). Lo hace un script al comienzo de `Base.astro`, solo en la portada y solo al
-  recargar: el botón "atrás" sigue devolviendo al mismo lugar. "Después" es la foto real de la obra; "Antes" y "Durante"
-  son fotos de ejemplo (`src/assets/ejemplo/` y `src/assets/portada/`, marcadas "Foto de
-  ejemplo"): reemplazarlas por las de cada obra en `etapas` de `src/data/proyectos.ts`, idealmente
-  una foto por etapa tomada desde un ángulo parecido. Autores de las de ejemplo: Billy Freeman e
-  Iain (Unsplash).
+  recargar: el botón "atrás" sigue devolviendo al mismo lugar.
 - **Tomas con dron (`src/assets/dron/`)**: fotos aéreas de ejemplo en los banners de Quiénes somos,
   Proyectos y Trabaja con nosotros, el llamado final, la vista previa al compartir y la
   presentación. Stock de Unsplash (Centar MURID, CHUTTERSNAP, Ivan Bandura, Jamie Street y Eli
