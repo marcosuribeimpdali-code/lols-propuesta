@@ -39,7 +39,7 @@ export const propuestas: Propuesta[] = [
     nombre: 'Panorámica',
     resumen: 'Fotográfica, con portada a pantalla completa e imágenes que giran en cubo 3D.',
     rasgos: ['Colores del sitio lols.cl de 2018', 'Fotos grandes y titulares en mayúscula', 'Tipografía condensada (Barlow)'],
-    colores: ['#168d3a', '#81d742', '#141414'],
+    colores: ['#168d3a', '#0b3d1c', '#141414'],
     fichas: true,
   },
 ];

@@ -1,8 +1,11 @@
 /* ==========================================================================
    LOLS Ingeniería — Propuesta 2 · Panorámica
-   Colores del sitio lols.cl de 2018: verde #168D3A, lima #81D742, negro y blanco.
-   Fotos grandes, titulares condensados en mayúscula (Barlow Condensed).
-   Contrastes (WCAG): blanco sobre --verde-osc 6,6:1 · negro sobre --lima 11,7:1 ·
+   Colores: el verde de lols.cl (#168D3A) con sus tonos oscuros, negro y blanco. El lima
+   #81D742 del sitio 2018 se sacó (30-09-2026) porque no combinaba con el verde. Regla: sobre
+   fondo claro los acentos van en verde; sobre fotos o fondos oscuros, en blanco.
+   Fotos grandes; títulos grandes en minúsculas (Barlow Semi Condensed) y rótulos condensados en
+   mayúscula (Barlow Condensed).
+   Contrastes (WCAG): blanco sobre --verde-osc 6,6:1 · --verde-osc sobre blanco 6,6:1 ·
    --tinta-2 sobre blanco 8:1. El --verde de 2018 sobre blanco da 4,3:1: se usa solo
    en texto grande o gráficos; para texto normal y enlaces va --verde-osc.
    ========================================================================== */
@@ -11,8 +14,6 @@
   --verde: #168d3a;
   --verde-osc: #0f6b2b;
   --verde-noche: #0b3d1c;
-  --lima: #81d742;
-  --lima-hi: #97e35c;
   --marca: #029e4d;
   --negro: #141414;
   --tinta: #1c211d;
@@ -91,7 +92,7 @@ a {
 .pn-footer :focus-visible,
 .pn-top :focus-visible,
 .pn-header--sobre:not(.is-fijo) :focus-visible {
-  outline-color: var(--lima);
+  outline-color: #fff;
 }
 main:focus {
   outline: none;
@@ -149,13 +150,14 @@ main:focus {
     border-color 0.18s,
     transform 0.18s;
 }
-.btn--lima {
-  background: var(--lima);
-  color: var(--negro);
+/* botón principal sobre fotos y fondos oscuros: blanco con texto verde */
+.btn--blanco {
+  background: #fff;
+  color: var(--verde-osc);
 }
-.btn--lima:hover {
-  background: var(--lima-hi);
-  color: var(--negro);
+.btn--blanco:hover {
+  background: #e3eee6;
+  color: var(--verde-noche);
 }
 .btn--verde,
 .btn--primary {
@@ -218,7 +220,9 @@ main:focus {
   text-decoration: none;
 }
 .pn-top a:hover {
-  color: var(--lima);
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
 }
 /* WhatsApp: ícono del tamaño del texto, junto al teléfono */
 .ico-wa {
@@ -241,6 +245,7 @@ main:focus {
   font-size: 0.85rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  color: rgb(255 255 255 / 0.7);
 }
 .pn-bar__in {
   position: relative;
@@ -281,16 +286,17 @@ main:focus {
 .pn-nav a:hover {
   color: var(--verde-osc);
 }
-/* ítem activo en caja de color, como el "INICIO" amarillo de la referencia */
+/* ítem activo: texto verde y una raya abajo (sin caja de color) */
 .pn-nav a[aria-current] {
-  background: var(--lima);
-  color: var(--negro);
+  color: var(--verde-osc);
+  box-shadow: inset 0 -3px 0 var(--verde);
 }
 .pn-nav a.pn-nav__cta {
   margin-left: 14px;
   padding-inline: 1.2em;
   border: 2px solid var(--verde-osc);
   color: var(--verde-osc);
+  box-shadow: none;
 }
 .pn-nav a.pn-nav__cta:hover,
 .pn-nav a.pn-nav__cta[aria-current] {
@@ -335,10 +341,12 @@ main:focus {
   color: #fff;
 }
 .pn-header--sobre .pn-nav a:hover {
-  color: var(--lima);
+  color: #fff;
+  box-shadow: inset 0 -2px 0 rgb(255 255 255 / 0.7);
 }
 .pn-header--sobre .pn-nav a[aria-current] {
-  color: var(--negro);
+  color: #fff;
+  box-shadow: inset 0 -3px 0 #fff;
 }
 .pn-header--sobre .pn-nav a.pn-nav__cta {
   border-color: #fff;
@@ -378,8 +386,13 @@ main:focus {
 .pn-header--sobre.is-fijo .pn-nav a {
   color: var(--tinta);
 }
+.pn-header--sobre.is-fijo .pn-nav a:hover {
+  color: var(--verde-osc);
+  box-shadow: none;
+}
 .pn-header--sobre.is-fijo .pn-nav a[aria-current] {
-  color: var(--negro);
+  color: var(--verde-osc);
+  box-shadow: inset 0 -3px 0 var(--verde);
 }
 .pn-header--sobre.is-fijo .pn-nav a.pn-nav__cta {
   border-color: var(--verde-osc);
@@ -490,13 +503,19 @@ main:focus {
     color: var(--tinta);
     font-size: 1.2rem;
   }
-  /* página actual: texto verde y una marca lima a la izquierda (sin caja de color) */
+  .pn-nav a:hover,
+  .pn-header--sobre .pn-nav a:hover,
+  .pn-header--sobre.is-fijo .pn-nav a:hover {
+    color: var(--verde-osc);
+    box-shadow: none;
+  }
+  /* página actual: texto verde y una marca verde a la izquierda (sin caja de color) */
   .pn-nav a[aria-current],
   .pn-header--sobre .pn-nav a[aria-current],
   .pn-header--sobre.is-fijo .pn-nav a[aria-current] {
     padding-left: 0.9em;
     background: transparent;
-    box-shadow: inset 4px 0 0 var(--lima);
+    box-shadow: inset 4px 0 0 var(--verde);
     color: var(--verde-osc);
   }
   /* en tablet (sin barra de abajo) el botón queda en el menú, en contorno */
@@ -578,7 +597,7 @@ main:focus {
   font: 600 1rem/1.2 var(--cond);
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--lima);
+  color: rgb(255 255 255 / 0.85);
 }
 .cubo__titulo {
   max-width: 15ch;
@@ -667,9 +686,9 @@ main:focus {
     border-color 0.18s;
 }
 .cubo__flecha:hover {
-  background: var(--lima);
-  border-color: var(--lima);
-  color: var(--negro);
+  background: #fff;
+  border-color: #fff;
+  color: var(--verde-osc);
 }
 .cubo__flecha svg {
   width: 20px;
@@ -707,7 +726,7 @@ main:focus {
 }
 .cubo__punto[aria-current='true']::before {
   width: 22px;
-  background: var(--lima);
+  background: #fff;
 }
 .cubo__pausa {
   display: inline-flex;
@@ -751,7 +770,7 @@ main:focus {
 .cubo__progreso span {
   display: block;
   height: 100%;
-  background: var(--lima);
+  background: #fff;
   transform: scaleX(0);
   transform-origin: left;
 }
@@ -870,7 +889,7 @@ main:focus {
   font: 600 1rem/1.2 var(--cond);
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--lima);
+  color: rgb(255 255 255 / 0.85);
 }
 .fundido__titulo {
   max-width: 13ch;
@@ -981,12 +1000,13 @@ main:focus {
   width: 22px;
   height: 22px;
 }
-.fundido__tab[aria-selected="true"] .icono {
-  color: var(--lima);
+.fundido__tab[aria-selected="true"] .icono,
+.fundido__tab[aria-selected="true"] .fundido__tab-n {
+  color: #fff;
 }
 .fundido__tab-n {
   font-size: 0.85rem;
-  color: var(--lima);
+  color: rgb(255 255 255 / 0.6);
 }
 .fundido__tab-barra {
   position: absolute;
@@ -998,7 +1018,7 @@ main:focus {
 .fundido__tab-barra span {
   display: block;
   height: 100%;
-  background: var(--lima);
+  background: #fff;
   transform: scaleX(0);
   transform-origin: left;
 }
@@ -1008,7 +1028,7 @@ main:focus {
 }
 .fundido__tab:focus-visible,
 .fundido__pausa:focus-visible {
-  outline: 2px solid var(--lima);
+  outline: 2px solid #fff;
   outline-offset: -4px;
 }
 .fundido__pausa {
@@ -1192,7 +1212,7 @@ main:focus {
   width: 70px;
   height: 5px;
   margin-top: 20px;
-  background: var(--lima);
+  background: var(--verde);
 }
 .pn-tit--centro .pn-tit__raya {
   margin-inline: auto;
@@ -1202,7 +1222,10 @@ main:focus {
   color: var(--tinta-2);
 }
 .pn-tit--claro .pn-tit__ante {
-  color: var(--lima);
+  color: rgb(255 255 255 / 0.75);
+}
+.pn-tit--claro .pn-tit__raya {
+  background: #fff;
 }
 .pn-tit--claro h2 {
   color: #fff;
@@ -1243,7 +1266,7 @@ main:focus {
   right: -1px;
   bottom: -1px;
   height: 5px;
-  background: var(--lima);
+  background: var(--verde);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.3s;
@@ -1271,8 +1294,8 @@ main:focus {
   height: 36px;
 }
 .pn-serv:hover .pn-serv__icono {
-  background: var(--lima);
-  color: var(--negro);
+  background: var(--verde);
+  color: #fff;
 }
 .pn-serv h3 {
   margin-top: 6px;
@@ -1312,13 +1335,13 @@ main:focus {
 }
 .pn-directrices__grid li {
   padding: 30px 28px 32px;
-  border-top: 5px solid var(--lima);
+  border-top: 5px solid rgb(255 255 255 / 0.9);
   background: rgb(0 0 0 / 0.14);
 }
 .pn-directrices__n {
   display: block;
   font: 800 3.4rem/1 var(--cond);
-  color: var(--lima);
+  color: rgb(255 255 255 / 0.5);
 }
 .pn-directrices h3 {
   margin-top: 10px;
@@ -1381,7 +1404,7 @@ main:focus {
   transition: opacity 0.25s;
 }
 .pn-galeria__n {
-  color: var(--lima);
+  color: rgb(255 255 255 / 0.75);
 }
 .pn-galeria__item:hover img,
 .pn-galeria__item:focus-visible img {
@@ -1442,7 +1465,7 @@ main:focus {
 .pn-footer {
   background: var(--negro);
   color: #c9cfca;
-  border-top: 5px solid var(--lima);
+  border-top: 5px solid var(--verde);
   font-size: 0.97rem;
 }
 .pn-footer__grid {
@@ -1486,7 +1509,7 @@ main:focus {
   width: 30px;
   height: 3px;
   margin-top: 10px;
-  background: var(--lima);
+  background: var(--verde);
 }
 .pn-footer ul {
   display: grid;
@@ -1499,7 +1522,9 @@ main:focus {
   text-decoration: none;
 }
 .pn-footer a:hover {
-  color: var(--lima);
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
   text-decoration: underline;
 }
 .pn-footer__nota {
@@ -1567,8 +1592,10 @@ main:focus {
   color: rgb(255 255 255 / 0.85);
 }
 .pn-migas a {
-  color: var(--lima);
-  text-decoration: none;
+  color: #fff;
+  text-decoration: underline;
+  text-decoration-color: rgb(255 255 255 / 0.5);
+  text-underline-offset: 0.25em;
 }
 .pn-migas a:hover {
   text-decoration: underline;
@@ -1583,7 +1610,7 @@ main:focus {
   width: 84px;
   height: 5px;
   margin-top: 20px;
-  background: var(--lima);
+  background: #fff;
 }
 .pn-banner__lead {
   max-width: 42em;
@@ -1626,9 +1653,13 @@ main:focus {
   height: 26px;
   padding: 0 6px;
   border-radius: 999px;
-  background: var(--lima);
-  color: var(--negro);
+  background: var(--verde);
+  color: #fff;
   font-size: 0.85rem;
+}
+.pn-tabs a[aria-current='page'] .pn-tabs__n {
+  background: #fff;
+  color: var(--verde-osc);
 }
 .pn-aviso {
   display: grid;
@@ -1684,8 +1715,8 @@ main:focus {
   font: 700 0.88rem/1.1 var(--cond);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  background: var(--lima);
-  color: var(--negro);
+  background: #fff;
+  color: var(--verde-osc);
 }
 .pn-obra__cinta--en-construccion {
   background: var(--verde-osc);
@@ -1761,16 +1792,16 @@ main:focus {
 .pn-cita {
   margin-top: 30px;
   padding: 20px 26px;
-  border-left: 6px solid var(--lima);
+  border-left: 6px solid var(--verde);
   background: var(--gris);
   font: 700 1.6rem/1.15 var(--cond);
   text-transform: uppercase;
   color: var(--verde-osc);
 }
-/* la sombra desplazada en verde lima recuerda el marco de las fotos del sitio 2018 */
+/* la sombra desplazada en verde recuerda el marco de las fotos del sitio 2018 */
 .pn-dos__img {
   position: relative;
-  box-shadow: 20px 20px 0 var(--lima);
+  box-shadow: 20px 20px 0 var(--verde);
 }
 .pn-dos__img img {
   width: 100%;
@@ -1832,7 +1863,7 @@ main:focus {
 
 /* ---------- franja con foto: Servicios y Capacidad técnica usan la misma ----------
    foto grande a un lado y texto al otro, alternando lados; antetítulo con número, título con
-   raya lima (como los títulos de sección) y lista de chequeo liviana en dos columnas */
+   raya verde (como los títulos de sección) y lista de chequeo liviana en dos columnas */
 .pn-franja {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
@@ -1865,8 +1896,8 @@ main:focus {
 }
 .pn-franja__n {
   padding: 4px 8px;
-  background: var(--lima);
-  color: var(--negro);
+  background: var(--verde);
+  color: #fff;
   letter-spacing: 0.06em;
 }
 .pn-franja__ante .icono {
@@ -1884,7 +1915,7 @@ main:focus {
   width: 70px;
   height: 5px;
   margin-top: 18px;
-  background: var(--lima);
+  background: var(--verde);
 }
 .pn-franja__desc {
   margin-top: 22px;
@@ -1926,7 +1957,7 @@ main:focus {
   width: 18px;
   height: 18px;
   margin-top: 1px;
-  background: var(--verde-osc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7.5l3 3 6-6.5' fill='none' stroke='%2381d742' stroke-width='2.2'/%3E%3C/svg%3E") center / 12px no-repeat;
+  background: var(--verde-osc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7.5l3 3 6-6.5' fill='none' stroke='%23ffffff' stroke-width='2.2'/%3E%3C/svg%3E") center / 12px no-repeat;
 }
 @media (max-width: 900px) {
   .pn-franja,
@@ -1959,7 +1990,7 @@ main:focus {
   padding: 28px 24px;
   background: #fff;
   border: 1px solid var(--linea);
-  border-top: 5px solid var(--lima);
+  border-top: 5px solid var(--verde);
 }
 .pn-dato__icono {
   display: grid;
@@ -2067,7 +2098,7 @@ main:focus {
   padding: clamp(22px, 3vw, 36px);
   background: #fff;
   border: 1px solid var(--linea);
-  border-top: 6px solid var(--lima);
+  border-top: 6px solid var(--verde);
 }
 .pn-mapa h2 {
   font: 800 clamp(1.8rem, 1.4rem + 1.2vw, 2.4rem) / 1 var(--cond);
@@ -2194,7 +2225,7 @@ main:focus {
 }
 .form__estado {
   padding: 14px 16px;
-  border-left: 5px solid var(--lima);
+  border-left: 5px solid var(--verde);
   background: var(--gris);
 }
 .form__estado[hidden] {
@@ -2330,8 +2361,8 @@ main:focus {
 }
 .pn-obra-top__estado {
   padding: 0.3em 0.8em;
-  background: var(--lima);
-  color: var(--negro);
+  background: var(--verde);
+  color: #fff;
   font: 700 0.95rem/1.2 var(--cond);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -2350,7 +2381,7 @@ main:focus {
   margin: 22px 0 0;
   padding: 20px 24px;
   background: var(--gris);
-  border-top: 5px solid var(--lima);
+  border-top: 5px solid var(--verde);
 }
 .pn-obra-ficha dt {
   font: 600 0.88rem/1.2 var(--cond);
@@ -2487,8 +2518,8 @@ main:focus {
   bottom: 26px;
   z-index: 2;
   padding: 0.45em 1.1em;
-  background: var(--lima);
-  color: var(--negro);
+  background: #fff;
+  color: var(--verde-osc);
   font: 800 1.2rem/1.1 var(--cond);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -2525,7 +2556,7 @@ main:focus {
   transition: background-color 0.3s;
 }
 .pap__barra.is-hecha {
-  background: var(--lima);
+  background: var(--verde);
 }
 @media (max-width: 640px) {
   .pap__tabs {
@@ -2592,8 +2623,8 @@ main:focus {
   left: 0;
   bottom: 12px;
   padding: 0.3em 0.8em;
-  background: var(--lima);
-  color: var(--negro);
+  background: #fff;
+  color: var(--verde-osc);
   font: 700 0.85rem/1.1 var(--cond);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -2646,8 +2677,8 @@ main:focus {
 .pn-galeria-obra__btn:hover .pn-galeria-obra__lupa,
 .pn-galeria-obra__btn:focus-visible .pn-galeria-obra__lupa {
   transform: scale(1.1);
-  background: var(--lima);
-  color: var(--negro);
+  background: var(--verde-osc);
+  color: #fff;
 }
 @media (max-width: 760px) {
   .pn-galeria-obra {
@@ -2692,7 +2723,7 @@ main:focus {
   background: rgb(0 0 0 / 0.85);
 }
 .visor :focus-visible {
-  outline-color: var(--lima);
+  outline-color: #fff;
 }
 .visor__top {
   display: flex;
@@ -2711,7 +2742,7 @@ main:focus {
   font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: 0.12em;
-  color: var(--lima);
+  color: rgb(255 255 255 / 0.7);
 }
 .visor__n {
   margin-left: auto;
@@ -2780,9 +2811,9 @@ main:focus {
   cursor: pointer;
 }
 .visor__flecha--next {
-  border-color: var(--lima);
-  background: var(--lima);
-  color: var(--negro);
+  border-color: #fff;
+  background: #fff;
+  color: var(--verde-osc);
 }
 .visor__flecha svg {
   width: 22px;
@@ -2818,7 +2849,7 @@ main:focus {
 }
 .visor__mini[aria-current='true'] {
   opacity: 1;
-  outline-color: var(--lima);
+  outline-color: #fff;
 }
 @media (max-width: 640px) {
   .visor__escena {
@@ -2947,11 +2978,11 @@ main:focus {
   color: #fff;
 }
 .pasos__item.is-hecho {
-  border-color: var(--lima);
+  border-color: var(--verde);
 }
 .pasos__item.is-hecho .pasos__n {
-  background: var(--lima);
-  color: var(--negro);
+  background: var(--verde);
+  color: #fff;
 }
 .paso {
   display: grid;
@@ -3031,7 +3062,7 @@ main:focus {
   color: #fff;
 }
 .opcion input:checked + .opcion__caja .icono {
-  color: var(--lima);
+  color: #fff;
 }
 .opcion input:focus-visible + .opcion__caja,
 .chip input:focus-visible + span {
@@ -3162,10 +3193,12 @@ html:not(.js) .form__siguiente {
   font: 600 0.85rem var(--cond);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--lima);
+  color: #fff;
 }
 .pn-top__der a:hover {
   color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
 }
 
 /* cómo trabajamos: 4 pasos en la banda verde */
@@ -3282,7 +3315,7 @@ html:not(.js) .form__siguiente {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--verde-osc), var(--lima));
+  background: var(--verde);
 }
 .pn-linea__hito {
   position: relative;
@@ -3301,7 +3334,7 @@ html:not(.js) .form__siguiente {
 }
 .pn-linea__hito:last-child::before {
   border-color: var(--verde-osc);
-  background: var(--lima);
+  background: var(--verde);
 }
 .pn-linea__hito.is-ejemplo::before {
   border-color: var(--campo);
@@ -3345,7 +3378,7 @@ html:not(.js) .form__siguiente {
     right: auto;
     width: 4px;
     height: auto;
-    background: linear-gradient(180deg, var(--verde-osc), var(--lima));
+    background: var(--verde);
   }
   .pn-linea__hito {
     padding-top: 0;
@@ -3449,7 +3482,7 @@ html:not(.js) .form__siguiente {
     border: 2px solid var(--verde-osc);
     color: var(--verde-osc);
   }
-  /* mismo borde que "Llamar": el verde de WhatsApp va solo en el ícono (sin más verde en la barra) */
+  /* mismo borde que "Llamar"; el ícono, en el mismo verde (un solo verde en todo el sitio) */
   .pn-barra-movil__wa {
     border: 2px solid var(--verde-osc);
     color: var(--verde-osc);
@@ -3457,11 +3490,11 @@ html:not(.js) .form__siguiente {
   .pn-barra-movil__wa .ico-wa {
     width: 1.3em;
     height: 1.3em;
-    color: #128c7e;
+    color: currentColor;
   }
   .pn-barra-movil__cotizar {
-    background: var(--lima);
-    color: var(--negro);
+    background: var(--verde-osc);
+    color: #fff;
   }
   /* "Cotizar" ya está en la barra: el menú queda solo para navegar */
   .pn-nav__cta-li {
@@ -3524,7 +3557,7 @@ fieldset.campo--grupo > legend {
   justify-content: space-between;
   gap: 20px 40px;
   padding: clamp(24px, 4vw, 40px);
-  border-left: 6px solid var(--lima);
+  border-left: 6px solid var(--verde);
   background: #fff;
 }
 .eq-licita__t {

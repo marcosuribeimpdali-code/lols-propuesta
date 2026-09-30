@@ -218,7 +218,6 @@ const total = 6;
     --verde: #168d3a;
     --verde-osc: #0f6b2b;
     --verde-noche: #0b3d1c;
-    --lima: #81d742;
     --negro: #141414;
     --tinta: #1c211d;
     --tinta-2: #4a524c;
@@ -235,10 +234,12 @@ const total = 6;
   ul, ol { list-style: none; }
   img { display: block; }
   .fondo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .raya { display: block; width: 18mm; height: 1.4mm; margin-top: 5mm; background: var(--lima); }
+  .raya { display: block; width: 18mm; height: 1.4mm; margin-top: 5mm; background: var(--verde); }
+  /* sobre foto o fondo oscuro, la raya va en blanco (sin verde claro, como en el sitio) */
+  .hoja--portada .raya, .tarjeta .raya { background: #fff; }
   .ref { position: absolute; right: 3mm; bottom: 2.5mm; z-index: 3; padding: 0.4mm 2mm; font: 500 6.5pt var(--mono); color: rgb(255 255 255 / 0.92); background: rgb(0 0 0 / 0.55); }
   .ante { font: 700 10pt/1 var(--cond); letter-spacing: 0.18em; text-transform: uppercase; color: var(--verde-osc); }
-  .ante--claro { color: var(--lima); }
+  .ante--claro { color: rgb(255 255 255 / 0.8); }
   h1, h2, h3 { font-family: var(--cond); text-transform: uppercase; }
   h1, h2 { font-family: var(--titular); text-transform: none; letter-spacing: -0.005em; }
   h2 { margin-top: 3mm; font-weight: 700; font-size: 30pt; line-height: 1; }
@@ -252,7 +253,7 @@ const total = 6;
   .tarjeta__lema { margin-top: 44px; font: 700 76px/1 var(--titular); letter-spacing: -0.01em; }
   .tarjeta .raya { width: 90px; height: 7px; margin-top: 26px; }
   .tarjeta__sub { margin-top: 26px; font: 500 30px/1.2 var(--font); }
-  .tarjeta__serv { margin-top: 12px; font: 700 21px/1.3 var(--cond); letter-spacing: 0.08em; text-transform: uppercase; color: var(--lima); }
+  .tarjeta__serv { margin-top: 12px; font: 700 21px/1.3 var(--cond); letter-spacing: 0.08em; text-transform: uppercase; color: rgb(255 255 255 / 0.85); }
   .tarjeta .ref { font-size: 13px; padding: 3px 10px; right: 16px; bottom: 14px; }
 
   /* ---------- presentación: A4 horizontal ---------- */
@@ -267,17 +268,17 @@ const total = 6;
   .portada__logo { width: 62mm; height: auto; margin-bottom: 16mm; color: #fff; }
   .hoja--portada h1 { margin-top: 5mm; font-weight: 700; font-size: 48pt; line-height: 1; }
   .portada__sub { margin-top: 6mm; font: 500 13pt/1.4 var(--font); color: rgb(255 255 255 / 0.92); }
-  .portada__borrador { position: absolute; left: 20mm; bottom: 12mm; z-index: 2; padding: 1.2mm 3mm; background: var(--lima); color: var(--negro); font: 700 9pt var(--cond); letter-spacing: 0.1em; text-transform: uppercase; }
+  .portada__borrador { position: absolute; left: 20mm; bottom: 12mm; z-index: 2; padding: 1.2mm 3mm; background: #fff; color: var(--verde-osc); font: 700 9pt var(--cond); letter-spacing: 0.1em; text-transform: uppercase; }
 
   .dos { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 14mm; align-items: start; }
   .grande { margin-top: 6mm; font-size: 14pt; font-weight: 500; line-height: 1.4; }
   .dos p + p { margin-top: 3mm; font-size: 10.5pt; line-height: 1.5; color: var(--tinta-2); }
   .foto { position: relative; margin: 0; }
   .foto img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
-  .foto--sombra { box-shadow: 5mm 5mm 0 var(--lima); }
+  .foto--sombra { box-shadow: 5mm 5mm 0 var(--verde); }
   .foto--sombra img { aspect-ratio: 5 / 4; }
   .directrices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin-top: 7mm; }
-  .directrices li { padding: 4mm; border-top: 1.2mm solid var(--lima); background: var(--gris); }
+  .directrices li { padding: 4mm; border-top: 1.2mm solid var(--verde); background: var(--gris); }
   .directrices span { font: 800 16pt/1 var(--cond); color: var(--verde); }
   .directrices h3 { margin-top: 1.5mm; font-weight: 700; font-size: 13pt; }
   .directrices p { margin-top: 1.5mm; font-size: 8.5pt; line-height: 1.4; color: var(--tinta-2); }
@@ -296,7 +297,7 @@ const total = 6;
   .servicios div p { margin-top: 1mm; font-size: 9pt; line-height: 1.4; color: var(--tinta-2); }
   .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2mm 4mm; }
   .checks li { position: relative; padding-left: 4.5mm; font-size: 8.5pt; font-weight: 600; line-height: 1.3; }
-  .checks li::before { content: ''; position: absolute; left: 0; top: 0.8mm; width: 2.6mm; height: 2.6mm; background: var(--lima); }
+  .checks li::before { content: ''; position: absolute; left: 0; top: 0.8mm; width: 2.6mm; height: 2.6mm; background: var(--verde); }
 
   .cab { display: flex; justify-content: space-between; align-items: flex-end; gap: 10mm; }
   .cifras--chicas { margin-top: 0; min-width: 140mm; }
@@ -329,7 +330,7 @@ const total = 6;
   .contacto__logo { width: 46mm; height: auto; color: #fff; }
   .contacto h2 { margin-top: 9mm; font-size: 22pt; color: #fff; }
   .contacto dl { display: grid; gap: 3.5mm; margin-top: 7mm; }
-  .contacto dt { font: 700 8pt var(--cond); letter-spacing: 0.14em; text-transform: uppercase; color: var(--lima); }
+  .contacto dt { font: 700 8pt var(--cond); letter-spacing: 0.14em; text-transform: uppercase; color: rgb(255 255 255 / 0.7); }
   .contacto dd { display: flex; align-items: center; gap: 2mm; margin-top: 0.8mm; font-size: 11.5pt; font-weight: 500; }
   .contacto dd .ico-wa { width: 4.2mm; height: 4.2mm; }
   .hoja--final .pie { right: 126mm; }

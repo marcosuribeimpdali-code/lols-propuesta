@@ -16,7 +16,7 @@ solo el diseño. **Hoy se publica solo Panorámica**, en la raíz de `new.lols.c
 | # | Propuesta | Idea |
 |---|---|---|
 | 1 | Plano técnico | Sobria y oscura: grilla de plano, rótulos técnicos, verde de marca |
-| 2 | Panorámica ✅ | Fotográfica: portada con fundido y pestañas de servicios, colores del sitio 2018 |
+| 2 | Panorámica ✅ | Fotográfica: portada con fundido y pestañas de servicios, verde de la marca |
 
 **Qué se publica** lo decide una línea en `src/propuestas/registro.ts`:
 
@@ -85,6 +85,9 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
   pestaña por servicio y una barra de avance (`PortadaFundido.astro`, datos en `portadaServicios`
   de `src/data/portada.ts`). Reemplazó al cubo 3D, que sigue en `PortadaCubo.astro`: para volver,
   cambiar el componente en `src/propuestas/panoramica/paginas/index.astro`.
+- **Colores**: el verde de lols.cl (#168D3A) con sus tonos oscuros, negro y blanco. El lima
+  (#81D742) del sitio 2018 se sacó (30-09-2026): no combinaba con el verde. Sobre fondo claro los
+  acentos van en verde; sobre fotos o fondos oscuros, en blanco.
 - **Tipografía**: Barlow (la misma de Bouygues Construction). Los títulos grandes van en minúsculas
   con Barlow Semi Condensed; antetítulos, botones, menú y rótulos siguen en mayúsculas condensadas.
 - **Portada giratoria y fondos (`src/assets/portada/`)**: fotos de stock de

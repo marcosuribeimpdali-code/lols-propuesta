@@ -39,7 +39,7 @@ const total = caras.length;
           <p class="cubo__titulo">{d.titulo}</p>
           <p class="cubo__bajada">{d.texto}</p>
           {d.revisar && <p><Revisar nota={d.revisar} /></p>}
-          <a class="btn btn--lima" href={r(d.cta.pagina, d.cta.ancla)}>{d.cta.label}{d.cta.ancla && <span class="visually-hidden">: {d.titulo}</span>} <span aria-hidden="true">→</span></a>
+          <a class="btn btn--blanco" href={r(d.cta.pagina, d.cta.ancla)}>{d.cta.label}{d.cta.ancla && <span class="visually-hidden">: {d.titulo}</span>} <span aria-hidden="true">→</span></a>
         </div>
         {d.referencial && <p class="cubo__ref">Imagen referencial{d.credito && ` · ${d.credito}`}</p>}
       </div>

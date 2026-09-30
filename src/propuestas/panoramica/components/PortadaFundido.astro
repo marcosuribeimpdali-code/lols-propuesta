@@ -43,7 +43,7 @@ const pasos = portadaServicios.map((p) => ({ ...p, servicio: servicios.find((s) 
           <p class="fundido__titulo">{p.titulo}</p>
           <p class="fundido__bajada">{p.texto}</p>
           <div class="fundido__acciones">
-            <a class="btn btn--lima" href={r('servicios', `#${p.slug}`)}>
+            <a class="btn btn--blanco" href={r('servicios', `#${p.slug}`)}>
               Ver servicio<span class="visually-hidden">: {p.servicio.nombre}</span> <span aria-hidden="true">→</span>
             </a>
             <a class="btn btn--linea-clara" href={r('contacto')}>Cotizar proyecto</a>
