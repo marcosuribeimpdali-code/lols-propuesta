@@ -94,6 +94,10 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
   ejemplo"): reemplazarlas por las de cada obra en `etapas` de `src/data/proyectos.ts`, idealmente
   una foto por etapa tomada desde un ángulo parecido. Autores de las de ejemplo: Billy Freeman e
   Iain (Unsplash).
+- **Tomas con dron (`src/assets/dron/`)**: fotos aéreas de ejemplo en los banners de Quiénes somos,
+  Proyectos y Trabaja con nosotros, el llamado final, la vista previa al compartir y la
+  presentación. Stock de Unsplash (Centar MURID, CHUTTERSNAP, Ivan Bandura, Jamie Street y Eli
+  Williams), marcadas "Imagen referencial"; se cambian en `src/data/dron.ts`.
 - **Servicios**: cada servicio es una franja con foto grande y el texto al lado. Construcción,
   montaje y electricidad usan fotos de la portada; mantención y voz y datos, las de
   `src/assets/servicios/` (Unsplash: Valentin Lacoste y Wonderlane). Todas "Imagen referencial".
@@ -112,6 +116,22 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
   "Próximas entregas". Son de 500 px: se reemplazan cuando lleguen fotos actuales.
 - **Capturas de la portada selectora (`src/assets/capturas/<slug>.jpg`)**: se sacan a mano
   (1440 × 900) si una propuesta cambia mucho.
+
+## Presentación en PDF y vista previa al compartir
+
+- **Presentación corporativa** (`public/descargas/presentacion-lols.pdf`, A4 horizontal, 6 hojas):
+  se descarga desde Quiénes somos, el pie y Capacidad técnica. Es un **borrador**: usa los mismos
+  datos del sitio (con las obras de ejemplo marcadas) y lo dice en cada hoja.
+- **Vista previa al compartir** (`public/compartir.jpg`, 1200 × 630): la foto, el logo y el lema
+  que aparecen al mandar el enlace por WhatsApp o correo (etiquetas `og:` en `Base.astro`).
+
+Las dos se arman desde `src/pages/descargas/[pieza].astro` (páginas que solo existen con
+`npm run dev`) y se "imprimen" con Chrome. Cuando cambien los datos o las fotos:
+
+```bash
+npm run dev          # en una terminal
+npm run descargas    # en otra: regenera el PDF y la imagen; después subirlos
+```
 
 ## Marcas de revisión ([PENDIENTE] y "Por confirmar")
 
@@ -137,7 +157,11 @@ muestra sus marcas siempre (es un borrador legal con huecos a mitad de frase). D
 - Confirmar si las obras "en construcción" de 2018 ya se entregaron.
 - Versión vigente del isotipo (tercer rectángulo relleno o en contorno).
 - Formulario de contacto: hoy **no envía nada** (solo muestra un aviso). Definir a qué correo
-  llegan los mensajes y cómo se envían.
+  llegan los mensajes y cómo se envían. Las cotizaciones van al área comercial y a los
+  arquitectos, con copia a gerencia (quién es quién se definió en reunión; no va en el repo).
+- Contacto por área (Contacto → "¿Con quién hablar?"): cotizaciones, proveedores y facturación,
+  compras y logística. Hoy todo va a lols@lols.cl con el asunto ya escrito; cuando haya correos
+  por área, ponerlos en `areas` de `src/data/empresa.ts`.
 - Política de privacidad (Ley 21.719, vigente desde el 1-12-2026): es un borrador de estructura;
   la revisa quien vea lo legal.
 

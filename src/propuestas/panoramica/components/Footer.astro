@@ -6,7 +6,8 @@ import Logo from '../../comun/Logo.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import InterruptorMarcas from '../../comun/InterruptorMarcas.astro';
 import IconoWhatsapp from '../../comun/IconoWhatsapp.astro';
-import { empresa, whatsappHref } from '../../../data/empresa';
+import { empresa, whatsappHref, areas, correoArea } from '../../../data/empresa';
+import { presentacion } from '../../../data/descargas';
 import { r } from '../config';
 
 const anio = new Date().getFullYear();
@@ -26,12 +27,14 @@ const anio = new Date().getFullYear();
         <li><a href={r('terminados')}>Proyectos finalizados</a></li>
         <li><a href={r('construccion')}>Proyectos en ejecución</a></li>
         <li><a href={r('contacto')}>Cuéntenos su proyecto</a></li>
+        <li><a href={presentacion.href} download={presentacion.nombreArchivo}>Presentación corporativa (PDF)</a></li>
       </ul>
     </div>
     <div>
       <h2 class="pn-footer__h">Trabaje con LOLS</h2>
       <ul>
         <li><a href={r('trabaja')}>Trabaja con nosotros</a></li>
+        <li><a href={correoArea(areas[1])}>Proveedores y facturación</a></li>
         <li class="pn-footer__pend solo-marca"><Pendiente texto="registro de proveedores, si se quiere" /></li>
       </ul>
     </div>
@@ -47,7 +50,7 @@ const anio = new Date().getFullYear();
   </div>
   <div class="pn-footer__legal">
     <div class="wrap pn-footer__legal-in">
-      <p>© {anio} {empresa.razonSocial}<span class="solo-marca"> · RUT <Pendiente texto="RUT" /></span></p>
+      <p>© {anio} {empresa.razonSocial} · RUT {empresa.rut}</p>
       <p><a href={r('privacidad')}>Política de privacidad</a> · Propuesta de sitio en revisión · <InterruptorMarcas /></p>
     </div>
   </div>

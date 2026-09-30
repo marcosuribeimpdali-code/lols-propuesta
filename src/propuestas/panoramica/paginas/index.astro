@@ -12,19 +12,12 @@ import { empresa } from '../../../data/empresa';
 import { servicios, revisarDescripciones, fraseServicios } from '../../../data/servicios';
 import { porEstado, altObra } from '../../../data/proyectos';
 import { usos } from '../../../data/equipos';
+import { proceso, procesoRevisar } from '../../../data/proceso';
 
 const terminados = porEstado('terminado');
 
 // adelanto de la página de capacidad técnica: equipos propios en obra (moldaje, losa, andamio, bomba)
 const equiposPortada = usos.slice(0, 4).map((u) => u.foto);
-
-// "Cómo trabajamos": los mismos pasos que promete la página de contacto
-const proceso = [
-  { titulo: 'Cuéntenos su proyecto', texto: 'En 3 pasos: el servicio que necesita, los datos de la obra y cómo contactarlo.' },
-  { titulo: 'Visita o reunión', texto: 'Conversamos el proyecto en terreno, en oficina o por videollamada.' },
-  { titulo: 'Propuesta', texto: 'Le enviamos una propuesta técnica y económica con alcance y plazo.' },
-  { titulo: 'Ejecución y entrega', texto: 'Construimos, coordinamos cada etapa y entregamos la obra terminada.' },
-];
 
 // cifras bajo la portada: reemplazan los accesos directos, que repetían el menú. "+50" y "+300"
 // son lo seguro (no hay registro exacto de las obras de todos estos años); los m² no se saben aún.
@@ -95,7 +88,7 @@ const cifras = [
   <section class="pn-directrices pn-proceso" aria-labelledby="proc-t">
     <div class="wrap">
       <TituloSeccion antetitulo="Cómo trabajamos" titulo="De la idea a la entrega" id="proc-t" claro>
-        <p class="solo-marca"><Revisar nota="pasos del proceso a confirmar con la jefatura" /></p>
+        <p class="solo-marca"><Revisar nota={procesoRevisar} /></p>
       </TituloSeccion>
       <ol class="pn-directrices__grid pn-proceso__grid">
         {proceso.map((p, i) => (

@@ -17,6 +17,7 @@ import Header from './components/Header.astro';
 import Footer from './components/Footer.astro';
 import { SLUG } from './config';
 import { listaServicios } from '../../data/servicios';
+import { empresa } from '../../data/empresa';
 
 interface Props {
   /** undefined = página de inicio */
@@ -25,10 +26,14 @@ interface Props {
 }
 const {
   title,
-  description = `LOLS Ingeniería Limitada: ${listaServicios.charAt(0).toLowerCase() + listaServicios.slice(1)}`,
+  description = `${empresa.nombreCorto}: ${empresa.anios} años en el mercado. ${listaServicios}`,
 } = Astro.props;
 const esPortada = !title;
-const fullTitle = title ? `${title} · LOLS Ingeniería` : 'LOLS Ingeniería · Sus proyectos en las mejores manos';
+const fullTitle = title ? `${title} · LOLS Ingeniería` : `LOLS Ingeniería · ${empresa.lema}`;
+// vista previa al compartir el enlace (WhatsApp, correo, LinkedIn): foto aérea, logo y el lema.
+// La imagen la genera scripts/descargas.mjs (public/compartir.jpg, 1200 × 630).
+const url = new URL(Astro.url.pathname, Astro.site);
+const imagenCompartir = new URL(`/compartir.jpg?v=${VERSION}`, Astro.site);
 ---
 <!doctype html>
 <html lang="es-CL">
@@ -39,6 +44,17 @@ const fullTitle = title ? `${title} · LOLS Ingeniería` : 'LOLS Ingeniería · 
     <meta name="robots" content="noindex, nofollow" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="LOLS Ingeniería" />
+    <meta property="og:locale" content="es_CL" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content={imagenCompartir} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${empresa.nombreCorto}: ${empresa.lema}`} />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <!-- hoja propia de esta propuesta como <link>, no como import: la ruta única del sitio
          importa los componentes de todas y los estilos se mezclarían -->

@@ -6,10 +6,18 @@ import FormContacto from '../../comun/FormContacto.astro';
 import Mapa from '../../comun/Mapa.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import IconoWhatsapp from '../../comun/IconoWhatsapp.astro';
-import { empresa, mapas, whatsappHref } from '../../../data/empresa';
+import TituloSeccion from '../components/TituloSeccion.astro';
+import { empresa, mapas, whatsappHref, areas, correoArea } from '../../../data/empresa';
 import { diapositivas } from '../../../data/portada';
 
 const banner = diapositivas[3];
+
+// íconos de línea de cada área (mismo trazo que los de arriba)
+const iconosArea = [
+  'M6 3h9l3 3v15H6zM15 3v3h3M9 11h6M9 15h6M9 19h4',
+  'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6M9 16h3',
+  'M2 7h11v9H2zM13 10h4l3 3v3h-7M4.5 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0M14.5 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0',
+];
 ---
 <Base title="Contacto" description="Contacte a LOLS Ingeniería: dirección, teléfono y correo.">
   <PageBanner titulo="Contacto" img={banner.img} referencial={banner.credito ?? undefined}>
@@ -73,6 +81,30 @@ const banner = diapositivas[3];
           <p class="pn-mapa__cv">¿Busca trabajo? <a href={r('trabaja')}>Envíe su CV aquí</a>.</p>
         </section>
       </div>
+    </div>
+  </section>
+
+  <section class="pn-sec pn-sec--gris" aria-labelledby="areas-t">
+    <div class="wrap">
+      <TituloSeccion antetitulo="Contacto por área" titulo="¿Con quién hablar?" id="areas-t">
+        <p>Escríbanos con el asunto ya indicado y su mensaje llega directo a quien corresponde.</p>
+      </TituloSeccion>
+      <ul class="pn-areas">
+        {areas.map((a, i) => (
+          <li class="pn-dato">
+            <span class="pn-dato__icono" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={iconosArea[i]} /></svg></span>
+            <h3>{a.titulo}</h3>
+            <p>{a.texto}</p>
+            <a class="pn-link" href={correoArea(a)}>Escribir <span aria-hidden="true">→</span><span class="visually-hidden">: {a.titulo}</span></a>
+          </li>
+        ))}
+        <li class="pn-dato">
+          <span class="pn-dato__icono" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 11a4 4 0 1 0 8 0a4 4 0 1 0-8 0M4 21a8 8 0 0 1 16 0" /></svg></span>
+          <h3>Trabaja con nosotros</h3>
+          <p>Postulaciones y CV para obra y oficina.</p>
+          <a class="pn-link" href={r('trabaja')}>Postular <span aria-hidden="true">→</span></a>
+        </li>
+      </ul>
     </div>
   </section>
 </Base>

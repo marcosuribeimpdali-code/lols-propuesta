@@ -12,8 +12,10 @@ import { empresa } from '../../../data/empresa';
 import { listaServicios } from '../../../data/servicios';
 import { diapositivas } from '../../../data/portada';
 import { hitos } from '../../../data/historia';
+import { dron } from '../../../data/dron';
+import { presentacion } from '../../../data/descargas';
 
-const banner = diapositivas[2];
+const banner = dron.obraGrua;
 const lateral = diapositivas[0];
 const servicios = listaServicios.charAt(0).toLowerCase() + listaServicios.slice(1);
 ---
@@ -30,6 +32,11 @@ const servicios = listaServicios.charAt(0).toLowerCase() + listaServicios.slice(
         </p>
         <p>Hoy somos más de {empresa.cifras.trabajadores} trabajadores en {servicios} <Revisar nota={empresa.cifrasRevisar} /></p>
         <p class="solo-marca"><Pendiente texto="2 o 3 líneas sobre el tipo de obras que hace la empresa y para quién" /></p>
+        <a class="btn btn--verde pn-descarga" href={presentacion.href} download={presentacion.nombreArchivo}>
+          <svg class="pn-descarga__ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16" /></svg>
+          Descargar presentación
+          <span class="pn-descarga__peso">PDF{presentacion.peso && ` · ${presentacion.peso}`}</span>
+        </a>
       </div>
       <figure class="pn-dos__img">
         <Image src={lateral.img} alt={lateral.alt} widths={[600, 1200]} sizes="(max-width: 900px) 100vw, 560px" />

@@ -2,9 +2,10 @@
 // Llamado a contacto sobre foto (como el "¡Construyamos tu sueño, juntos!" de la referencia).
 import { Image } from 'astro:assets';
 import { r } from '../config';
-import { diapositivas } from '../../../data/portada';
+import { dron } from '../../../data/dron';
 
-const fondo = diapositivas[0];
+// toma aérea de ejemplo (src/data/dron.ts)
+const fondo = dron.cenital;
 ---
 <section class="pn-cta" aria-labelledby="pn-cta-t">
   <Image class="pn-cta__img" src={fondo.img} alt="" widths={[640, 1280, 2000]} sizes="100vw" />
@@ -16,5 +17,5 @@ const fondo = diapositivas[0];
       <a class="btn btn--lima" href={r('contacto')}>Cuéntenos su proyecto <span aria-hidden="true">→</span></a>
     </div>
   </div>
-  {fondo.referencial && <p class="cubo__ref">Imagen referencial{fondo.credito && ` · ${fondo.credito}`}</p>}
+  {fondo.credito && <p class="cubo__ref">Imagen referencial · {fondo.credito}</p>}
 </section>

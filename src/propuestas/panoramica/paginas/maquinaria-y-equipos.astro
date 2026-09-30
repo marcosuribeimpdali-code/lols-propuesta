@@ -11,6 +11,7 @@ import CtaFoto from '../components/CtaFoto.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import Revisar from '../../comun/Revisar.astro';
 import { cifrasEquipos, ventajas, ventajasRevisar, usos, fotoBanner, fotoBodega } from '../../../data/equipos';
+import { presentacion } from '../../../data/descargas';
 ---
 <Base title="Capacidad técnica" description="Moldajes, alzaprimas, andamios, maquinaria y vehículos propios de LOLS Ingeniería.">
   <PageBanner titulo="Capacidad técnica" img={fotoBanner.src} referencial={fotoBanner.credito ?? undefined}>
@@ -99,6 +100,7 @@ import { cifrasEquipos, ventajas, ventajasRevisar, usos, fotoBanner, fotoBodega 
         <div>
           <h2 id="lic-t" class="eq-licita__t">¿Su licitación pide el listado de equipos?</h2>
           <p>Le enviamos el detalle de moldajes, alzaprimas, andamios, maquinaria y vehículos, con cantidades y medidas.</p>
+          <p class="eq-licita__pdf"><a href={presentacion.href} download={presentacion.nombreArchivo}>Descargar la presentación corporativa (PDF{presentacion.peso && ` · ${presentacion.peso}`})</a></p>
         </div>
         <a class="btn btn--verde" href={r('contacto')}>Solicitar el listado <span aria-hidden="true">→</span></a>
       </div>

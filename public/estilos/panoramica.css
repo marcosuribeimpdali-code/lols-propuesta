@@ -1681,6 +1681,64 @@ main:focus {
 .pn-dato p a:hover {
   color: var(--verde-osc);
 }
+/* contacto por área: 4 tarjetas como las de arriba */
+.pn-areas {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+}
+.pn-areas .pn-dato p {
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--tinta-2);
+}
+.pn-areas .pn-link {
+  margin-top: auto;
+  padding-top: 6px;
+}
+.pn-areas .pn-dato {
+  align-content: stretch;
+  grid-template-rows: auto auto auto 1fr;
+}
+@media (max-width: 1000px) {
+  .pn-areas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .pn-areas {
+    grid-template-columns: 1fr;
+  }
+}
+/* botón para descargar la presentación (Quiénes somos) */
+.pn-descarga {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 28px;
+}
+.pn-descarga__ico {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pn-descarga__peso {
+  padding-left: 10px;
+  border-left: 1px solid rgb(255 255 255 / 0.45);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+}
+.eq-licita__pdf a {
+  color: var(--verde-osc);
+  font-weight: 600;
+}
 /* formulario a la izquierda y mapa a la derecha */
 .pn-contacto {
   display: grid;

@@ -16,7 +16,9 @@ export const empresa = {
    *  lo seguro. Los m² construidos no se saben todavía. */
   cifras: { obras: 50, trabajadores: 300 },
   cifrasRevisar: 'que «300 y algo» sea la cantidad de trabajadores actual',
-  razonSocial: 'LOLS Ingeniería Limitada',
+  /** razón social oficial y RUT (confirmados por la empresa, 30-09-2026) */
+  razonSocial: 'LOLS Empresa de Ingeniería Limitada',
+  rut: '77.085.560-8',
   nombreCorto: 'LOLS Ingeniería',
   lema: 'Sus proyectos en las mejores manos',
   directrices: 'Experiencia, seguridad y calidad son nuestras directrices.',
@@ -47,6 +49,24 @@ export const empresa = {
 export const whatsappHref = `https://wa.me/${empresa.whatsapp.valor.replace(/\D/g, '')}?text=${encodeURIComponent(
   'Hola, les escribo desde el sitio web de LOLS Ingeniería.',
 )}`;
+
+/** contacto por área (página Contacto). Mientras no haya correos por área, todo llega a
+ *  lols@lols.cl con el asunto ya escrito, para que cada encargado filtre lo suyo. Cuando existan,
+ *  poner el correo en `correo`. Quién recibe cada área es dato interno: no va en este repositorio,
+ *  que es público. */
+export interface Area {
+  titulo: string;
+  texto: string;
+  asunto: string;
+  correo: string | null;
+}
+export const areas: Area[] = [
+  { titulo: 'Cotizaciones y proyectos', texto: 'Presupuestos, visitas a terreno y consultas técnicas de su obra.', asunto: 'Cotización', correo: null },
+  { titulo: 'Proveedores y facturación', texto: 'Facturas, pagos, cobranzas y datos bancarios.', asunto: 'Proveedores y facturación', correo: null },
+  { titulo: 'Compras y logística', texto: 'Ofertas de materiales, despachos y retiros.', asunto: 'Compras y logística', correo: null },
+];
+export const correoArea = (a: Area) =>
+  `mailto:${a.correo ?? empresa.correo.valor}?subject=${encodeURIComponent(`${a.asunto} - `)}`;
 
 // Google Maps a partir de la dirección (sin API key). Si la dirección cambia, el mapa la sigue.
 const q = encodeURIComponent(empresa.direccion.valor);

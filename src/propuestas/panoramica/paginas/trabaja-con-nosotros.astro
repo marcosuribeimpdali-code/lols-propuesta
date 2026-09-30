@@ -7,9 +7,9 @@ import FormPostulacion from '../../comun/FormPostulacion.astro';
 import IconoServicio from '../../comun/IconoServicio.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import { servicios } from '../../../data/servicios';
-import { diapositivas } from '../../../data/portada';
+import { dron } from '../../../data/dron';
 
-const banner = diapositivas[2];
+const banner = dron.obraTrabajadores;
 ---
 <Base title="Trabaja con nosotros" description="Envíe su CV a LOLS Ingeniería.">
   <PageBanner titulo="Trabaja con nosotros" img={banner.img} referencial={banner.credito ?? undefined}>

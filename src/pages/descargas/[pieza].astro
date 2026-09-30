@@ -1,0 +1,338 @@
+---
+// Piezas para descargar o compartir, que se arman con los mismos datos del sitio y se "imprimen"
+// con Chrome (scripts/descargas.mjs):
+//   /descargas/compartir/    → public/compartir.jpg (1200 × 630): vista previa al compartir el enlace
+//   /descargas/presentacion/ → public/descargas/presentacion-lols.pdf: presentación corporativa (A4)
+// Solo existen en el servidor de desarrollo (`npm run dev`): en la compilación no se publican.
+// Es un BORRADOR: lleva fotos de stock y datos de ejemplo, igual que el sitio, y lo dice en cada hoja.
+import '@fontsource/barlow/latin-400.css';
+import '@fontsource/barlow/latin-500.css';
+import '@fontsource/barlow/latin-600.css';
+import '@fontsource/barlow-condensed/latin-600.css';
+import '@fontsource/barlow-condensed/latin-700.css';
+import '@fontsource/barlow-condensed/latin-800.css';
+import '@fontsource/ibm-plex-mono/latin-500.css';
+import '@fontsource-variable/dm-sans';
+import { Image } from 'astro:assets';
+import Logo from '../../propuestas/comun/Logo.astro';
+import IconoServicio from '../../propuestas/comun/IconoServicio.astro';
+import IconoWhatsapp from '../../propuestas/comun/IconoWhatsapp.astro';
+import { empresa } from '../../data/empresa';
+import { servicios, fraseServicios } from '../../data/servicios';
+import { cifrasEquipos, ventajas, usos } from '../../data/equipos';
+import { porEstado } from '../../data/proyectos';
+import { proceso } from '../../data/proceso';
+import { dron } from '../../data/dron';
+import { diapositivas } from '../../data/portada';
+
+export function getStaticPaths() {
+  return import.meta.env.DEV ? [{ params: { pieza: 'compartir' } }, { params: { pieza: 'presentacion' } }] : [];
+}
+
+const { pieza } = Astro.params;
+const portada = dron.obraGrua;
+const obras = porEstado('terminado').slice(0, 8);
+const hoy = new Date();
+const mes = hoy.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
+const cifras = [
+  { valor: String(empresa.anios), texto: 'años en el mercado' },
+  { valor: `+${empresa.cifras.obras}`, texto: 'obras realizadas' },
+  { valor: `+${empresa.cifras.trabajadores}`, texto: 'trabajadores*' },
+  { valor: String(servicios.length), texto: 'especialidades' },
+];
+const total = 6;
+---
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{pieza === 'compartir' ? 'Vista previa al compartir' : 'Presentación corporativa'} · LOLS Ingeniería</title>
+  </head>
+  <body class={pieza}>
+    {pieza === 'compartir' ? (
+      <main class="tarjeta">
+        <Image format="jpg" quality={72} class="fondo" src={portada.img} alt="" widths={[1400]} sizes="1200px" loading="eager" />
+        <div class="tarjeta__velo"></div>
+        <div class="tarjeta__txt">
+          <Logo class="tarjeta__logo" decorativo />
+          <p class="tarjeta__lema">{empresa.lema}</p>
+          <span class="raya"></span>
+          <p class="tarjeta__sub">{empresa.anios} años en el mercado · Santiago, Chile</p>
+          <p class="tarjeta__serv">{servicios.map((s) => s.nombre).join(' · ')}</p>
+        </div>
+        {portada.credito && <p class="ref">Imagen referencial</p>}
+      </main>
+    ) : (
+      <main>
+        {/* 1 · portada */}
+        <section class="hoja hoja--portada">
+          <Image format="jpg" quality={72} class="fondo" src={portada.img} alt="" widths={[1754]} sizes="297mm" loading="eager" />
+          <div class="portada__velo"></div>
+          <div class="portada__txt">
+            <Logo class="portada__logo" decorativo />
+            <p class="ante ante--claro">Presentación corporativa</p>
+            <h1>{empresa.lema}</h1>
+            <span class="raya"></span>
+            <p class="portada__sub">{empresa.anios} años en el mercado · {servicios.map((s) => s.nombre).join(' · ')}</p>
+          </div>
+          <p class="portada__borrador">Borrador para revisión · {mes}</p>
+          {portada.credito && <p class="ref">Imagen referencial · {portada.credito}</p>}
+        </section>
+
+        {/* 2 · quiénes somos */}
+        <section class="hoja">
+          <div class="dos">
+            <div>
+              <p class="ante">Quiénes somos</p>
+              <h2>Nuestra empresa</h2>
+              <span class="raya"></span>
+              <p class="grande">
+                Somos una empresa de Santiago con {empresa.anios} años en el área de la construcción y más de
+                {' '}{empresa.cifras.obras} obras realizadas.
+              </p>
+              <p>{fraseServicios}</p>
+              <ol class="directrices">
+                <li><span>01</span><h3>Experiencia</h3><p>Más de {empresa.cifras.obras} obras en {empresa.anios} años.</p></li>
+                <li><span>02</span><h3>Seguridad</h3><p>{empresa.principios[1]}</p></li>
+                <li><span>03</span><h3>Calidad</h3><p>{empresa.principios[0]}</p></li>
+              </ol>
+            </div>
+            <figure class="foto foto--sombra">
+              <Image format="jpg" quality={72} src={diapositivas[2].img} alt={diapositivas[2].alt} widths={[900]} sizes="120mm" />
+              <figcaption class="ref">Imagen referencial</figcaption>
+            </figure>
+          </div>
+          <dl class="cifras">
+            {cifras.map((c) => <div><dd>{c.valor}</dd><dt>{c.texto}</dt></div>)}
+          </dl>
+          <footer class="pie"><span>{empresa.razonSocial} · RUT {empresa.rut}</span><span>* Por confirmar · Borrador</span><span>2 / {total}</span></footer>
+        </section>
+
+        {/* 3 · servicios */}
+        <section class="hoja">
+          <p class="ante">Especialidades</p>
+          <h2>Cinco especialidades, un mismo equipo</h2>
+          <span class="raya"></span>
+          <ul class="servicios">
+            {servicios.map((s, i) => (
+              <li>
+                <span class="servicios__n">{String(i + 1).padStart(2, '0')}</span>
+                <span class="servicios__ico"><IconoServicio nombre={s.icono} /></span>
+                <div>
+                  <h3>{s.nombre}</h3>
+                  <p>{s.descripcion}</p>
+                </div>
+                <ul class="checks">{s.incluye.map((x) => <li>{x}</li>)}</ul>
+              </li>
+            ))}
+          </ul>
+          <footer class="pie"><span>{empresa.razonSocial} · RUT {empresa.rut}</span><span>Textos propuestos · Borrador</span><span>3 / {total}</span></footer>
+        </section>
+
+        {/* 4 · capacidad técnica */}
+        <section class="hoja">
+          <div class="cab">
+            <div>
+              <p class="ante">Capacidad técnica</p>
+              <h2>Nuestros equipos en su obra</h2>
+              <span class="raya"></span>
+            </div>
+            <dl class="cifras cifras--chicas">
+              {cifrasEquipos.map((c) => <div><dd>{c.valor}</dd><dt>{c.texto}</dt></div>)}
+            </dl>
+          </div>
+          <p class="bajada">{ventajas[0].texto}</p>
+          <ul class="usos">
+            {usos.map((u) => (
+              <li>
+                <figure class="foto">
+                  <Image format="jpg" quality={72} src={u.foto.src} alt={u.foto.alt} widths={[600]} sizes="85mm" />
+                  <figcaption class="ref">{u.foto.real ? 'Foto real' : 'Imagen referencial'}</figcaption>
+                </figure>
+                <h3>{u.titulo}</h3>
+                <p>{u.equipos[0]}</p>
+              </li>
+            ))}
+          </ul>
+          <footer class="pie"><span>{empresa.razonSocial} · RUT {empresa.rut}</span><span>Borrador</span><span>4 / {total}</span></footer>
+        </section>
+
+        {/* 5 · obras */}
+        <section class="hoja">
+          <p class="ante">Proyectos <span class="ejemplo">Datos de ejemplo</span></p>
+          <h2>Obras realizadas</h2>
+          <span class="raya"></span>
+          <ul class="obras">
+            {obras.map((o, i) => (
+              <li>
+                <figure class="foto">
+                  {o.imagen && <Image format="jpg" quality={72} src={o.imagen.src} alt={o.nombre ?? `Obra ${i + 1}`} widths={[500]} sizes="62mm" />}
+                </figure>
+                <h3>{o.nombre ?? `Obra ${String(i + 1).padStart(2, '0')}`}</h3>
+                <p>{[o.comuna, o.anio].filter(Boolean).join(' · ')}</p>
+                {o.servicios && <p class="obras__serv">{o.servicios.join(' · ')}</p>}
+              </li>
+            ))}
+          </ul>
+          <footer class="pie"><span>{empresa.razonSocial} · RUT {empresa.rut}</span><span>Nombres y datos de ejemplo, a reemplazar por los reales · Borrador</span><span>5 / {total}</span></footer>
+        </section>
+
+        {/* 6 · cómo trabajamos y contacto */}
+        <section class="hoja hoja--final">
+          <div class="final">
+            <div>
+              <p class="ante">Cómo trabajamos</p>
+              <h2>De la idea a la entrega</h2>
+              <span class="raya"></span>
+              <ol class="pasos">
+                {proceso.map((p, i) => <li><span>{String(i + 1).padStart(2, '0')}</span><h3>{p.titulo}</h3><p>{p.texto}</p></li>)}
+              </ol>
+              <figure class="foto final__foto">
+                <Image format="jpg" quality={72} src={dron.obraCiudad.img} alt={dron.obraCiudad.alt} widths={[1000]} sizes="160mm" />
+                <figcaption class="ref">Imagen referencial</figcaption>
+              </figure>
+            </div>
+            <div class="contacto">
+              <Logo class="contacto__logo" decorativo />
+              <h2>Conversemos su próximo proyecto</h2>
+              <dl>
+                <div><dt>Dirección</dt><dd>{empresa.direccion.valor}</dd></div>
+                <div><dt>Teléfono</dt><dd>{empresa.telefono.valor}</dd></div>
+                <div><dt>WhatsApp</dt><dd><IconoWhatsapp /> {empresa.whatsapp.valor}</dd></div>
+                <div><dt>Correo</dt><dd>{empresa.correo.valor}</dd></div>
+                <div><dt>Sitio web</dt><dd>lols.cl</dd></div>
+              </dl>
+            </div>
+          </div>
+          <footer class="pie"><span>{empresa.razonSocial} · RUT {empresa.rut}</span><span>Borrador</span><span>6 / {total}</span></footer>
+        </section>
+      </main>
+    )}
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --verde: #168d3a;
+    --verde-osc: #0f6b2b;
+    --verde-noche: #0b3d1c;
+    --lima: #81d742;
+    --negro: #141414;
+    --tinta: #1c211d;
+    --tinta-2: #4a524c;
+    --gris: #f3f5f2;
+    --linea: #dfe3de;
+    --font: 'Barlow', system-ui, sans-serif;
+    --cond: 'Barlow Condensed', 'Barlow', sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); color: var(--tinta); background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  ul, ol { list-style: none; }
+  img { display: block; }
+  .fondo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .raya { display: block; width: 18mm; height: 1.4mm; margin-top: 5mm; background: var(--lima); }
+  .ref { position: absolute; right: 3mm; bottom: 2.5mm; z-index: 3; padding: 0.4mm 2mm; font: 500 6.5pt var(--mono); color: rgb(255 255 255 / 0.92); background: rgb(0 0 0 / 0.55); }
+  .ante { font: 700 10pt/1 var(--cond); letter-spacing: 0.18em; text-transform: uppercase; color: var(--verde-osc); }
+  .ante--claro { color: var(--lima); }
+  h1, h2, h3 { font-family: var(--cond); text-transform: uppercase; }
+  h2 { margin-top: 3mm; font-weight: 800; font-size: 30pt; line-height: 0.95; }
+
+  /* ---------- vista previa al compartir: 1200 × 630 ---------- */
+  body.compartir { width: 1200px; height: 630px; overflow: hidden; }
+  .tarjeta { position: relative; width: 1200px; height: 630px; overflow: hidden; }
+  .tarjeta__velo { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(11 61 28 / 0.96) 0%, rgb(15 107 43 / 0.86) 46%, rgb(11 61 28 / 0.15) 100%); }
+  .tarjeta__txt { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; height: 100%; max-width: 720px; padding: 0 72px; color: #fff; }
+  .tarjeta__logo { width: 240px; height: auto; color: #fff; }
+  .tarjeta__lema { margin-top: 44px; font: 800 74px/0.95 var(--cond); text-transform: uppercase; }
+  .tarjeta .raya { width: 90px; height: 7px; margin-top: 26px; }
+  .tarjeta__sub { margin-top: 26px; font: 500 30px/1.2 var(--font); }
+  .tarjeta__serv { margin-top: 12px; font: 700 21px/1.3 var(--cond); letter-spacing: 0.08em; text-transform: uppercase; color: var(--lima); }
+  .tarjeta .ref { font-size: 13px; padding: 3px 10px; right: 16px; bottom: 14px; }
+
+  /* ---------- presentación: A4 horizontal ---------- */
+  @page { size: A4 landscape; margin: 0; }
+  .hoja { position: relative; width: 297mm; height: 210mm; padding: 16mm 18mm 20mm; overflow: hidden; page-break-after: always; break-after: page; }
+  .hoja:last-child { page-break-after: auto; break-after: auto; }
+  .pie { position: absolute; left: 18mm; right: 18mm; bottom: 8mm; display: flex; justify-content: space-between; gap: 8mm; padding-top: 2.5mm; border-top: 0.3mm solid var(--linea); font: 500 7pt var(--mono); color: var(--tinta-2); }
+
+  .hoja--portada { padding: 0; color: #fff; }
+  .portada__velo { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(11 61 28 / 0.95) 0%, rgb(15 107 43 / 0.82) 48%, rgb(11 61 28 / 0.1) 100%); }
+  .portada__txt { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; height: 100%; max-width: 175mm; padding: 0 20mm; }
+  .portada__logo { width: 62mm; height: auto; margin-bottom: 16mm; color: #fff; }
+  .hoja--portada h1 { margin-top: 5mm; font-weight: 800; font-size: 46pt; line-height: 0.95; }
+  .portada__sub { margin-top: 6mm; font: 500 13pt/1.4 var(--font); color: rgb(255 255 255 / 0.92); }
+  .portada__borrador { position: absolute; left: 20mm; bottom: 12mm; z-index: 2; padding: 1.2mm 3mm; background: var(--lima); color: var(--negro); font: 700 9pt var(--cond); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .dos { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 14mm; align-items: start; }
+  .grande { margin-top: 6mm; font-size: 14pt; font-weight: 500; line-height: 1.4; }
+  .dos p + p { margin-top: 3mm; font-size: 10.5pt; line-height: 1.5; color: var(--tinta-2); }
+  .foto { position: relative; margin: 0; }
+  .foto img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+  .foto--sombra { box-shadow: 5mm 5mm 0 var(--lima); }
+  .foto--sombra img { aspect-ratio: 5 / 4; }
+  .directrices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin-top: 7mm; }
+  .directrices li { padding: 4mm; border-top: 1.2mm solid var(--lima); background: var(--gris); }
+  .directrices span { font: 800 16pt/1 var(--cond); color: var(--verde); }
+  .directrices h3 { margin-top: 1.5mm; font-weight: 700; font-size: 13pt; }
+  .directrices p { margin-top: 1.5mm; font-size: 8.5pt; line-height: 1.4; color: var(--tinta-2); }
+  .cifras { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 9mm; border-top: 0.3mm solid var(--linea); border-bottom: 0.3mm solid var(--linea); }
+  .cifras > div { padding: 4mm 5mm; border-left: 0.3mm solid var(--linea); }
+  .cifras > div:first-child { border-left: 0; }
+  .cifras dd { font: 800 26pt/1 var(--cond); color: var(--verde); }
+  .cifras dt { margin-top: 1mm; font: 700 8.5pt var(--cond); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .servicios { display: grid; gap: 3mm; margin-top: 7mm; }
+  .servicios > li { display: grid; grid-template-columns: 11mm 12mm 1.3fr 1fr; gap: 5mm; align-items: center; padding: 3.2mm 5mm; background: var(--gris); border-left: 1.2mm solid var(--verde-osc); }
+  .servicios__n { font: 800 16pt/1 var(--cond); color: var(--verde); }
+  .servicios__ico { display: grid; place-items: center; width: 12mm; height: 12mm; background: var(--verde-osc); color: #fff; }
+  .servicios__ico .icono { width: 7mm; height: 7mm; }
+  .servicios h3 { font-weight: 800; font-size: 15pt; }
+  .servicios div p { margin-top: 1mm; font-size: 9pt; line-height: 1.4; color: var(--tinta-2); }
+  .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2mm 4mm; }
+  .checks li { position: relative; padding-left: 4.5mm; font-size: 8.5pt; font-weight: 600; line-height: 1.3; }
+  .checks li::before { content: ''; position: absolute; left: 0; top: 0.8mm; width: 2.6mm; height: 2.6mm; background: var(--lima); }
+
+  .cab { display: flex; justify-content: space-between; align-items: flex-end; gap: 10mm; }
+  .cifras--chicas { margin-top: 0; min-width: 140mm; }
+  .cifras--chicas dd { font-size: 20pt; }
+  .cifras--chicas dt { font-size: 7.5pt; }
+  .bajada { margin-top: 5mm; font-size: 10.5pt; color: var(--tinta-2); }
+  .usos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm 6mm; margin-top: 5mm; }
+  .usos .foto img { aspect-ratio: 16 / 7; }
+  .usos h3 { margin-top: 2mm; font-weight: 800; font-size: 12pt; }
+  .usos p { margin-top: 0.8mm; font-size: 8.5pt; color: var(--tinta-2); }
+
+  .ejemplo { margin-left: 3mm; padding: 0.6mm 2mm; background: #ffe58a; color: var(--negro); letter-spacing: 0.06em; font-size: 7.5pt; }
+  .obras { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6mm 6mm; margin-top: 7mm; }
+  .obras .foto img { aspect-ratio: 4 / 3; }
+  .obras h3 { margin-top: 2mm; font-weight: 800; font-size: 12pt; }
+  .obras p { margin-top: 0.6mm; font-size: 8.5pt; color: var(--tinta-2); }
+  .obras__serv { font: 700 7.5pt var(--cond) !important; letter-spacing: 0.06em; text-transform: uppercase; color: var(--verde-osc) !important; }
+
+  .hoja--final { padding: 0 0 0 18mm; }
+  .final { display: grid; grid-template-columns: 1fr 112mm; height: 210mm; }
+  .final > div:first-child { display: flex; flex-direction: column; padding: 16mm 12mm 22mm 0; }
+  .final__foto { margin-top: auto; }
+  .final__foto img { aspect-ratio: 16 / 6; }
+  .pasos { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; margin-top: 8mm; }
+  .pasos li { padding-top: 3mm; border-top: 1.2mm solid var(--verde-osc); }
+  .pasos span { font: 800 16pt/1 var(--cond); color: var(--verde); }
+  .pasos h3 { margin-top: 1.5mm; font-weight: 700; font-size: 13pt; }
+  .pasos p { margin-top: 1mm; font-size: 9pt; line-height: 1.4; color: var(--tinta-2); }
+  .contacto { display: flex; flex-direction: column; justify-content: center; padding: 16mm 14mm; background: linear-gradient(160deg, var(--verde-osc), var(--verde-noche)); color: #fff; }
+  .contacto__logo { width: 46mm; height: auto; color: #fff; }
+  .contacto h2 { margin-top: 9mm; font-size: 22pt; color: #fff; }
+  .contacto dl { display: grid; gap: 3.5mm; margin-top: 7mm; }
+  .contacto dt { font: 700 8pt var(--cond); letter-spacing: 0.14em; text-transform: uppercase; color: var(--lima); }
+  .contacto dd { display: flex; align-items: center; gap: 2mm; margin-top: 0.8mm; font-size: 11.5pt; font-weight: 500; }
+  .contacto dd .ico-wa { width: 4.2mm; height: 4.2mm; }
+  .hoja--final .pie { right: 126mm; }
+
+  /* en pantalla, las hojas separadas como en un visor de PDF */
+  @media screen {
+    body.presentacion { background: #6b6f6c; padding: 10mm 0; }
+    body.presentacion .hoja { margin: 0 auto 10mm; background: #fff; box-shadow: 0 4px 20px rgb(0 0 0 / 0.35); }
+  }
+</style>

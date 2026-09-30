@@ -3,9 +3,9 @@ import Base from '../Base.astro';
 import PageBanner from '../components/PageBanner.astro';
 import ListadoObras from '../components/ListadoObras.astro';
 import CtaFoto from '../components/CtaFoto.astro';
-import { diapositivas } from '../../../data/portada';
+import { dron } from '../../../data/dron';
 
-const banner = diapositivas[0];
+const banner = dron.edificioGruaRoja;
 ---
 <Base title="Proyectos finalizados" description="Obras finalizadas por LOLS Ingeniería.">
   <PageBanner titulo="Proyectos finalizados" img={banner.img} referencial={banner.credito ?? undefined} />
