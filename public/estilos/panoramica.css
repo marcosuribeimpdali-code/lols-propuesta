@@ -1505,60 +1505,126 @@ main:focus {
   width: 18px;
   height: 18px;
 }
-.pn-serv-lista {
-  display: grid;
-  gap: 24px;
-  margin-top: 48px;
+/* cada servicio en su franja: foto grande y texto al lado, alternando lados (el número va en el
+   antetítulo, sin columna aparte) */
+.sv-intro {
+  padding-bottom: clamp(40px, 6vw, 72px);
 }
-.pn-serv-item {
-  display: grid;
-  grid-template-columns: 170px minmax(0, 1fr);
-  gap: 32px;
-  padding: clamp(24px, 3.5vw, 40px);
-  background: #fff;
-  border: 1px solid var(--linea);
-  border-left: 6px solid var(--verde-osc);
+.sv {
+  padding-block: clamp(56px, 8vw, 104px);
+  scroll-margin-top: 16px;
 }
-.pn-serv-item__lado {
+.sv--gris {
+  background: var(--gris);
+}
+.sv__in {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 72px);
+}
+.sv__in--inv {
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+}
+.sv__in--inv .sv__foto {
+  order: 2;
+}
+.sv__foto {
+  position: relative;
+  margin: 0;
+}
+.sv__foto img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.sv__ante {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
+  align-items: center;
+  gap: 10px;
+  font: 700 0.98rem/1 var(--cond);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--verde-osc);
 }
-.pn-serv-item__n {
-  font: 800 3.6rem/1 var(--cond);
-  color: var(--verde);
+.sv__n {
+  padding: 4px 8px;
+  background: var(--lima);
+  color: var(--negro);
+  letter-spacing: 0.06em;
 }
-.pn-serv__icono--xl {
-  width: 86px;
-  height: 86px;
+.sv__ante .icono {
+  width: 20px;
+  height: 20px;
 }
-.pn-serv__icono--xl .icono {
-  width: 46px;
-  height: 46px;
-}
-.pn-serv-item__cuerpo {
-  display: grid;
-  gap: 16px;
-  align-content: start;
-  justify-items: start;
-}
-.pn-serv-item__cuerpo h2 {
-  font: 800 clamp(1.9rem, 1.3rem + 1.8vw, 2.8rem) / 1 var(--cond);
+.sv__txt h2 {
+  margin-top: 14px;
+  font: 800 clamp(2.1rem, 1.3rem + 2.4vw, 3.2rem) / 0.98 var(--cond);
   text-transform: uppercase;
 }
-.pn-serv-item__cuerpo .pendiente--bloque {
-  justify-self: stretch;
+.sv__txt h2::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 5px;
+  margin-top: 18px;
+  background: var(--lima);
 }
-@media (max-width: 700px) {
-  .pn-serv-item {
+.sv__desc {
+  margin-top: 22px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.sv__detalle {
+  margin-top: 14px;
+  color: var(--tinta-2);
+}
+.sv__h {
+  margin-top: 26px;
+  font: 800 1.2rem/1 var(--cond);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+/* "Qué incluye": lista liviana en dos columnas, sin cajas */
+.sv__incluye {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 24px;
+  margin-top: 14px;
+  list-style: none;
+  padding: 0;
+}
+.sv__incluye li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.sv__incluye li::before {
+  content: '';
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  background: var(--verde-osc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7.5l3 3 6-6.5' fill='none' stroke='%2381d742' stroke-width='2.2'/%3E%3C/svg%3E") center / 12px no-repeat;
+}
+.sv__obras {
+  margin-top: 22px;
+}
+@media (max-width: 900px) {
+  .sv__in,
+  .sv__in--inv {
     grid-template-columns: 1fr;
-    gap: 18px;
   }
-  .pn-serv-item__lado {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+  .sv__in--inv .sv__foto {
+    order: 0;
+  }
+}
+@media (max-width: 480px) {
+  .sv__incluye {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -2976,25 +3042,6 @@ html:not(.js) .form__siguiente {
   line-height: 1.5;
   color: var(--tinta);
 }
-.pn-serv-item__desc {
-  font-size: 1.2rem;
-  font-weight: 500;
-  line-height: 1.5;
-}
-.pn-serv-item__cols {
-  justify-self: stretch;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: start;
-  gap: 28px;
-  margin-top: 6px;
-}
-.pn-serv-item__h {
-  margin-bottom: 12px;
-  font: 800 1.35rem/1 var(--cond);
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-}
 .pn-incluye {
   display: grid;
   gap: 8px;
@@ -3016,23 +3063,6 @@ html:not(.js) .form__siguiente {
   width: 20px;
   height: 20px;
   background: var(--verde-osc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7.5l3 3 6-6.5' fill='none' stroke='%2381d742' stroke-width='2.2'/%3E%3C/svg%3E") center / 14px no-repeat;
-}
-.pn-serv-item__foto {
-  position: relative;
-  margin: 0;
-}
-.pn-serv-item__foto img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-}
-.pn-serv-item__obras {
-  justify-self: stretch;
-}
-@media (max-width: 900px) {
-  .pn-serv-item__cols {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* ---------- barra fija de contacto en el celular ---------- */
@@ -3256,10 +3286,6 @@ fieldset.campo--grupo > legend {
   }
 }
 
-/* modo limpio: servicio sin foto → "Qué incluye" a todo el ancho */
-html:not(.con-marcas) .pn-serv-item__cols--sin-foto {
-  grid-template-columns: 1fr;
-}
 /* modo limpio: en Contacto se esconde "Horario" (pendiente) y quedan 3 datos, a todo el ancho */
 @media (min-width: 1001px) {
   html:not(.con-marcas) .pn-datos {

@@ -94,6 +94,9 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
   ejemplo"): reemplazarlas por las de cada obra en `etapas` de `src/data/proyectos.ts`, idealmente
   una foto por etapa tomada desde un ángulo parecido. Autores de las de ejemplo: Billy Freeman e
   Iain (Unsplash).
+- **Servicios**: cada servicio es una franja con foto grande y el texto al lado. Construcción,
+  montaje y electricidad usan fotos de la portada; mantención y voz y datos, las de
+  `src/assets/servicios/` (Unsplash: Valentin Lacoste y Wonderlane). Todas "Imagen referencial".
 - **Capacidad técnica (`src/assets/capacidad/`)**: la página muestra los equipos propios **por uso y
   en obra** (moldaje de muros, losas apuntaladas, andamios, maquinaria, faena, flota), como lo hacen
   las constructoras de referencia; no hay fichas de piezas en fondo blanco ni unidades por pieza

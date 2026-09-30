@@ -1,87 +1,104 @@
 ---
 // Servicios: aquí va todo lo que la portada no cuenta (la portada muestra solo el nombre y una
-// línea). Cada servicio: descripción, cómo se trabaja, qué incluye, foto y obras de ese tipo.
+// línea). Cada servicio es una franja propia con foto grande y el texto al lado, alternando lados,
+// como en las constructoras de referencia (B&M, Ingevec, Turner); el número va en el antetítulo.
 import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import Base from '../Base.astro';
 import PageBanner from '../components/PageBanner.astro';
+import TituloSeccion from '../components/TituloSeccion.astro';
 import CtaFoto from '../components/CtaFoto.astro';
 import IconoServicio from '../../comun/IconoServicio.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import Revisar from '../../comun/Revisar.astro';
 import { servicios, listaServicios, revisarDescripciones } from '../../../data/servicios';
 import { diapositivas } from '../../../data/portada';
+import fotoMantencion from '../../../assets/servicios/mantencion.jpg';
+import fotoVozDatos from '../../../assets/servicios/voz-y-datos.jpg';
 
-const banner = diapositivas[1];
+const banner = diapositivas[0];
 
-// fotos de stock que ya usa el sitio, por servicio (las que faltan quedan marcadas)
-const fotoDe: Record<string, (typeof diapositivas)[number] | undefined> = {
-  construccion: diapositivas[2],
-  'montaje-industrial': diapositivas[1],
-  electricidad: diapositivas[3],
+// fotos por servicio: todas de stock (Unsplash), marcadas "Imagen referencial" hasta tener las de
+// LOLS. Las de construcción, montaje y electricidad son las mismas de la portada.
+interface FotoServicio {
+  src: ImageMetadata;
+  alt: string;
+  credito: string | null;
+}
+const dePortada = (i: number): FotoServicio => ({ src: diapositivas[i].img, alt: diapositivas[i].alt, credito: diapositivas[i].credito });
+const fotoDe: Record<string, FotoServicio> = {
+  construccion: dePortada(2),
+  'montaje-industrial': dePortada(1),
+  mantencion: { src: fotoMantencion, alt: 'Técnico con casco y chaleco trabajando en las instalaciones del cielo de un edificio', credito: 'Valentin Lacoste / Unsplash' },
+  electricidad: dePortada(3),
+  'voz-y-datos': { src: fotoVozDatos, alt: 'Bandeja portacables con cableado de red ordenado por colores', credito: 'Wonderlane / Unsplash' },
 };
+
+const enLetras = ['Una', 'Dos', 'Tres', 'Cuatro', 'Cinco', 'Seis', 'Siete'];
+const cuantas = enLetras[servicios.length - 1] ?? String(servicios.length);
 ---
 <Base title="Servicios" description={listaServicios}>
   <PageBanner titulo="Nuestros servicios" img={banner.img} referencial={banner.credito ?? undefined}>
     <p>{listaServicios}</p>
   </PageBanner>
 
-  <section class="pn-sec">
+  <section class="pn-sec sv-intro" aria-labelledby="sv-t">
     <div class="wrap">
+      <TituloSeccion antetitulo="Especialidades" titulo={`${cuantas} especialidades, un mismo equipo`} id="sv-t">
+        <p>
+          Puede encargarnos la obra completa o solo la especialidad que necesite. Planificamos, ejecutamos y
+          coordinamos en terreno.
+        </p>
+        <p class="pn-serv-nota solo-marca"><Revisar nota={revisarDescripciones} /></p>
+      </TituloSeccion>
       <ul class="pn-chips" aria-label="Ir a un servicio">
         {servicios.map((s) => (
           <li><a href={`#${s.slug}`}><IconoServicio nombre={s.icono} />{s.nombre}</a></li>
         ))}
       </ul>
-      <p class="pn-serv-nota solo-marca"><Revisar nota={revisarDescripciones} /></p>
-
-      <div class="pn-serv-lista">
-        {servicios.map((s, i) => {
-          const foto = fotoDe[s.slug];
-          return (
-            <article class="pn-serv-item" id={s.slug} aria-labelledby={`${s.slug}-t`}>
-              <div class="pn-serv-item__lado">
-                <span class="pn-serv-item__n">{String(i + 1).padStart(2, '0')}</span>
-                <span class="pn-serv__icono pn-serv__icono--xl"><IconoServicio nombre={s.icono} /></span>
-              </div>
-              <div class="pn-serv-item__cuerpo">
-                <h2 id={`${s.slug}-t`}>{s.nombre}</h2>
-                {s.descripcion ? (
-                  <p class="pn-serv-item__desc">{s.descripcion} <Revisar nota={s.revisar} /></p>
-                ) : (
-                  <Pendiente texto="descripción: qué incluye el servicio, para qué tipo de cliente y un ejemplo de obra" bloque />
-                )}
-                <p>{s.detalle}</p>
-
-                <div class:list={['pn-serv-item__cols', { 'pn-serv-item__cols--sin-foto': !foto }]}>
-                  <div>
-                    <h3 class="pn-serv-item__h">Qué incluye</h3>
-                    <ul class="pn-incluye">
-                      {s.incluye.map((x) => <li>{x}</li>)}
-                    </ul>
-                  </div>
-                  <figure class:list={['pn-serv-item__foto', { 'solo-marca': !foto }]}>
-                    {foto ? (
-                      <>
-                        <Image src={foto.img} alt={foto.alt} widths={[480, 960]} sizes="(max-width: 900px) 100vw, 480px" />
-                        {foto.referencial && <figcaption class="cubo__ref">Imagen referencial</figcaption>}
-                      </>
-                    ) : (
-                      <Pendiente texto={`foto de un trabajo de ${s.nombre.toLowerCase()}`} bloque />
-                    )}
-                  </figure>
-                </div>
-
-                <div class="pn-serv-item__obras solo-marca">
-                  <h3 class="pn-serv-item__h">Obras con este servicio</h3>
-                  <Pendiente texto={`qué obras del listado incluyeron ${s.nombre.toLowerCase()}`} />
-                </div>
-              </div>
-            </article>
-          );
-        })}
-      </div>
     </div>
   </section>
+
+  {servicios.map((s, i) => {
+    const foto = fotoDe[s.slug];
+    return (
+      <section class:list={['sv', { 'sv--gris': i % 2 === 0 }]} id={s.slug} aria-labelledby={`${s.slug}-t`}>
+        <div class:list={['wrap', 'sv__in', { 'sv__in--inv': i % 2 === 1 }]}>
+          <figure class="sv__foto">
+            {foto ? (
+              <>
+                <Image src={foto.src} alt={foto.alt} widths={[640, 1100]} sizes="(max-width: 900px) 100vw, 640px" />
+                <figcaption class="cubo__ref">Imagen referencial{foto.credito && ` · ${foto.credito}`}</figcaption>
+              </>
+            ) : (
+              <Pendiente texto={`foto de un trabajo de ${s.nombre.toLowerCase()}`} bloque />
+            )}
+          </figure>
+          <div class="sv__txt">
+            <p class="sv__ante">
+              <span class="sv__n">{String(i + 1).padStart(2, '0')}</span>
+              <IconoServicio nombre={s.icono} />
+              Especialidad
+            </p>
+            <h2 id={`${s.slug}-t`}>{s.nombre}</h2>
+            {s.descripcion ? (
+              <p class="sv__desc">{s.descripcion} <Revisar nota={s.revisar} /></p>
+            ) : (
+              <Pendiente texto="descripción: qué incluye el servicio, para qué tipo de cliente y un ejemplo de obra" bloque />
+            )}
+            <p class="sv__detalle">{s.detalle}</p>
+            <h3 class="sv__h">Qué incluye</h3>
+            <ul class="sv__incluye">
+              {s.incluye.map((x) => <li>{x}</li>)}
+            </ul>
+            <div class="sv__obras solo-marca">
+              <Pendiente texto={`qué obras del listado incluyeron ${s.nombre.toLowerCase()}`} />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  })}
 
   <CtaFoto />
 </Base>
