@@ -10,7 +10,7 @@ import TituloSeccion from '../components/TituloSeccion.astro';
 import CtaFoto from '../components/CtaFoto.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import Revisar from '../../comun/Revisar.astro';
-import { cifrasEquipos, ventajas, ventajasRevisar, usos, fotoBanner, fotoBodega, fuenteEquipos } from '../../../data/equipos';
+import { cifrasEquipos, ventajas, ventajasRevisar, usos, fotoBanner, fotoBodega } from '../../../data/equipos';
 ---
 <Base title="Capacidad técnica" description="Moldajes, alzaprimas, andamios, maquinaria y vehículos propios de LOLS Ingeniería.">
   <PageBanner titulo="Capacidad técnica" img={fotoBanner.src} referencial={fotoBanner.credito ?? undefined}>
@@ -29,7 +29,6 @@ import { cifrasEquipos, ventajas, ventajasRevisar, usos, fotoBanner, fotoBodega,
           Cuando una obra termina, los equipos vuelven a nuestra bodega, se revisan y quedan listos para la
           siguiente. Así planificamos cada proyecto sabiendo con qué contamos.
         </p>
-        <p class="solo-marca"><Revisar nota={`cifras del ${fuenteEquipos}; confirmar que se puedan publicar`} /></p>
       </div>
       <figure class="pn-dos__img eq-dos__img">
         <Image src={fotoBodega.src} alt={fotoBodega.alt} widths={[600, 1200]} sizes="(max-width: 900px) 100vw, 560px" />

@@ -2,6 +2,8 @@
 // Fuente: inventario y flota de Bóveda LOLS, respaldo del 28-09-2026 (tablas items_inventario,
 // ubicaciones_stock y vehiculos). Son cifras redondeadas hacia abajo ("más de"); para actualizarlas,
 // volver a sumar el stock de todas las ubicaciones. No se publican ubicaciones, patentes ni valores.
+// En la página van solo cifras redondas ("más de 500", "más de 1.000"): la empresa pidió no
+// publicar cantidades exactas (30-09-2026).
 //
 // La página muestra QUÉ se puede hacer con los equipos (por uso, con fotos en obra), no un catálogo
 // pieza por pieza: las fotos sueltas en fondo blanco con unidades y medidas se leían como tienda.
@@ -43,7 +45,7 @@ export const fotoBodega = stock(bodegaPlacas, 'Placas de moldaje apiladas en bod
 export const cifrasEquipos = [
   { valor: '+7.000', leido: 'más de 7.000', texto: 'alzaprimas' },
   { valor: '+5.000', leido: 'más de 5.000', texto: 'piezas de andamio' },
-  { valor: '+4.600', leido: 'más de 4.600', texto: 'm² de moldaje' },
+  { valor: '+4.500', leido: 'más de 4.500', texto: 'm² de moldaje' },
   { valor: '+25', leido: 'más de 25', texto: 'vehículos de trabajo' },
 ];
 
@@ -82,7 +84,7 @@ export const usos: Uso[] = [
     titulo: 'Moldajes para muros y pilares',
     texto: 'Armamos el moldaje de muros, pilares y vigas con paneles propios, reutilizables obra tras obra, y lo dejamos alineado y a plomo antes de hormigonar.',
     equipos: [
-      'Más de 4.600 m² de moldaje fenólico, en 27 medidas',
+      'Más de 4.500 m² de moldaje fenólico, en distintas medidas',
       'Esquineros y ángulos para resolver encuentros y esquinas',
       'Alineadores de 3 y 6 m, pernos y separadores de muro',
       'Escuadras para las pasarelas de trabajo sobre el moldaje',
@@ -96,7 +98,7 @@ export const usos: Uso[] = [
     texto: 'Apuntalamos losas y vigas mientras fragua el hormigón, con alzaprimas que se ajustan a la altura de cada piso.',
     equipos: [
       'Más de 7.000 alzaprimas fijas y telescópicas, de 1,8 a 8 m',
-      'Más de 4.200 vigas para el moldaje de losas',
+      'Más de 4.000 vigas para el moldaje de losas',
       'Cabezales y trípodes para cada alzaprima',
       'Placas fenólicas de 18 mm para los tableros',
     ],
@@ -145,12 +147,17 @@ export const usos: Uso[] = [
     antetitulo: 'Logística',
     titulo: 'Flota propia',
     texto: 'Trasladamos personal, materiales y equipos entre la bodega y cada faena con vehículos propios.',
-    equipos: ['20 camionetas', '5 camiones Mercedes-Benz, Hyundai, Foton y Maxus', '1 minibús para el personal'],
+    equipos: [
+      'Más de 25 vehículos de trabajo',
+      'Camionetas para el personal y las herramientas',
+      'Camiones Mercedes-Benz, Hyundai, Foton y Maxus',
+      'Minibús para el personal',
+    ],
     foto: stock(flotaCamionetas, 'Camionetas de trabajo estacionadas en una obra', 'Maaz Khan'),
   },
 ];
 
-// ---------- detalle del inventario (NO se publica en la página) ----------
+// ---------- detalle del inventario (NO se publica: cantidades exactas) ----------
 // Base del "listado de equipos" que se envía a solicitud para licitaciones. Unidades: suma del
 // stock de todas las ubicaciones al 28-09-2026 (132 ítems del inventario, agrupados).
 

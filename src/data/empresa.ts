@@ -7,12 +7,12 @@ export interface Dato {
   revisar?: string;
 }
 
-/** años en la construcción (dato de la empresa, 2026) */
-const anios = 30;
+/** años en el mercado (dato de la empresa, 2026) */
+const anios = 31;
 
 export const empresa = {
   anios,
-  /** cifras de la empresa (2026). No hay registro exacto de las obras de los 30 años: "más de 50" es
+  /** cifras de la empresa (2026). No hay registro exacto de las obras de todos estos años: "más de 50" es
    *  lo seguro. Los m² construidos no se saben todavía. */
   cifras: { obras: 50, trabajadores: 300 },
   cifrasRevisar: 'que «300 y algo» sea la cantidad de trabajadores actual',
@@ -21,23 +21,18 @@ export const empresa = {
   lema: 'Sus proyectos en las mejores manos',
   directrices: 'Experiencia, seguridad y calidad son nuestras directrices.',
   direccion: {
-    valor: 'El Mirador 112-150, Cerrillos, Santiago',
-    revisar: 'que la dirección siga vigente',
+    valor: 'El Mirador 150, Cerrillos, Santiago',
   } satisfies Dato,
   telefono: {
     valor: '+56 652 710 609',
-    revisar: 'el prefijo 65 es de Osorno, no de Santiago',
   } satisfies Dato,
   telefonoHref: 'tel:+56652710609',
-  /** PROVISORIO: el mismo número del teléfono hasta que la empresa diga cuál tiene WhatsApp (un
-   *  número fijo solo sirve si tiene WhatsApp Business). Cambiar `valor` y listo. */
+  /** el mismo número del teléfono (confirmado por la empresa, 30-09-2026) */
   whatsapp: {
     valor: '+56 652 710 609',
-    revisar: 'qué número tiene WhatsApp: hoy se usa el mismo teléfono, que es fijo',
   } satisfies Dato,
   correo: {
     valor: 'lols@lols.cl',
-    revisar: 'que la casilla siga activa',
   } satisfies Dato,
   experiencia: {
     valor: `${anios} años de experiencia en el área de la construcción.`,

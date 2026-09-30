@@ -27,7 +27,7 @@ const proceso = [
 ];
 
 // cifras bajo la portada: reemplazan los accesos directos, que repetían el menú. "+50" y "+300"
-// son lo seguro (no hay registro exacto de las obras de los 30 años); los m² no se saben aún.
+// son lo seguro (no hay registro exacto de las obras de todos estos años); los m² no se saben aún.
 const cifras = [
   { valor: String(empresa.anios), leido: String(empresa.anios), texto: 'años en la construcción' },
   { valor: `+${empresa.cifras.obras}`, leido: `más de ${empresa.cifras.obras}`, texto: 'obras realizadas' },
@@ -76,7 +76,7 @@ const cifras = [
       <div class="eq-teaser__txt">
         <TituloSeccion antetitulo="Capacidad técnica" titulo="Nuestros equipos en su obra" id="eqp-t" centrado={false} />
         <p class="pn-grande">
-          Más de 7.000 alzaprimas, 5.000 piezas de andamio, 4.600 m² de moldaje, maquinaria y más de 25 vehículos:
+          Más de 7.000 alzaprimas, 5.000 piezas de andamio, 4.500 m² de moldaje, maquinaria y más de 25 vehículos:
           la obra no espera un arriendo para avanzar.
         </p>
         <a class="btn btn--verde" href={r('maquinaria')}>Ver capacidad técnica <span aria-hidden="true">→</span></a>

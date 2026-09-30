@@ -3,7 +3,6 @@ import Base from '../Base.astro';
 import { r } from '../config';
 import PageHero from '../components/PageHero.astro';
 import Pendiente from '../../comun/Pendiente.astro';
-import Revisar from '../../comun/Revisar.astro';
 import FormContacto from '../../comun/FormContacto.astro';
 import Mapa from '../../comun/Mapa.astro';
 import { empresa, mapas } from '../../../data/empresa';
@@ -24,21 +23,18 @@ import { empresa, mapas } from '../../../data/empresa';
             <dd>
               {empresa.direccion.valor}
               <a class="link-flecha" href={mapas.llegar} target="_blank" rel="noopener">Cómo llegar <span aria-hidden="true">↗</span><span class="visually-hidden">(se abre en otra pestaña)</span></a>
-              <Revisar nota={empresa.direccion.revisar} />
             </dd>
           </div>
           <div class="dato">
             <dt>Teléfono</dt>
             <dd>
               <a href={empresa.telefonoHref}>{empresa.telefono.valor}</a>
-              <Revisar nota={empresa.telefono.revisar} />
             </dd>
           </div>
           <div class="dato">
             <dt>Correo</dt>
             <dd>
               <a href={`mailto:${empresa.correo.valor}`}>{empresa.correo.valor}</a>
-              <Revisar nota={empresa.correo.revisar} />
             </dd>
           </div>
           <div class="dato">

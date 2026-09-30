@@ -82,7 +82,7 @@ export const diapositivas: Diapositiva[] = [
     cta: { label: 'Quiénes somos', pagina: 'quienes' },
     referencial: true,
     credito: 'Michael Bader / Unsplash',
-    // los 30 años ya están en la banda de cifras, justo bajo el cubo
+    // los años ya están en la banda de cifras, justo bajo el cubo
     enCubo: false,
   },
 ];

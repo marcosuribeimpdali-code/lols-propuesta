@@ -5,7 +5,6 @@ import PageBanner from '../components/PageBanner.astro';
 import FormContacto from '../../comun/FormContacto.astro';
 import Mapa from '../../comun/Mapa.astro';
 import Pendiente from '../../comun/Pendiente.astro';
-import Revisar from '../../comun/Revisar.astro';
 import IconoWhatsapp from '../../comun/IconoWhatsapp.astro';
 import { empresa, mapas, whatsappHref } from '../../../data/empresa';
 import { diapositivas } from '../../../data/portada';
@@ -28,7 +27,6 @@ const banner = diapositivas[3];
           <h3>Dirección</h3>
           <p>{empresa.direccion.valor}</p>
           <a class="pn-link" href={mapas.ver} target="_blank" rel="noopener">Ver en el mapa <span aria-hidden="true">↗</span><span class="visually-hidden">(se abre en otra pestaña)</span></a>
-          <Revisar nota={empresa.direccion.revisar} />
         </li>
         <li class="pn-dato">
           <span class="pn-dato__icono" aria-hidden="true">
@@ -37,8 +35,6 @@ const banner = diapositivas[3];
           <h3>Teléfono</h3>
           <p><a href={empresa.telefonoHref}>{empresa.telefono.valor}</a></p>
           <a class="pn-link pn-link--wa" href={whatsappHref} target="_blank" rel="noopener"><IconoWhatsapp /> Escribir por WhatsApp<span class="visually-hidden"> (se abre en otra pestaña)</span></a>
-          <Revisar nota={empresa.telefono.revisar} />
-          <Revisar nota={empresa.whatsapp.revisar} />
         </li>
         <li class="pn-dato">
           <span class="pn-dato__icono" aria-hidden="true">
@@ -46,7 +42,6 @@ const banner = diapositivas[3];
           </span>
           <h3>Correo</h3>
           <p><a href={`mailto:${empresa.correo.valor}`}>{empresa.correo.valor}</a></p>
-          <Revisar nota={empresa.correo.revisar} />
         </li>
         <li class="pn-dato solo-marca">
           <span class="pn-dato__icono" aria-hidden="true">
@@ -69,7 +64,6 @@ const banner = diapositivas[3];
             <strong>{empresa.razonSocial}</strong><br />
             {empresa.direccion.valor}
           </p>
-          <Revisar nota={empresa.direccion.revisar} />
           <div class="pn-mapa__acciones">
             <a class="btn btn--lima" href={mapas.llegar} target="_blank" rel="noopener">
               Cómo llegar <span aria-hidden="true">↗</span><span class="visually-hidden">(abre Google Maps en otra pestaña)</span>

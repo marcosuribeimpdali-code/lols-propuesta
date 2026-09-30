@@ -11,7 +11,6 @@ import PlanoConstruccion from './plano/paginas/proyectos-en-construccion.astro';
 import PlanoContacto from './plano/paginas/contacto.astro';
 import PlanoPrivacidad from './plano/paginas/politica-de-privacidad.astro';
 import PlanoTrabaja from './plano/paginas/trabaja-con-nosotros.astro';
-import PlanoDenuncias from './plano/paginas/canal-de-denuncias.astro';
 import PlanoMaquinaria from './plano/paginas/maquinaria-y-equipos.astro';
 
 import PanoInicio from './panoramica/paginas/index.astro';
@@ -23,7 +22,6 @@ import PanoContacto from './panoramica/paginas/contacto.astro';
 import PanoPrivacidad from './panoramica/paginas/politica-de-privacidad.astro';
 import PanoObra from './panoramica/paginas/obra.astro';
 import PanoTrabaja from './panoramica/paginas/trabaja-con-nosotros.astro';
-import PanoDenuncias from './panoramica/paginas/canal-de-denuncias.astro';
 import PanoMaquinaria from './panoramica/paginas/maquinaria-y-equipos.astro';
 
 type Componente = typeof PlanoInicio;
@@ -38,7 +36,6 @@ export const paginasDe: Record<string, Record<Pagina, Componente>> = {
     contacto: PlanoContacto,
     privacidad: PlanoPrivacidad,
     trabaja: PlanoTrabaja,
-    denuncias: PlanoDenuncias,
     maquinaria: PlanoMaquinaria,
   },
   panoramica: {
@@ -50,7 +47,6 @@ export const paginasDe: Record<string, Record<Pagina, Componente>> = {
     contacto: PanoContacto,
     privacidad: PanoPrivacidad,
     trabaja: PanoTrabaja,
-    denuncias: PanoDenuncias,
     maquinaria: PanoMaquinaria,
   },
 };

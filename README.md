@@ -121,18 +121,16 @@ muestra sus marcas siempre (es un borrador legal con huecos a mitad de frase). D
 
 ## Pendientes antes de salir de propuesta
 
-- Contenido: validar los textos propuestos de los servicios, nombres y datos de las obras, hitos
-  de la historia, horario, m² construidos. Cifras confirmadas (2026): 30 años, más de 50 obras;
-  "300 y algo" se leyó como trabajadores (por confirmar). La empresa no tiene premios ni
-  certificaciones: no se muestran.
-- Canal de denuncias (`/canal-de-denuncias/`): dos vías (delitos y ética, que admite anonimato;
-  Ley Karin, con nombre), consulta con folio y contraseña. No envía nada. Definir quién recibe y
-  revisa las denuncias, el correo, los plazos y los documentos; el texto lo revisa lo legal.
+- Contenido: validar los textos propuestos de los servicios (y qué es "Voz y datos"), nombres y
+  datos reales de las obras con sus fotos, hitos reales de la historia, horario, m² construidos.
+  Cifras confirmadas (2026): 31 años en el mercado, más de 50 obras; "300 y algo" se leyó como
+  trabajadores (por confirmar). La empresa no tiene premios ni certificaciones: no se muestran.
+- Datos confirmados (30-09-2026): dirección El Mirador 150, Cerrillos; teléfono y WhatsApp
+  +56 652 710 609; correo lols@lols.cl; presupuesto estimado en pesos; cifras del inventario se
+  publican solo redondeadas ("más de 500", "más de 1.000").
+- Canal de denuncias: se sacó del sitio a pedido de Recursos Humanos (30-09-2026). El código
+  quedó en el historial de git (commit anterior a su eliminación) por si se retoma.
 - Fotos reales de LOLS para la portada y los servicios.
-- Validar dirección, teléfono (el prefijo 65 es de Osorno) y correo.
-- WhatsApp: los botones (barra de arriba, barra del celular, contacto y pie) abren un chat con un
-  saludo ya escrito, pero hoy usan el mismo teléfono, que es fijo. Poner el número que tiene
-  WhatsApp en `whatsapp.valor` de `src/data/empresa.ts`.
 - Confirmar si las obras "en construcción" de 2018 ya se entregaron.
 - Versión vigente del isotipo (tercer rectángulo relleno o en contorno).
 - Formulario de contacto: hoy **no envía nada** (solo muestra un aviso). Definir a qué correo
