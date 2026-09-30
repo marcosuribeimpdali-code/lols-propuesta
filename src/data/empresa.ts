@@ -53,7 +53,8 @@ export const whatsappHref = `https://wa.me/${empresa.whatsapp.valor.replace(/\D/
 /** contacto por área (página Contacto). Mientras no haya correos por área, todo llega a
  *  lols@lols.cl con el asunto ya escrito, para que cada encargado filtre lo suyo. Cuando existan,
  *  poner el correo en `correo`. Quién recibe cada área es dato interno: no va en este repositorio,
- *  que es público. */
+ *  que es público. "Proveedores y facturación" y "Compras y logística" se sacaron (30-09-2026):
+ *  Marcos no los pidió y podían hacer pensar que LOLS vende materiales. */
 export interface Area {
   titulo: string;
   texto: string;
@@ -62,8 +63,6 @@ export interface Area {
 }
 export const areas: Area[] = [
   { titulo: 'Cotizaciones y proyectos', texto: 'Presupuestos, visitas a terreno y consultas técnicas de su obra.', asunto: 'Cotización', correo: null },
-  { titulo: 'Proveedores y facturación', texto: 'Facturas, pagos, cobranzas y datos bancarios.', asunto: 'Proveedores y facturación', correo: null },
-  { titulo: 'Compras y logística', texto: 'Ofertas de materiales, despachos y retiros.', asunto: 'Compras y logística', correo: null },
 ];
 export const correoArea = (a: Area) =>
   `mailto:${a.correo ?? empresa.correo.valor}?subject=${encodeURIComponent(`${a.asunto} - `)}`;

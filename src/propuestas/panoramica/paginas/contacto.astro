@@ -14,11 +14,7 @@ import fotoObra from '../../../assets/contacto/obra-terminada.jpg';
 import planoObra from '../../../assets/contacto/obra-terminada-plano.jpg';
 
 // íconos de línea de cada área (mismo trazo que los de arriba)
-const iconosArea = [
-  'M6 3h9l3 3v15H6zM15 3v3h3M9 11h6M9 15h6M9 19h4',
-  'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6M9 16h3',
-  'M2 7h11v9H2zM13 10h4l3 3v3h-7M4.5 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0M14.5 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0',
-];
+const iconosArea = ['M6 3h9l3 3v15H6zM15 3v3h3M9 11h6M9 15h6M9 19h4'];
 ---
 <Base title="Contacto" description="Contacte a LOLS Ingeniería: dirección, teléfono y correo.">
   <BannerPlano
@@ -100,7 +96,7 @@ const iconosArea = [
       <ul class="pn-areas">
         {areas.map((a, i) => (
           <li class="pn-dato">
-            <span class="pn-dato__icono" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={iconosArea[i]} /></svg></span>
+            <span class="pn-dato__icono" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={iconosArea[i % iconosArea.length]} /></svg></span>
             <h3>{a.titulo}</h3>
             <p>{a.texto}</p>
             <a class="pn-link" href={correoArea(a)}>Escribir <span aria-hidden="true">→</span><span class="visually-hidden">: {a.titulo}</span></a>

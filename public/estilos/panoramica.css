@@ -2417,8 +2417,10 @@ main:focus {
 /* contacto por área: 4 tarjetas como las de arriba */
 .pn-areas {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
+  max-width: 880px;
+  margin-inline: auto;
   list-style: none;
   padding: 0;
 }
@@ -2434,11 +2436,6 @@ main:focus {
 .pn-areas .pn-dato {
   align-content: stretch;
   grid-template-rows: auto auto auto 1fr;
-}
-@media (max-width: 1000px) {
-  .pn-areas {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 @media (max-width: 560px) {
   .pn-areas {
