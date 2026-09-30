@@ -71,18 +71,19 @@ import { cifrasEquipos, ventajas, ventajasRevisar, usos, fotoBanner, fotoBodega 
       <TituloSeccion antetitulo="En obra" titulo="Lo que hacemos con nuestros equipos" id="usos-t" />
       <div class="eq-usos">
         {usos.map((u, i) => (
-          <article class:list={['eq-uso', { 'eq-uso--inv': i % 2 === 1 }]} id={u.id} aria-labelledby={`${u.id}-t`}>
-            <figure class="eq-uso__foto">
+          <article class:list={['pn-franja', { 'pn-franja--inv': i % 2 === 1 }]} id={u.id} aria-labelledby={`${u.id}-t`}>
+            <figure class="pn-franja__foto">
               <Image src={u.foto.src} alt={u.foto.alt} widths={[640, 1100]} sizes="(max-width: 900px) 100vw, 620px" />
               <figcaption class="cubo__ref">
                 {u.foto.real ? 'Foto real' : `Imagen referencial${u.foto.credito ? ` · ${u.foto.credito}` : ''}`}
               </figcaption>
             </figure>
-            <div class="eq-uso__txt">
-              <p class="eq-uso__ante">{u.antetitulo}</p>
-              <h3 id={`${u.id}-t`}>{u.titulo}</h3>
-              <p class="eq-uso__desc">{u.texto}</p>
-              <ul class="pn-incluye eq-uso__equipos" aria-label="Con qué lo hacemos">
+            <div class="pn-franja__txt">
+              <p class="pn-franja__ante"><span class="pn-franja__n">{String(i + 1).padStart(2, '0')}</span> {u.antetitulo}</p>
+              <h3 class="pn-franja__t" id={`${u.id}-t`}>{u.titulo}</h3>
+              <p class="pn-franja__desc">{u.texto}</p>
+              <h4 class="pn-franja__h">Con qué lo hacemos</h4>
+              <ul class="pn-checks">
                 {u.equipos.map((e) => <li>{e}</li>)}
               </ul>
             </div>

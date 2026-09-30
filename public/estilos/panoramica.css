@@ -1505,8 +1505,7 @@ main:focus {
   width: 18px;
   height: 18px;
 }
-/* cada servicio en su franja: foto grande y texto al lado, alternando lados (el número va en el
-   antetítulo, sin columna aparte) */
+/* cada servicio en su franja (fondo alterno); adentro, la franja con foto compartida */
 .sv-intro {
   padding-bottom: clamp(40px, 6vw, 72px);
 }
@@ -1517,28 +1516,32 @@ main:focus {
 .sv--gris {
   background: var(--gris);
 }
-.sv__in {
+
+/* ---------- franja con foto: Servicios y Capacidad técnica usan la misma ----------
+   foto grande a un lado y texto al otro, alternando lados; antetítulo con número, título con
+   raya lima (como los títulos de sección) y lista de chequeo liviana en dos columnas */
+.pn-franja {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   align-items: center;
   gap: clamp(28px, 5vw, 72px);
 }
-.sv__in--inv {
+.pn-franja--inv {
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
 }
-.sv__in--inv .sv__foto {
+.pn-franja--inv .pn-franja__foto {
   order: 2;
 }
-.sv__foto {
+.pn-franja__foto {
   position: relative;
   margin: 0;
 }
-.sv__foto img {
+.pn-franja__foto img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
-.sv__ante {
+.pn-franja__ante {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1547,47 +1550,49 @@ main:focus {
   text-transform: uppercase;
   color: var(--verde-osc);
 }
-.sv__n {
+.pn-franja__n {
   padding: 4px 8px;
   background: var(--lima);
   color: var(--negro);
   letter-spacing: 0.06em;
 }
-.sv__ante .icono {
+.pn-franja__ante .icono {
   width: 20px;
   height: 20px;
 }
-.sv__txt h2 {
+.pn-franja__t {
   margin-top: 14px;
-  font: 800 clamp(2.1rem, 1.3rem + 2.4vw, 3.2rem) / 0.98 var(--cond);
+  font: 800 clamp(2rem, 1.3rem + 2.2vw, 3.1rem) / 0.98 var(--cond);
   text-transform: uppercase;
 }
-.sv__txt h2::after {
+.pn-franja__t::after {
   content: '';
   display: block;
-  width: 64px;
+  width: 70px;
   height: 5px;
   margin-top: 18px;
   background: var(--lima);
 }
-.sv__desc {
+.pn-franja__desc {
   margin-top: 22px;
   font-size: 1.2rem;
   font-weight: 500;
   line-height: 1.5;
 }
-.sv__detalle {
+.pn-franja__detalle {
   margin-top: 14px;
   color: var(--tinta-2);
 }
-.sv__h {
+.pn-franja__h {
   margin-top: 26px;
   font: 800 1.2rem/1 var(--cond);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-/* "Qué incluye": lista liviana en dos columnas, sin cajas */
-.sv__incluye {
+.pn-franja__extra {
+  margin-top: 22px;
+}
+.pn-checks {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px 24px;
@@ -1595,14 +1600,14 @@ main:focus {
   list-style: none;
   padding: 0;
 }
-.sv__incluye li {
+.pn-checks li {
   display: flex;
   align-items: flex-start;
   gap: 10px;
   font-weight: 600;
   line-height: 1.35;
 }
-.sv__incluye li::before {
+.pn-checks li::before {
   content: '';
   flex: none;
   width: 18px;
@@ -1610,20 +1615,17 @@ main:focus {
   margin-top: 1px;
   background: var(--verde-osc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7.5l3 3 6-6.5' fill='none' stroke='%2381d742' stroke-width='2.2'/%3E%3C/svg%3E") center / 12px no-repeat;
 }
-.sv__obras {
-  margin-top: 22px;
-}
 @media (max-width: 900px) {
-  .sv__in,
-  .sv__in--inv {
+  .pn-franja,
+  .pn-franja--inv {
     grid-template-columns: 1fr;
   }
-  .sv__in--inv .sv__foto {
+  .pn-franja--inv .pn-franja__foto {
     order: 0;
   }
 }
 @media (max-width: 480px) {
-  .sv__incluye {
+  .pn-checks {
     grid-template-columns: 1fr;
   }
 }
@@ -3042,28 +3044,6 @@ html:not(.js) .form__siguiente {
   line-height: 1.5;
   color: var(--tinta);
 }
-.pn-incluye {
-  display: grid;
-  gap: 8px;
-  list-style: none;
-  padding: 0;
-}
-.pn-incluye li {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 44px;
-  padding: 6px 14px;
-  border: 1px solid var(--linea);
-  font-weight: 600;
-}
-.pn-incluye li::before {
-  content: '';
-  flex: none;
-  width: 20px;
-  height: 20px;
-  background: var(--verde-osc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7.5l3 3 6-6.5' fill='none' stroke='%2381d742' stroke-width='2.2'/%3E%3C/svg%3E") center / 14px no-repeat;
-}
 
 /* ---------- barra fija de contacto en el celular ---------- */
 .pn-barra-movil {
@@ -3162,59 +3142,6 @@ fieldset.campo--grupo > legend {
   display: grid;
   gap: clamp(56px, 8vw, 104px);
 }
-.eq-uso {
-  display: grid;
-  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
-  align-items: center;
-  gap: clamp(28px, 5vw, 72px);
-}
-.eq-uso--inv {
-  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
-}
-.eq-uso--inv .eq-uso__foto {
-  order: 2;
-}
-.eq-uso__foto {
-  position: relative;
-  margin: 0;
-}
-.eq-uso__foto img {
-  width: 100%;
-  aspect-ratio: 3 / 2;
-  object-fit: cover;
-}
-.eq-uso__ante {
-  font: 700 0.98rem/1.2 var(--cond);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--verde-osc);
-}
-.eq-uso__txt h3 {
-  margin-top: 8px;
-  font: 800 clamp(1.8rem, 1.2rem + 1.6vw, 2.5rem) / 1 var(--cond);
-  text-transform: uppercase;
-}
-.eq-uso__txt h3::after {
-  content: '';
-  display: block;
-  width: 56px;
-  height: 5px;
-  margin-top: 16px;
-  background: var(--lima);
-}
-.eq-uso__desc {
-  margin-top: 18px;
-  font-size: 1.12rem;
-  line-height: 1.55;
-}
-.eq-uso__equipos {
-  margin-top: 22px;
-}
-.eq-uso__equipos li {
-  min-height: 40px;
-  background: #fff;
-  font-weight: 500;
-}
 /* pedido del listado para licitaciones */
 .eq-licita-sec {
   padding-block: clamp(40px, 6vw, 72px);
@@ -3237,15 +3164,6 @@ fieldset.campo--grupo > legend {
   margin-top: 10px;
   max-width: 62ch;
   color: var(--tinta-2);
-}
-@media (max-width: 900px) {
-  .eq-uso,
-  .eq-uso--inv {
-    grid-template-columns: 1fr;
-  }
-  .eq-uso--inv .eq-uso__foto {
-    order: 0;
-  }
 }
 /* adelanto en la portada */
 .eq-teaser {

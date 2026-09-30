@@ -1,7 +1,8 @@
 ---
 // Servicios: aquí va todo lo que la portada no cuenta (la portada muestra solo el nombre y una
 // línea). Cada servicio es una franja propia con foto grande y el texto al lado, alternando lados,
-// como en las constructoras de referencia (B&M, Ingevec, Turner); el número va en el antetítulo.
+// según el modelo de B&M (constructora chilena). La franja (.pn-franja) es la misma de Capacidad
+// técnica, para que las dos páginas se vean iguales.
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Base from '../Base.astro';
@@ -63,8 +64,8 @@ const cuantas = enLetras[servicios.length - 1] ?? String(servicios.length);
     const foto = fotoDe[s.slug];
     return (
       <section class:list={['sv', { 'sv--gris': i % 2 === 0 }]} id={s.slug} aria-labelledby={`${s.slug}-t`}>
-        <div class:list={['wrap', 'sv__in', { 'sv__in--inv': i % 2 === 1 }]}>
-          <figure class="sv__foto">
+        <div class:list={['wrap', 'pn-franja', { 'pn-franja--inv': i % 2 === 1 }]}>
+          <figure class="pn-franja__foto">
             {foto ? (
               <>
                 <Image src={foto.src} alt={foto.alt} widths={[640, 1100]} sizes="(max-width: 900px) 100vw, 640px" />
@@ -74,24 +75,24 @@ const cuantas = enLetras[servicios.length - 1] ?? String(servicios.length);
               <Pendiente texto={`foto de un trabajo de ${s.nombre.toLowerCase()}`} bloque />
             )}
           </figure>
-          <div class="sv__txt">
-            <p class="sv__ante">
-              <span class="sv__n">{String(i + 1).padStart(2, '0')}</span>
+          <div class="pn-franja__txt">
+            <p class="pn-franja__ante">
+              <span class="pn-franja__n">{String(i + 1).padStart(2, '0')}</span>
               <IconoServicio nombre={s.icono} />
               Especialidad
             </p>
-            <h2 id={`${s.slug}-t`}>{s.nombre}</h2>
+            <h2 class="pn-franja__t" id={`${s.slug}-t`}>{s.nombre}</h2>
             {s.descripcion ? (
-              <p class="sv__desc">{s.descripcion} <Revisar nota={s.revisar} /></p>
+              <p class="pn-franja__desc">{s.descripcion} <Revisar nota={s.revisar} /></p>
             ) : (
               <Pendiente texto="descripción: qué incluye el servicio, para qué tipo de cliente y un ejemplo de obra" bloque />
             )}
-            <p class="sv__detalle">{s.detalle}</p>
-            <h3 class="sv__h">Qué incluye</h3>
-            <ul class="sv__incluye">
+            <p class="pn-franja__detalle">{s.detalle}</p>
+            <h3 class="pn-franja__h">Qué incluye</h3>
+            <ul class="pn-checks">
               {s.incluye.map((x) => <li>{x}</li>)}
             </ul>
-            <div class="sv__obras solo-marca">
+            <div class="pn-franja__extra solo-marca">
               <Pendiente texto={`qué obras del listado incluyeron ${s.nombre.toLowerCase()}`} />
             </div>
           </div>
