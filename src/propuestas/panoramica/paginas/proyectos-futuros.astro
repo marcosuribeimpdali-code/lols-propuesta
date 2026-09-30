@@ -1,0 +1,17 @@
+---
+// Futuros proyectos (30-09-2026): obras que parten pronto, para que un futuro cliente vea que vienen
+// más. Hoy son dos de ejemplo (src/data/proyectos.ts, `ejemplosFuturos`). De fondo, el plano de una
+// de ellas: son obras que todavía están en el papel.
+import Base from '../Base.astro';
+import PageBanner from '../components/PageBanner.astro';
+import ListadoObras from '../components/ListadoObras.astro';
+import CtaFoto from '../components/CtaFoto.astro';
+import plano from '../../../assets/futuros/bodegas-cerrillos-plano.jpg';
+---
+<Base title="Futuros proyectos" description="Proyectos que LOLS Ingeniería comienza próximamente.">
+  <PageBanner titulo="Futuros proyectos" img={plano} referencial="plano hecho a partir de una foto de Esphera ArqEng / Unsplash">
+    <p>Obras que comienzan en 2027.</p>
+  </PageBanner>
+  <ListadoObras estado="futuro" />
+  <CtaFoto />
+</Base>

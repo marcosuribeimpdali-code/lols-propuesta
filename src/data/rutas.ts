@@ -12,6 +12,7 @@ export const paginas = {
   maquinaria: 'capacidad-tecnica/',
   terminados: 'proyectos-terminados/',
   construccion: 'proyectos-en-construccion/',
+  futuros: 'proyectos-futuros/',
   contacto: 'contacto/',
   privacidad: 'politica-de-privacidad/',
   trabaja: 'trabaja-con-nosotros/',

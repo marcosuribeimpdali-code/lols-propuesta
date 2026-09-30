@@ -8,6 +8,7 @@ import PlanoQuienes from './plano/paginas/quienes-somos.astro';
 import PlanoServicios from './plano/paginas/nuestros-servicios.astro';
 import PlanoTerminados from './plano/paginas/proyectos-terminados.astro';
 import PlanoConstruccion from './plano/paginas/proyectos-en-construccion.astro';
+import PlanoFuturos from './plano/paginas/proyectos-futuros.astro';
 import PlanoContacto from './plano/paginas/contacto.astro';
 import PlanoPrivacidad from './plano/paginas/politica-de-privacidad.astro';
 import PlanoTrabaja from './plano/paginas/trabaja-con-nosotros.astro';
@@ -18,6 +19,7 @@ import PanoQuienes from './panoramica/paginas/quienes-somos.astro';
 import PanoServicios from './panoramica/paginas/nuestros-servicios.astro';
 import PanoTerminados from './panoramica/paginas/proyectos-terminados.astro';
 import PanoConstruccion from './panoramica/paginas/proyectos-en-construccion.astro';
+import PanoFuturos from './panoramica/paginas/proyectos-futuros.astro';
 import PanoContacto from './panoramica/paginas/contacto.astro';
 import PanoPrivacidad from './panoramica/paginas/politica-de-privacidad.astro';
 import PanoObra from './panoramica/paginas/obra.astro';
@@ -33,6 +35,7 @@ export const paginasDe: Record<string, Record<Pagina, Componente>> = {
     servicios: PlanoServicios,
     terminados: PlanoTerminados,
     construccion: PlanoConstruccion,
+    futuros: PlanoFuturos,
     contacto: PlanoContacto,
     privacidad: PlanoPrivacidad,
     trabaja: PlanoTrabaja,
@@ -44,6 +47,7 @@ export const paginasDe: Record<string, Record<Pagina, Componente>> = {
     servicios: PanoServicios,
     terminados: PanoTerminados,
     construccion: PanoConstruccion,
+    futuros: PanoFuturos,
     contacto: PanoContacto,
     privacidad: PanoPrivacidad,
     trabaja: PanoTrabaja,

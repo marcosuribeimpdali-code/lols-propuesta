@@ -1,5 +1,5 @@
 ---
-// Cuerpo compartido de /proyectos-terminados/ y /proyectos-en-construccion/.
+// Cuerpo compartido de /proyectos-terminados/, /proyectos-en-construccion/ y /proyectos-futuros/.
 import ObraCard from './ObraCard.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import Revisar from '../../comun/Revisar.astro';
@@ -14,6 +14,7 @@ const lista = porEstado(estado);
 const tabs = [
   { href: r('terminados'), label: 'Finalizados', n: porEstado('terminado').length, activo: estado === 'terminado' },
   { href: r('construccion'), label: 'En ejecución', n: porEstado('en-construccion').length, activo: estado === 'en-construccion' },
+  { href: r('futuros'), label: 'Futuros proyectos', n: porEstado('futuro').length, activo: estado === 'futuro' },
 ];
 ---
 <section class="pn-sec">
@@ -26,6 +27,13 @@ const tabs = [
       ))}
     </nav>
 
+    {estado === 'futuro' ? (
+      <div class="pn-aviso solo-marca">
+        <p>Estos dos proyectos son <strong>de ejemplo</strong> (inventados), para ver cómo se ve la sección: se reemplazan por los reales.</p>
+        <p>Las imágenes son referenciales (Unsplash) y el plano de cada una sale de la misma imagen.</p>
+        <Pendiente texto="futuros proyectos reales de LOLS y sus fechas de inicio" bloque />
+      </div>
+    ) : (
     <div class="pn-aviso solo-marca">
       <p>
         Las imágenes vienen del sitio de 2018, que mostraba estas obras sin datos; son de baja
@@ -36,6 +44,7 @@ const tabs = [
       {estado === 'en-construccion' && <p class="solo-marca"><Revisar nota="son obras de 2018: confirmar si siguen en ejecución" /></p>}
       <Pendiente texto="listado actualizado de obras (lo está reuniendo la jefatura)" bloque />
     </div>
+    )}
 
     <div class="pn-obras-grid">
       {lista.map((p, i) => <ObraCard proyecto={p} numero={i + 1} nivel="h2" />)}

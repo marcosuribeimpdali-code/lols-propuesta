@@ -2107,6 +2107,10 @@ main:focus {
   background: var(--verde-osc);
   color: #fff;
 }
+.pn-obra__cinta--futuro {
+  background: var(--verde-noche);
+  color: #fff;
+}
 .pn-obra__origen {
   position: absolute;
   right: 8px;
@@ -2777,6 +2781,59 @@ main:focus {
   background: #fff;
   color: var(--verde-osc);
   box-shadow: inset 0 0 0 2px var(--verde-osc);
+}
+.pn-obra-top__estado--futuro {
+  background: var(--verde-noche);
+  color: #fff;
+}
+/* calendario previsto de un futuro proyecto: cuatro hitos en fila unidos por una línea */
+.pn-plan {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pn-plan__hito {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding-top: 22px;
+  border-top: 4px solid var(--linea);
+}
+.pn-plan__hito:first-child {
+  border-top-color: var(--verde);
+}
+.pn-plan__n {
+  font: 800 clamp(1.8rem, 1.4rem + 1vw, 2.4rem) / 1 var(--cond);
+  font-variant-numeric: tabular-nums;
+  color: var(--verde);
+}
+.pn-plan__fecha {
+  font: 700 0.95rem var(--cond);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--verde-osc);
+}
+.pn-plan__t {
+  font: 700 1.35rem/1.1 var(--titular);
+}
+.pn-plan__txt {
+  color: var(--tinta-2);
+  line-height: 1.5;
+}
+@media (max-width: 860px) {
+  .pn-plan {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .pn-plan {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
 }
 .pn-obra-top__resumen {
   margin: -6px 0 18px;

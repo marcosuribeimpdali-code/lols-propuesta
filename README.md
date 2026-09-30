@@ -109,7 +109,16 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
   marco toma la proporción de la foto del después. Abajo, una galería con visor a pantalla
   completa. Las obras **en ejecución** también tienen ficha (`/proyectos-en-construccion/<slug>/`)
   con su avance como recorrido con scroll (opción I, `RecorridoObra.astro`): Inicio de obra →
-  Obra gruesa → Avance actual → Así quedará (el render de 2018), el % de avance y datos de ejemplo. "Después" es la foto real de la obra; "Antes" y "Durante"
+  Obra gruesa → Avance actual → Así quedará (el render de 2018), el % de avance y datos de ejemplo.
+- **Futuros proyectos (30-09-2026)**: `/proyectos-futuros/`, tercera pestaña de Proyectos, con
+  dos obras de EJEMPLO (inventadas y marcadas) que parten en 2027: Bodegas Cerrillos y Oficinas San
+  Miguel (`ejemplosFuturos` en `src/data/proyectos.ts`). Cada ficha tiene el arrastre del plano a
+  "así será" (imagen referencial de Unsplash en `src/assets/futuros/`; el plano sale de ella con
+  `scripts/plano.mjs`), sus datos y un calendario previsto. Para cargar uno real: agregarlo a
+  `ejemplosFuturos` con su foto o render, y generar su plano.
+- **F5 en la portada**: al recargar, la portada vuelve siempre arriba (Chrome a veces la dejaba a
+  media altura). Lo hace un script al comienzo de `Base.astro`, solo en la portada y solo al
+  recargar: el botón "atrás" sigue devolviendo al mismo lugar. "Después" es la foto real de la obra; "Antes" y "Durante"
   son fotos de ejemplo (`src/assets/ejemplo/` y `src/assets/portada/`, marcadas "Foto de
   ejemplo"): reemplazarlas por las de cada obra en `etapas` de `src/data/proyectos.ts`, idealmente
   una foto por etapa tomada desde un ángulo parecido. Autores de las de ejemplo: Billy Freeman e

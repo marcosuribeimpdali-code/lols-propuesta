@@ -8,6 +8,10 @@
 // Los mandantes son genéricos a propósito ("Inmobiliaria privada"): no se le atribuye una obra
 // inventada a una empresa real.
 //
+// Futuros proyectos (30-09-2026, pedido de Marcos para mostrar a futuros clientes que vienen más
+// obras): dos obras de EJEMPLO en Santiago que parten en 2027, inventadas y marcadas igual que las
+// demás. Su "foto" es una imagen referencial (Unsplash) y su plano sale de ella con scripts/plano.mjs.
+//
 // Cada obra finalizada tiene su ficha en /proyectos-terminados/<slug>/, con el mismo slug que
 // usaba su subpágina en el sitio de 2018 (así esos links siguen funcionando), y un paso a paso
 // Antes → Durante → Después. "Después" es la foto real de la obra; "Antes" y "Durante" son fotos
@@ -23,12 +27,17 @@ import losa from '../assets/portada/03-trabajadores-losa.jpg';
 import gruas from '../assets/portada/01-gruas-edificio.jpg';
 import fierros from '../assets/portada/05-enfierradura.jpg';
 import soldador from '../assets/portada/02-soldador-estructura.jpg';
+import bodegas from '../assets/futuros/bodegas-cerrillos.jpg';
+import bodegasPlano from '../assets/futuros/bodegas-cerrillos-plano.jpg';
+import oficinas from '../assets/futuros/oficinas-san-miguel.jpg';
+import oficinasPlano from '../assets/futuros/oficinas-san-miguel-plano.jpg';
 
-export type Estado = 'terminado' | 'en-construccion';
+export type Estado = 'terminado' | 'en-construccion' | 'futuro';
 
 export interface Imagen {
   src: ImageMetadata;
-  tipo: 'foto' | 'render';
+  /** referencial = imagen de stock de una obra parecida (futuros proyectos) */
+  tipo: 'foto' | 'render' | 'referencial';
   /** de dónde salió, para la marca de revisión */
   origen: string;
 }
@@ -44,6 +53,8 @@ export interface Foto {
   ejemplo: boolean;
   fecha: string | null;
   descripcion: string | null;
+  /** rótulo de origen que se muestra sobre la foto (si falta: "Foto de ejemplo" o "Foto real") */
+  origen?: string;
 }
 
 export interface Proyecto {
@@ -239,6 +250,73 @@ const fichaEjecucion = (img: Imagen | null, slug: string, i: number): Proyecto =
   };
 };
 
+// ---------- futuros proyectos: datos de ejemplo (inventados) ----------
+interface EjemploFuturo {
+  nombre: string;
+  mandante: string;
+  comuna: string;
+  inicio: [mes: number, anio: number];
+  /** entrega estimada */
+  entrega: [mes: number, anio: number];
+  m2: number;
+  servicios: string[];
+  pisos: number;
+  uso: string;
+  foto: ImageMetadata;
+  plano: ImageMetadata;
+  alt: string;
+  /** autor de la imagen referencial */
+  credito: string;
+}
+const ejemplosFuturos: Record<string, EjemploFuturo> = {
+  'bodegas-cerrillos': { nombre: 'Bodegas Cerrillos', mandante: 'Empresa de logística privada', comuna: 'Cerrillos', inicio: [1, 2027], entrega: [10, 2027], m2: 4200, servicios: ['Construcción', 'Montaje industrial', 'Electricidad'], pisos: 2, uso: 'bodegas con oficinas', foto: bodegas, plano: bodegasPlano, alt: 'Galpón industrial moderno con portón y oficinas en dos pisos', credito: 'Esphera ArqEng / Unsplash' },
+  'oficinas-san-miguel': { nombre: 'Oficinas San Miguel', mandante: 'Inmobiliaria privada', comuna: 'San Miguel', inicio: [3, 2027], entrega: [6, 2028], m2: 3400, servicios: ['Construcción', 'Electricidad', 'Voz y datos'], pisos: 6, uso: 'oficinas y locales comerciales', foto: oficinas, plano: oficinasPlano, alt: 'Edificio de oficinas de varios pisos con ventanales', credito: 'Matt Reames / Unsplash' },
+};
+const mayuscula = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+const fichaFutura = (slug: string): Proyecto => {
+  const e = ejemplosFuturos[slug];
+  const plazo = meses(e.inicio, e.entrega);
+  const referencial = `Imagen referencial · ${e.credito}`;
+  // el arrastre de la ficha va del plano a cómo quedará
+  const etapas: Foto[] = [
+    { src: e.plano, alt: `Plano de ${e.nombre}`, etapa: 'Proyecto', ejemplo: true, fecha: `Inicio de obra: ${mesAnio(e.inicio)}`, descripcion: `Proyecto listo para empezar: ${plazo} meses de obra.`, origen: 'Plano de ejemplo' },
+    { src: e.foto, alt: e.alt, etapa: 'Así será', ejemplo: true, fecha: `Entrega estimada: ${mesAnio(e.entrega)}`, descripcion: `${mayuscula(e.uso)} en ${e.pisos} pisos, ${m2(e.m2)}.`, origen: referencial },
+  ];
+  return {
+    slug,
+    nombre: e.nombre,
+    mandante: e.mandante,
+    comuna: e.comuna,
+    anio: String(e.inicio[1]),
+    servicios: e.servicios,
+    superficie: m2(e.m2),
+    plazo: `${plazo} meses`,
+    magnitud: `${m2(e.m2)} · ${plazo} meses`,
+    estado: 'futuro',
+    imagen: { src: e.foto, tipo: 'referencial', origen: e.credito },
+    datosEjemplo: true,
+    etapas,
+    galeria: [],
+    avance: null,
+    inicio: mesAnio(e.inicio),
+    entregaEstimada: mesAnio(e.entrega),
+  };
+};
+
+/** calendario previsto de un futuro proyecto: inicio, obra gruesa, terminaciones y entrega */
+export const calendarioPrevisto = (p: Proyecto) => {
+  const e = p.slug ? ejemplosFuturos[p.slug] : undefined;
+  if (!e) return [];
+  const plazo = meses(e.inicio, e.entrega);
+  return [
+    { hito: 'Inicio de obra', fecha: mesAnio(e.inicio), texto: 'Instalación de faena y excavación.' },
+    { hito: 'Obra gruesa', fecha: mesAnio(e.inicio, -Math.round(plazo / 4)), texto: 'Fundaciones, estructura y losas.' },
+    { hito: 'Terminaciones', fecha: mesAnio(e.inicio, -Math.round((plazo * 2) / 3)), texto: 'Revestimientos e instalaciones.' },
+    { hito: 'Entrega', fecha: mesAnio(e.entrega), texto: 'Obra terminada y recibida.' },
+  ];
+};
+
 // [archivo de la imagen, slug de su subpágina en el sitio de 2018]
 const terminados: [string, string][] = [
   ['t01-b_cam_esp.jpg', 'bro_cam'],
@@ -265,17 +343,21 @@ const enConstruccion: [string, string][] = [
 export const proyectos: Proyecto[] = [
   ...terminados.map(([a, slug], i) => ficha('terminado', imagen(`2018/${a}`, 'foto'), slug, i)),
   ...enConstruccion.map(([a, slug], i) => fichaEjecucion(imagen(`2018/${a}`, 'render'), slug, i)),
+  ...Object.keys(ejemplosFuturos).map(fichaFutura),
 ];
+
+/** página de cada sección de obras */
+export const paginaDe = { terminado: 'terminados', 'en-construccion': 'construccion', futuro: 'futuros' } as const satisfies Record<Estado, string>;
 
 export const porEstado = (estado: Estado) => proyectos.filter((p) => p.estado === estado);
 
-/** obras que tienen ficha propia (finalizadas y en ejecución) */
+/** obras que tienen ficha propia (finalizadas, en ejecución y futuras) */
 export const conFicha = () => proyectos.filter((p) => p.slug);
 
 /** texto alternativo cuando la obra todavía no tiene nombre */
 export const altObra = (p: Proyecto, numero: number) => {
   const n = String(numero).padStart(2, '0');
-  const que = p.imagen?.tipo === 'render' ? 'Render' : 'Foto';
-  const estado = p.estado === 'terminado' ? 'obra finalizada' : 'obra en ejecución';
+  const que = p.imagen?.tipo === 'render' ? 'Render' : p.imagen?.tipo === 'referencial' ? 'Imagen referencial' : 'Foto';
+  const estado = p.estado === 'terminado' ? 'obra finalizada' : p.estado === 'futuro' ? 'futuro proyecto' : 'obra en ejecución';
   return p.nombre ? `${que} de ${p.nombre}` : `${que} de la ${estado} ${n}`;
 };

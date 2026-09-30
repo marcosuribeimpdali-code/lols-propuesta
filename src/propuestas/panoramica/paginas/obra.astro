@@ -1,6 +1,8 @@
 ---
-// Ficha de una obra: /proyectos-terminados/<slug>/ (el slug de su subpágina en el sitio de 2018) y
-// /proyectos-en-construccion/<slug>/. La arma la ruta única del sitio, una por cada obra con `slug`.
+// Ficha de una obra: /proyectos-terminados/<slug>/ (el slug de su subpágina en el sitio de 2018),
+// /proyectos-en-construccion/<slug>/ y /proyectos-futuros/<slug>/. La arma la ruta única del sitio,
+// una por cada obra con `slug`. Los futuros proyectos muestran el arrastre del plano a "así será" y,
+// en vez de galería, el calendario previsto de la obra.
 // Arriba, en las finalizadas, el comparador de arrastre (ComparaObra): antes o durante contra el
 // después. En las que están en ejecución, el recorrido con scroll (RecorridoObra) con el avance hasta
 // el render ("Así quedará").
@@ -13,7 +15,7 @@ import RecorridoObra from '../components/RecorridoObra.astro';
 import VisorObra from '../components/VisorObra.astro';
 import CtaFoto from '../components/CtaFoto.astro';
 import Pendiente from '../../comun/Pendiente.astro';
-import { conFicha, type Proyecto } from '../../../data/proyectos';
+import { conFicha, paginaDe, calendarioPrevisto, type Proyecto } from '../../../data/proyectos';
 
 interface Props {
   obra: string;
@@ -21,6 +23,7 @@ interface Props {
 const { obra } = Astro.props;
 const p = conFicha().find((o) => o.slug === obra)!;
 const terminada = p.estado === 'terminado';
+const futura = p.estado === 'futuro';
 // anterior y siguiente, dentro de la misma sección
 const lista = conFicha().filter((o) => o.estado === p.estado);
 const indice = lista.indexOf(p);
@@ -29,8 +32,9 @@ const titulo = p.nombre ?? `Obra ${n}`;
 const anterior = lista[(indice - 1 + lista.length) % lista.length];
 const siguiente = lista[(indice + 1) % lista.length];
 const numero = (o: Proyecto) => String(lista.indexOf(o) + 1).padStart(2, '0');
-const seccion = terminada ? 'terminados' : 'construccion';
-const nombreSeccion = terminada ? 'Proyectos finalizados' : 'Proyectos en ejecución';
+const seccion = paginaDe[p.estado];
+const nombreSeccion = terminada ? 'Proyectos finalizados' : futura ? 'Futuros proyectos' : 'Proyectos en ejecución';
+const calendario = futura ? calendarioPrevisto(p) : [];
 
 // ficha de la obra, al pie del recorrido
 const datos: [string, string | null][] = terminada
@@ -52,12 +56,24 @@ const datos: [string, string | null][] = terminada
       ['Superficie', p.superficie],
       ['Servicios', p.servicios?.join(' · ') ?? null],
     ];
-const resumen = [p.comuna, terminada ? p.anio : p.entregaEstimada && `Entrega estimada: ${p.entregaEstimada}`, p.superficie].filter(Boolean).join(' · ');
+const resumen = [
+  p.comuna,
+  terminada ? p.anio : futura ? p.inicio && `Inicio: ${p.inicio}` : p.entregaEstimada && `Entrega estimada: ${p.entregaEstimada}`,
+  p.superficie,
+]
+  .filter(Boolean)
+  .join(' · ');
 const hayEjemplos = p.etapas.some((e) => e.ejemplo);
 ---
 <Base
   title={`${titulo} · ${nombreSeccion}`}
-  description={terminada ? `Ficha de la obra ${titulo} de LOLS Ingeniería: antes, durante y después.` : `Avance de la obra ${titulo} de LOLS Ingeniería.`}
+  description={
+    terminada
+      ? `Ficha de la obra ${titulo} de LOLS Ingeniería: antes, durante y después.`
+      : futura
+        ? `${titulo}, proyecto de LOLS Ingeniería que comienza en ${p.inicio}.`
+        : `Avance de la obra ${titulo} de LOLS Ingeniería.`
+  }
 >
   <section class="pn-obra-top" aria-labelledby="obra-t">
     <div class="wrap">
@@ -68,15 +84,19 @@ const hayEjemplos = p.etapas.some((e) => e.ejemplo);
       </nav>
       <div class="pn-obra-top__cab">
         <h1 id="obra-t">{titulo}</h1>
-        <span class:list={['pn-obra-top__estado', { 'pn-obra-top__estado--ejecucion': !terminada }]}>
-          {terminada ? 'Finalizado' : `En ejecución · ${p.avance} % de avance`}
+        <span class:list={['pn-obra-top__estado', { 'pn-obra-top__estado--ejecucion': p.estado === 'en-construccion', 'pn-obra-top__estado--futuro': futura }]}>
+          {terminada ? 'Finalizado' : futura ? `Futuro proyecto · inicio ${p.inicio}` : `En ejecución · ${p.avance} % de avance`}
         </span>
         {p.datosEjemplo && <span class="pn-ej">Datos de ejemplo</span>}
       </div>
       {resumen && <p class="pn-obra-top__resumen">{resumen}</p>}
 
-      {terminada && p.etapas.length > 1 ? (
-        <ComparaObra etapas={p.etapas} titulo={`Antes y después de ${titulo}`} />
+      {(terminada || futura) && p.etapas.length > 1 ? (
+        <ComparaObra
+          etapas={p.etapas}
+          titulo={futura ? `Del plano a ${titulo}` : `Antes y después de ${titulo}`}
+          antetitulo={futura ? 'Del plano a la obra' : undefined}
+        />
       ) : (
         <RecorridoObra etapas={p.etapas} titulo={terminada ? `Paso a paso de ${titulo}` : `Avance de ${titulo}`} />
       )}
@@ -88,7 +108,7 @@ const hayEjemplos = p.etapas.some((e) => e.ejemplo);
             <dd>{v ?? <span class="pendiente pendiente--mini">pendiente</span>}</dd>
           </div>
         ))}
-        {!terminada && (
+        {p.estado === 'en-construccion' && (
           <div class="pn-obra-ficha__avance">
             <dt>Avance</dt>
             <dd>
@@ -100,19 +120,49 @@ const hayEjemplos = p.etapas.some((e) => e.ejemplo);
       </dl>
       <div class="pn-obra-top__notas">
         {p.datosEjemplo && <Pendiente texto="los datos reales de esta obra: los de ahora son de ejemplo" />}
-        {hayEjemplos && <Pendiente texto={terminada ? 'fotos reales de Antes y Durante: las de ahora son de ejemplo' : 'fotos reales del avance: las de ahora son de ejemplo'} />}
+        {hayEjemplos && (
+          <Pendiente
+            texto={
+              terminada
+                ? 'fotos reales de Antes y Durante: las de ahora son de ejemplo'
+                : futura
+                  ? 'plano e imagen del proyecto real: los de ahora son de ejemplo'
+                  : 'fotos reales del avance: las de ahora son de ejemplo'
+            }
+          />
+        )}
       </div>
     </div>
   </section>
 
-  <section class="pn-sec pn-sec--gris" aria-labelledby="gal-t">
-    <div class="wrap">
-      <TituloSeccion antetitulo="Registro de la obra" titulo="Galería" id="gal-t">
-        <p>Toque una foto para verla en grande.</p>
-      </TituloSeccion>
-      <VisorObra fotos={[...p.etapas, ...p.galeria]} titulo={titulo} />
-    </div>
-  </section>
+  {futura ? (
+    <section class="pn-sec pn-sec--gris" aria-labelledby="cal-t">
+      <div class="wrap">
+        <TituloSeccion antetitulo="Calendario previsto" titulo="Así avanzará la obra" id="cal-t">
+          <p>Fechas estimadas, sujetas a la firma del contrato y a los permisos.</p>
+        </TituloSeccion>
+        <ol class="pn-plan">
+          {calendario.map((h, i) => (
+            <li class="pn-plan__hito">
+              <span class="pn-plan__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <span class="pn-plan__fecha">{h.fecha}</span>
+              <span class="pn-plan__t">{h.hito}</span>
+              <span class="pn-plan__txt">{h.texto}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  ) : (
+    <section class="pn-sec pn-sec--gris" aria-labelledby="gal-t">
+      <div class="wrap">
+        <TituloSeccion antetitulo="Registro de la obra" titulo="Galería" id="gal-t">
+          <p>Toque una foto para verla en grande.</p>
+        </TituloSeccion>
+        <VisorObra fotos={[...p.etapas, ...p.galeria]} titulo={titulo} />
+      </div>
+    </section>
+  )}
 
   <nav class="wrap pn-obra-nav" aria-label="Otras obras">
     <a href={rObra(anterior.slug!, anterior.estado)} class="pn-obra-nav__link">

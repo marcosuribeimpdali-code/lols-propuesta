@@ -20,13 +20,16 @@ interface Props {
   etapas: Foto[];
   /** texto para lectores de pantalla, por ejemplo "Antes y después de Edificio Cam" */
   titulo: string;
+  /** rótulo sobre las etapas */
+  antetitulo?: string;
 }
-const { etapas, titulo } = Astro.props;
+const { etapas, titulo, antetitulo = 'Paso a paso de la obra' } = Astro.props;
 const despues = etapas[etapas.length - 1];
 const previas = etapas.slice(0, -1);
 const proporcion = Math.min(1.6, Math.max(0.8, despues.src.width / despues.src.height));
 const n = (i: number) => String(i + 1).padStart(2, '0');
-const origen = (e: Foto) => (e.ejemplo ? 'Foto de ejemplo' : 'Foto real · lols.cl 2018');
+const origen = (e: Foto) => e.origen ?? (e.ejemplo ? 'Foto de ejemplo' : 'Foto real · lols.cl 2018');
+const ultima = despues.etapa.toLowerCase();
 ---
 <section class="cmp" data-cmp style={`--proporcion: ${proporcion.toFixed(3)}`} aria-labelledby="cmp-t">
   <h2 id="cmp-t" class="visually-hidden">{titulo}</h2>
@@ -66,11 +69,11 @@ const origen = (e: Foto) => (e.ejemplo ? 'Foto de ejemplo' : 'Foto real · lols.
       class="cmp__manija"
       role="slider"
       tabindex="0"
-      aria-label={`Comparar ${previas[0].etapa.toLowerCase()} y después`}
+      aria-label={`Comparar ${previas[0].etapa.toLowerCase()} y ${ultima}`}
       aria-valuemin="0"
       aria-valuemax="100"
       aria-valuenow="50"
-      aria-valuetext={`Mitad ${previas[0].etapa.toLowerCase()}, mitad después`}
+      aria-valuetext={`Mitad ${previas[0].etapa.toLowerCase()}, mitad ${ultima}`}
     >
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6 3 12l6 6M15 6l6 6-6 6" /></svg>
     </div>
@@ -78,7 +81,7 @@ const origen = (e: Foto) => (e.ejemplo ? 'Foto de ejemplo' : 'Foto real · lols.
   </div>
 
   <div class="cmp__info">
-    <p class="cmp__ante">Paso a paso de la obra</p>
+    <p class="cmp__ante">{antetitulo}</p>
     <ol class="cmp__etapas">
       {etapas.map((e, i) => (
         <li>
@@ -134,7 +137,7 @@ const origen = (e: Foto) => (e.ejemplo ? 'Foto de ejemplo' : 'Foto real · lols.
       manija.setAttribute('aria-valuenow', String(p));
       manija.setAttribute(
         'aria-valuetext',
-        p >= 100 ? `Todo ${nombres[izq]}` : p <= 0 ? 'Todo después' : `${p} % ${nombres[izq]}, ${100 - p} % después`,
+        p >= 100 ? `Todo ${nombres[izq]}` : p <= 0 ? `Todo ${nombres[ultima]}` : `${p} % ${nombres[izq]}, ${100 - p} % ${nombres[ultima]}`,
       );
     };
     // todo se mueve con transform: la ventana de la foto de arriba hacia un lado y su contenido
@@ -179,7 +182,7 @@ const origen = (e: Foto) => (e.ejemplo ? 'Foto de ejemplo' : 'Foto real · lols.
         izq = i;
         vista = -1;
         previas.forEach((f, k) => f.classList.toggle('is-activa', k === i));
-        manija.setAttribute('aria-label', `Comparar ${nombres[i]} y después`);
+        manija.setAttribute('aria-label', `Comparar ${nombres[i]} y ${nombres[ultima]}`);
       }
       animar(100, 900);
     };

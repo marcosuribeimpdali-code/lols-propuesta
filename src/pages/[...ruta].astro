@@ -2,14 +2,15 @@
 // Ruta única del sitio: arma todas las páginas según `principal` (src/propuestas/registro.ts).
 //   principal = 'panoramica' → /, /quienes-somos/, /contacto/… con esa propuesta
 //   principal = null         → / (portada para elegir) + /plano/…, /panoramica/…
-// Más una ficha por obra: /proyectos-terminados/<slug>/ y /proyectos-en-construccion/<slug>/ (en
+// Más una ficha por obra: /proyectos-terminados/<slug>/, /proyectos-en-construccion/<slug>/ y
+// /proyectos-futuros/<slug>/ (en
 // las propuestas que la tienen, ver fichasDe en src/propuestas/paginas.ts).
 import type { GetStaticPaths } from 'astro';
 import Portada from '../propuestas/selector/Portada.astro';
 import { principal, propuestas } from '../propuestas/registro';
 import { paginasDe, fichasDe } from '../propuestas/paginas';
 import { paginas, type Pagina } from '../data/rutas';
-import { conFicha } from '../data/proyectos';
+import { conFicha, paginaDe } from '../data/proyectos';
 
 export const getStaticPaths = (() => {
   const claves = Object.keys(paginas) as Pagina[];
@@ -19,7 +20,7 @@ export const getStaticPaths = (() => {
   const fichas = (slug: string, prefijo: string) =>
     fichasDe[slug]
       ? conFicha().map((o) => ({
-          params: { ruta: ruta(prefijo, paginas[o.estado === 'terminado' ? 'terminados' : 'construccion'], o.slug!) },
+          params: { ruta: ruta(prefijo, paginas[paginaDe[o.estado]], o.slug!) },
           props: { slug, clave: 'ficha' as const, obra: o.slug! },
         }))
       : [];

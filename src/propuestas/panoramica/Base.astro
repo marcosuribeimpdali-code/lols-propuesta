@@ -62,6 +62,26 @@ const imagenCompartir = new URL(`/compartir.jpg?v=${VERSION}`, Astro.site);
     <link rel="stylesheet" href={`/estilos/panoramica.css?v=${VERSION}`} />
     <meta name="theme-color" content="#168D3A" />
     <script is:inline>document.documentElement.classList.add('js');</script>
+    {esPortada && (
+      <script is:inline>
+        // F5 en la portada: siempre arriba, con el título y la portada completos. Chrome a veces la
+        // devolvía a media altura al recargar (no siempre: depende de cuánto tarda en cargar). Al
+        // salir se deja la restauración normal, así "atrás" vuelve al mismo lugar de siempre.
+        (function () {
+          var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+          if (!nav || nav.type !== 'reload' || !('scrollRestoration' in history)) return;
+          history.scrollRestoration = 'manual';
+          var arriba = function () {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+          };
+          document.addEventListener('DOMContentLoaded', arriba, { once: true });
+          addEventListener('load', arriba, { once: true });
+          addEventListener('pagehide', function () {
+            history.scrollRestoration = 'auto';
+          });
+        })();
+      </script>
+    )}
     <ModoMarcas />
   </head>
   <body class="pn">
