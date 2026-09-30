@@ -1,3 +1,11 @@
-# Sitio de revisión (propuesta): que Google no lo indexe.
+# Sitio de revisión (propuesta): que Google y los demás buscadores no lo indexen.
 User-agent: *
 Disallow: /
+
+# Excepción: los robots que arman la vista previa al compartir el enlace (WhatsApp, Facebook,
+# LinkedIn, X). No indexan en buscadores; solo leen la foto, el título y la frase.
+User-agent: facebookexternalhit
+User-agent: WhatsApp
+User-agent: LinkedInBot
+User-agent: Twitterbot
+Allow: /
