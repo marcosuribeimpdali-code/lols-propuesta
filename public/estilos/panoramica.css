@@ -1932,6 +1932,21 @@ main:focus {
   margin-top: auto;
   padding-top: 6px;
 }
+/* toda la tarjeta lleva al servicio: el enlace "Ver servicio" se estira sobre ella (sigue siendo un
+   solo enlace, así el lector de pantalla no lo repite). ::after de la tarjeta ya es la raya verde */
+.pn-serv .pn-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.pn-serv .pn-link:focus-visible {
+  outline: none;
+}
+.pn-serv:has(.pn-link:focus-visible) {
+  outline: 3px solid var(--verde-osc);
+  outline-offset: 3px;
+}
 @media (max-width: 960px) {
   .pn-serv-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
