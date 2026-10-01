@@ -8,16 +8,27 @@
 // Rendimiento (30-09-2026, se veía trabada en Android): la cámara se mueve con `transform` y los
 // puntos con `scale`, que anima el compositor sin pasar por el procesador; la foto del celular es
 // de 2000 px y no de 3200; y fuera de la pantalla se detiene todo.
+// Desde el 01-10-2026 es la cabecera de Capacidad técnica (`cabecera="…"`: migas, <h1> con el
+// título de la página y el slot como bajada, bajo la cabecera blanca); sin `cabecera` vuelve a ser
+// la portada a pantalla completa.
 import { Image } from 'astro:assets';
 import { portadaObra } from '../../../data/portada';
 import { empresa } from '../../../data/empresa';
 import { listaServicios } from '../../../data/servicios';
 import { r } from '../config';
 
+interface Props {
+  /** título de la página interior que encabeza (va en el único <h1>); el slot es la bajada */
+  cabecera?: string;
+}
+const { cabecera } = Astro.props;
 const { img, alt, credito, puntos } = portadaObra;
 const n = (i: number) => String(i + 1).padStart(2, '0');
 ---
-<section class="obra-hero" aria-label="Portada: recorrido por una obra">
+<section
+  class:list={['obra-hero', { 'obra-hero--cabecera': cabecera }]}
+  aria-label={cabecera ? `${cabecera}: recorrido por una obra` : 'Portada: recorrido por una obra'}
+>
   <div class="obra-hero__escena">
     <div class="obra-hero__deriva">
       <div class="obra-hero__cam" style={`--proporcion: ${img.width / img.height}`}>
@@ -47,13 +58,26 @@ const n = (i: number) => String(i + 1).padStart(2, '0');
 
   <div class="wrap obra-hero__texto">
     <div class="obra-hero__caja">
-      <p class="obra-hero__ante">{empresa.razonSocial} · {empresa.anios} años</p>
-      <h1 class="obra-hero__titulo">{empresa.lema}</h1>
-      <p class="obra-hero__bajada">{listaServicios}</p>
-      <div class="obra-hero__acciones">
-        <a class="btn btn--blanco" href={r('contacto')}>Cotizar proyecto <span aria-hidden="true">→</span></a>
-        <a class="btn btn--linea-clara" href={r('terminados')}>Ver obras</a>
-      </div>
+      {cabecera ? (
+        <>
+          <nav aria-label="Migas de pan" class="pn-migas">
+            <a href={r('inicio')}>Inicio</a> <span aria-hidden="true">›</span> <span aria-current="page">{cabecera}</span>
+          </nav>
+          <h1 class="obra-hero__titulo">{cabecera}</h1>
+          <span class="pn-banner__raya" aria-hidden="true"></span>
+          {Astro.slots.has('default') && <div class="obra-hero__bajada"><slot /></div>}
+        </>
+      ) : (
+        <>
+          <p class="obra-hero__ante">{empresa.razonSocial} · {empresa.anios} años</p>
+          <h1 class="obra-hero__titulo">{empresa.lema}</h1>
+          <p class="obra-hero__bajada">{listaServicios}</p>
+          <div class="obra-hero__acciones">
+            <a class="btn btn--blanco" href={r('contacto')}>Cotizar proyecto <span aria-hidden="true">→</span></a>
+            <a class="btn btn--linea-clara" href={r('terminados')}>Ver obras</a>
+          </div>
+        </>
+      )}
     </div>
   </div>
 

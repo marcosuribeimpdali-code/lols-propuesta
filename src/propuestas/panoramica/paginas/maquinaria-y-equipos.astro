@@ -5,18 +5,20 @@
 import { Image } from 'astro:assets';
 import Base from '../Base.astro';
 import { r } from '../config';
-import PageBanner from '../components/PageBanner.astro';
+// cabecera: la obra anotada que antes era la portada (01-10-2026); la foto fija anterior sigue en
+// `fotoBanner` de equipos.ts, para volver a PageBanner
+import PortadaObra from '../components/PortadaObra.astro';
 import TituloSeccion from '../components/TituloSeccion.astro';
 import CtaFoto from '../components/CtaFoto.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import Revisar from '../../comun/Revisar.astro';
-import { cifrasEquipos, ventajas, ventajasRevisar, usos, fotoBanner, fotoBodega } from '../../../data/equipos';
+import { cifrasEquipos, ventajas, ventajasRevisar, usos, fotoBodega } from '../../../data/equipos';
 import { presentacion } from '../../../data/descargas';
 ---
 <Base title="Capacidad técnica" description="Moldajes, alzaprimas, andamios, maquinaria y vehículos propios de LOLS Ingeniería.">
-  <PageBanner titulo="Capacidad técnica" img={fotoBanner.src} referencial={fotoBanner.credito ?? undefined}>
+  <PortadaObra cabecera="Capacidad técnica">
     <p>Moldajes, alzaprimas, andamios, maquinaria y vehículos propios: cada obra parte con lo que ya tenemos.</p>
-  </PageBanner>
+  </PortadaObra>
 
   <section class="pn-sec eq-intro" aria-labelledby="eq-t">
     <div class="wrap pn-dos">

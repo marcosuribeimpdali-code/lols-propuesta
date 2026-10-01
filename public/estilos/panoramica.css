@@ -1516,6 +1516,54 @@ main:focus {
   }
 }
 
+/* ---------- la obra anotada como cabecera de Capacidad técnica (01-10-2026) ----------
+   Va bajo la cabecera blanca (no detrás, como en la portada): menos alta y con el texto abajo a
+   la izquierda, como las demás cabeceras interiores; el crédito sube para no tocar las paradas. */
+.obra-hero--cabecera {
+  height: clamp(540px, 76svh, 740px);
+}
+.obra-hero--cabecera .obra-hero__texto {
+  justify-content: flex-end;
+  padding-top: 40px;
+  padding-bottom: 112px;
+}
+.obra-hero--cabecera .obra-hero__caja {
+  gap: 0;
+  max-width: 640px;
+}
+.obra-hero--cabecera .obra-hero__titulo {
+  max-width: none;
+  margin-top: 14px;
+  font-size: clamp(2.6rem, 1.4rem + 4.6vw, 5.2rem);
+  line-height: 0.95;
+}
+.obra-hero--cabecera .pn-banner__raya {
+  margin-top: 20px;
+}
+.obra-hero--cabecera .obra-hero__bajada {
+  margin-top: 18px;
+}
+.obra-hero--cabecera .obra-hero__ref {
+  top: 16px;
+  bottom: auto;
+}
+@media (max-width: 760px) {
+  .obra-hero--cabecera {
+    height: max(540px, min(100svh - 140px, 680px));
+  }
+  .obra-hero--cabecera .obra-hero__texto {
+    padding-bottom: 84px;
+  }
+  .obra-hero--cabecera .obra-hero__bajada {
+    display: block;
+    margin-top: 14px;
+    font-size: 1rem;
+  }
+  .obra-hero--cabecera .obra-hero__ref {
+    top: 12px;
+  }
+}
+
 /* ---------- cifras bajo la portada ---------- */
 .pn-cifras {
   background: #fff;

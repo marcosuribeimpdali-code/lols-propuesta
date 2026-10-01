@@ -81,12 +81,17 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
 
 ### Imágenes
 
-- **Portada: obra anotada (opción G, 30-09-2026)**: la cámara recorre una foto aérea de una obra,
-  como un dron, y se detiene en cinco puntos (obra gruesa, moldajes, alzaprimas, flota, edificio
-  terminado), cada uno con su enlace (`PortadaObra.astro`, datos en `portadaObra` de
-  `src/data/portada.ts`, foto en `src/assets/portada/obra-aerea.jpg`). Con una foto aérea real de
-  LOLS: reemplazar el archivo (misma proporción) y volver a ubicar los puntos (en % de la foto). Las
-  portadas anteriores siguen en `components/`: `PortadaFundido` (opción C) y `PortadaCubo`.
+- **Portada: fundido con pestañas (opción C), provisoria desde el 01-10-2026** mientras se elige
+  una portada nueva con slider o carrusel (sin video de fondo: lo usa la otra propuesta). Una foto
+  por servicio que se funde con la siguiente (`PortadaFundido.astro`, datos en `portadaServicios`
+  de `src/data/portada.ts`). El cubo 3D sigue en `components/PortadaCubo.astro`.
+- **Cabecera de Capacidad técnica: obra anotada (opción G)**: fue la portada del 30-09-2026 al
+  01-10-2026. La cámara recorre una foto aérea de una obra, como un dron, y se detiene en cinco
+  puntos (obra gruesa, moldajes, alzaprimas, flota, edificio terminado), cada uno con su enlace
+  (`PortadaObra.astro` con `cabecera="Capacidad técnica"`, datos en `portadaObra` de
+  `src/data/portada.ts`, foto en `src/assets/portada/obra-aerea.jpg`). Sin `cabecera` vuelve a ser
+  una portada a pantalla completa. Con una foto aérea real de LOLS: reemplazar el archivo (misma
+  proporción) y volver a ubicar los puntos (en % de la foto).
 - **Contacto: del plano a la obra (opción H)**: la cabecera muestra una obra terminada y su plano
   de líneas, con una línea que el visitante arrastra (`BannerPlano.astro`). El plano sale de la
   misma foto: `node scripts/plano.mjs <foto> <plano>` (fotos en `src/assets/contacto/`). Se probó
