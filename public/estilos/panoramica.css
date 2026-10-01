@@ -1564,6 +1564,198 @@ main:focus {
   }
 }
 
+/* ---------- portada "fondo fijo: la página sube encima" (opción N, 01-10-2026) ----------
+   El fondo (fotos de obras terminadas que se funden) queda pegado arriba con sticky; la portada
+   se monta encima con un margen negativo del mismo alto, y lo que sigue (cifras, servicios) sube
+   por encima como una hoja, con sombra en el borde. Solo se anima la opacidad. */
+.fija {
+  --fija-alto: max(580px, 100svh);
+  position: relative;
+  background: #0a0f0b;
+}
+.fija__fondo {
+  position: sticky;
+  top: 0;
+  height: var(--fija-alto);
+  overflow: hidden;
+}
+.fija__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.6s ease;
+}
+.fija__img.is-activa {
+  opacity: 1;
+}
+.fija__velo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(6 10 7 / 0.7) 0%, rgb(6 10 7 / 0) 24%),
+    linear-gradient(0deg, rgb(6 10 7 / 0.55) 0%, rgb(6 10 7 / 0) 30%),
+    linear-gradient(90deg, rgb(6 18 9 / 0.85) 0%, rgb(6 18 9 / 0.5) 38%, rgb(6 18 9 / 0) 64%);
+}
+.fija__portada {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: max(580px, min(100svh - 36px, 960px));
+  margin-top: calc(var(--fija-alto) * -1);
+  color: #fff;
+}
+.fija__texto {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 18px;
+  width: 100%;
+  padding-top: 130px;
+}
+.fija__ante {
+  font: 600 1rem/1.2 var(--cond);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.85);
+}
+.fija__titulo {
+  max-width: 15ch;
+  font: 700 clamp(2.7rem, 1.2rem + 5vw, 5.6rem) / 1 var(--titular);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  text-shadow: 0 2px 30px rgb(0 0 0 / 0.35);
+}
+.fija__bajada {
+  max-width: 32em;
+  font-size: clamp(1.05rem, 0.95rem + 0.45vw, 1.3rem);
+  line-height: 1.5;
+  color: rgb(255 255 255 / 0.9);
+}
+.fija__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+.fija__pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  width: 100%;
+  padding-block: 0 28px;
+}
+.fija__pausa {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.4);
+  color: #fff;
+  font: 600 0.9rem var(--cond);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.fija__pausa:hover {
+  background: rgb(0 0 0 / 0.65);
+}
+.fija__pausa:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+.fija__pausa-icono {
+  width: 10px;
+  height: 12px;
+  border-inline: 3px solid currentColor;
+}
+.fija.is-pausado .fija__pausa-icono {
+  width: 0;
+  height: 0;
+  border-inline: 0;
+  border-left: 11px solid currentColor;
+  border-block: 7px solid transparent;
+}
+.fija__ref {
+  margin: 0;
+  padding: 2px 8px;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.02em;
+  color: rgb(255 255 255 / 0.92);
+  background: rgb(0 0 0 / 0.55);
+}
+.fija__sube {
+  position: relative;
+  z-index: 2;
+  background: #fff;
+  box-shadow: 0 -24px 48px rgb(0 0 0 / 0.28);
+}
+@media (prefers-reduced-motion: reduce) {
+  .fija__img {
+    transition: none;
+  }
+}
+@media (max-width: 960px) {
+  .fija__texto {
+    padding-top: 90px;
+  }
+}
+@media (max-width: 760px) {
+  /* como las otras portadas: termina justo encima de la barra fija de Llamar/WhatsApp/Cotizar;
+     el texto va abajo */
+  .fija {
+    --fija-alto: max(540px, 100svh);
+  }
+  .fija__portada {
+    height: max(540px, min(100svh - 68px, 760px));
+  }
+  .fija__velo {
+    background:
+      linear-gradient(180deg, rgb(6 10 7 / 0.7) 0%, rgb(6 10 7 / 0) 22%),
+      linear-gradient(0deg, rgb(6 18 9 / 0.94) 0%, rgb(6 18 9 / 0.55) 40%, rgb(6 18 9 / 0) 62%);
+  }
+  .fija__texto {
+    justify-content: flex-end;
+    gap: 12px;
+    padding-bottom: 14px;
+  }
+  .fija__ante {
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+  }
+  .fija__bajada {
+    display: none;
+  }
+  .fija__pie {
+    padding-bottom: 18px;
+  }
+  .fija__pausa {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+  .fija__pausa-txt {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
 /* ---------- cifras bajo la portada ---------- */
 .pn-cifras {
   background: #fff;

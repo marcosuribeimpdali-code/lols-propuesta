@@ -1,0 +1,125 @@
+---
+// Portada "fondo fijo: la página sube encima" (opción N de la página de portadas con slider,
+// 01-10-2026; idea de isayweinfeld.com). Fotos de obras terminadas se funden en el fondo, que se
+// queda quieto (position: sticky, que sí funciona en iPhone, a diferencia de background-attachment:
+// fixed); el contenido que va en el slot (cifras y servicios) sube por encima como una hoja.
+// Accesibilidad: botón de pausa (WCAG 2.2.2); con "reducir movimiento" no cambia sola; fuera de la
+// pantalla o con la pestaña oculta se detiene. Rendimiento: solo se anima la opacidad.
+// Fotos y créditos en `portadaFija` de src/data/portada.ts.
+import { Image } from 'astro:assets';
+import { portadaFija } from '../../../data/portada';
+import { empresa } from '../../../data/empresa';
+import { listaServicios } from '../../../data/servicios';
+import { r } from '../config';
+---
+<div class="fija">
+  <div class="fija__fondo">
+    {portadaFija.map((f, i) => (
+      <Image
+        class:list={['fija__img', { 'is-activa': i === 0 }]}
+        src={f.img}
+        alt={i === 0 ? f.alt : ''}
+        data-alt={f.alt}
+        data-credito={f.credito ?? ''}
+        widths={[640, 1024, 1440, 2000]}
+        sizes="100vw"
+        quality={72}
+        loading={i === 0 ? 'eager' : 'lazy'}
+        fetchpriority={i === 0 ? 'high' : 'low'}
+        style={f.encuadre ? `object-position: ${f.encuadre}` : undefined}
+      />
+    ))}
+    <div class="fija__velo" aria-hidden="true"></div>
+  </div>
+
+  <section class="fija__portada" aria-label="Portada">
+    <div class="wrap fija__texto">
+      <p class="fija__ante">{empresa.razonSocial} · {empresa.anios} años</p>
+      <h1 class="fija__titulo">{empresa.lema}</h1>
+      <p class="fija__bajada">{listaServicios}</p>
+      <div class="fija__acciones">
+        <a class="btn btn--blanco" href={r('contacto')}>Cotizar proyecto <span aria-hidden="true">→</span></a>
+        <a class="btn btn--linea-clara" href={r('terminados')}>Ver obras</a>
+      </div>
+    </div>
+    <div class="wrap fija__pie">
+      <button class="fija__pausa" type="button" aria-pressed="false">
+        <span class="fija__pausa-icono" aria-hidden="true"></span>
+        <span class="fija__pausa-txt">Pausar fotos</span>
+      </button>
+      {portadaFija[0].credito && <p class="fija__ref">Imagen referencial · <span data-autor>{portadaFija[0].credito}</span></p>}
+    </div>
+  </section>
+
+  <div class="fija__sube">
+    <slot />
+  </div>
+</div>
+
+<script>
+  const raiz = document.querySelector<HTMLElement>('.fija');
+  if (raiz) {
+    const fotos = [...raiz.querySelectorAll<HTMLImageElement>('.fija__img')];
+    const pausa = raiz.querySelector<HTMLButtonElement>('.fija__pausa')!;
+    const pausaTxt = raiz.querySelector<HTMLElement>('.fija__pausa-txt')!;
+    const credito = raiz.querySelector<HTMLElement>('[data-autor]');
+    const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const CADA = 5500; // cuánto se queda cada foto, contando el fundido (1,6 s en el CSS)
+
+    let actual = 0;
+    let pausado = reducido;
+    let fuera = false;
+    let oculto = document.hidden;
+    let reloj: number | undefined;
+
+    const mostrar = (i: number) => {
+      actual = i;
+      fotos.forEach((f, k) => {
+        f.classList.toggle('is-activa', k === i);
+        // solo la foto a la vista tiene texto alternativo (las demás quedan decorativas)
+        f.alt = k === i ? (f.dataset.alt ?? '') : '';
+      });
+      const c = fotos[i].dataset.credito;
+      if (credito && c) credito.textContent = c;
+    };
+    const programar = () => {
+      clearTimeout(reloj);
+      if (pausado || fuera || oculto || fotos.length < 2) return;
+      reloj = window.setTimeout(() => {
+        // no pasa a una foto que todavía no ha cargado (evita un fundido a negro)
+        const sig = (actual + 1) % fotos.length;
+        if (fotos[sig].complete && fotos[sig].naturalWidth) mostrar(sig);
+        else fotos[sig].loading = 'eager';
+        programar();
+      }, CADA);
+    };
+    const pintarPausa = () => {
+      pausa.setAttribute('aria-pressed', String(pausado));
+      pausaTxt.textContent = pausado ? 'Reproducir fotos' : 'Pausar fotos';
+      raiz.classList.toggle('is-pausado', pausado);
+    };
+
+    pausa.addEventListener('click', () => {
+      pausado = !pausado;
+      pintarPausa();
+      programar();
+    });
+    document.addEventListener('visibilitychange', () => {
+      oculto = document.hidden;
+      programar();
+    });
+    // la portada deja de cambiar de foto cuando el contenido ya la tapó o se bajó de largo
+    new IntersectionObserver(([e]) => {
+      fuera = !e.isIntersecting;
+      programar();
+    }).observe(raiz.querySelector('.fija__portada')!);
+
+    // las demás fotos se piden apenas carga la primera, para que estén listas al fundirse
+    const pedir = () => fotos.slice(1).forEach((f) => (f.loading = 'eager'));
+    if (fotos[0].complete) pedir();
+    else fotos[0].addEventListener('load', pedir, { once: true });
+
+    pintarPausa();
+    programar();
+  }
+</script>

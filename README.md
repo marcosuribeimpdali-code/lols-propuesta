@@ -81,10 +81,14 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
 
 ### Imágenes
 
-- **Portada: fundido con pestañas (opción C), provisoria desde el 01-10-2026** mientras se elige
-  una portada nueva con slider o carrusel (sin video de fondo: lo usa la otra propuesta). Una foto
-  por servicio que se funde con la siguiente (`PortadaFundido.astro`, datos en `portadaServicios`
-  de `src/data/portada.ts`). El cubo 3D sigue en `components/PortadaCubo.astro`.
+- **Portada: fondo fijo, la página sube encima (opción N, en prueba desde el 01-10-2026)**: fotos
+  de obras **terminadas** se funden en el fondo, que queda quieto, y las cifras y los servicios
+  suben por encima como una hoja (`PortadaFija.astro`; en `index.astro` lo que sube va dentro del
+  componente). Fotos en `portadaFija` de `src/data/portada.ts` y en `src/assets/portada/terminadas/`:
+  stock de Unsplash marcado "Imagen referencial" (Roger Starnes Sr, Alex Reynolds, Long Chung, Sam y
+  set.sj). Se eligieron obras terminadas porque se recomendó no mostrar obras a medio construir en la
+  portada. Las portadas anteriores siguen en `components/`: `PortadaFundido`
+  (opción C), `PortadaObra` (opción G, hoy cabecera de Capacidad técnica) y `PortadaCubo`.
 - **Cabecera de Capacidad técnica: obra anotada (opción G)**: fue la portada del 30-09-2026 al
   01-10-2026. La cámara recorre una foto aérea de una obra, como un dron, y se detiene en cinco
   puntos (obra gruesa, moldajes, alzaprimas, flota, edificio terminado), cada uno con su enlace

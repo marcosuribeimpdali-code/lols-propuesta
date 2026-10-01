@@ -2,9 +2,10 @@
 import { Image } from 'astro:assets';
 import Base from '../Base.astro';
 import { r, rObra } from '../config';
-// portada: fundido con pestañas (opción C), mientras se elige la nueva (01-10-2026). La obra anotada
-// (opción G) pasó a ser la cabecera de Capacidad técnica; PortadaCubo (cubo 3D) sigue en components/.
-import PortadaFundido from '../components/PortadaFundido.astro';
+// portada: fondo fijo, la página sube encima (opción N, prueba del 01-10-2026). Las cifras y los
+// servicios van dentro, porque son lo que sube sobre las fotos. Las anteriores siguen en components/:
+// PortadaFundido (opción C), PortadaObra (opción G, hoy en Capacidad técnica) y PortadaCubo.
+import PortadaFija from '../components/PortadaFija.astro';
 import TituloSeccion from '../components/TituloSeccion.astro';
 import CtaFoto from '../components/CtaFoto.astro';
 import IconoServicio from '../../comun/IconoServicio.astro';
@@ -31,8 +32,7 @@ const cifras = [
 ];
 ---
 <Base>
-  <PortadaFundido />
-
+  <PortadaFija>
   <section class="pn-cifras" aria-label={`${empresa.nombreCorto} en cifras`}>
     <div class="wrap">
       <dl class="pn-cifras__grid">
@@ -65,6 +65,7 @@ const cifras = [
       </ul>
     </div>
   </section>
+  </PortadaFija>
 
   <section class="pn-sec pn-sec--gris" aria-labelledby="eqp-t">
     <div class="wrap eq-teaser">

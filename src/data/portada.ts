@@ -18,6 +18,11 @@ import fotoMantencion from '../assets/servicios/mantencion.jpg';
 import fotoVozDatos from '../assets/servicios/voz-y-datos.jpg';
 import obraAerea from '../assets/portada/obra-aerea.jpg';
 import { dron } from './dron';
+import oficinasArboles from '../assets/portada/terminadas/oficinas-arboles.jpg';
+import conjuntoAereo from '../assets/portada/terminadas/conjunto-aereo.jpg';
+import departamentos from '../assets/portada/terminadas/departamentos.jpg';
+import galpon from '../assets/portada/terminadas/galpon.jpg';
+import comercial from '../assets/portada/terminadas/comercial.jpg';
 
 export interface Diapositiva {
   img: ImageMetadata;
@@ -183,3 +188,24 @@ export const portadaObra = {
     { x: 23, y: 46, zoom: 2.3, titulo: 'Edificio terminado', corto: 'Terminado', texto: 'Ver proyectos', pagina: 'terminados' },
   ] satisfies PuntoObra[],
 };
+
+// ---------- Portada "fondo fijo" (opción N, 01-10-2026) ----------
+// Fotos de obras TERMINADAS que se funden en el fondo mientras la página sube encima. A Marcos le
+// recomendaron que la portada no muestre obras a medio construir ("desordenado"). Son de stock
+// (Unsplash, "Imagen referencial"): para usar fotos reales de LOLS, reemplazar el archivo (mín.
+// 2000 px de ancho, horizontal) y poner `credito: null`. `encuadre` = object-position.
+export interface FotoFija {
+  img: ImageMetadata;
+  alt: string;
+  /** autor si es de stock (se marca "Imagen referencial"); null = foto de LOLS */
+  credito: string | null;
+  encuadre?: string;
+}
+
+export const portadaFija: FotoFija[] = [
+  { img: oficinasArboles, alt: 'Edificio de oficinas de pocos pisos, terminado, con árboles al frente', credito: 'Roger Starnes Sr / Unsplash', encuadre: '60% 70%' },
+  { img: conjuntoAereo, alt: 'Vista aérea de un conjunto de edificios de oficinas terminados', credito: 'Alex Reynolds / Unsplash' },
+  { img: departamentos, alt: 'Edificios de departamentos terminados en una calle con árboles', credito: 'Long Chung / Unsplash' },
+  { img: galpon, alt: 'Galpón industrial terminado, con revestimiento metálico', credito: 'Sam / Unsplash', encuadre: '50% 60%' },
+  { img: comercial, alt: 'Edificio comercial terminado, de fachada roja y blanca', credito: 'set.sj / Unsplash' },
+];
