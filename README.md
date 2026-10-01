@@ -192,9 +192,10 @@ muestra sus marcas siempre (es un borrador legal con huecos a mitad de frase). D
 - Formulario de contacto: hoy **no envía nada** (solo muestra un aviso). Definir a qué correo
   llegan los mensajes y cómo se envían. Las cotizaciones van al área comercial y a los
   arquitectos, con copia a gerencia (quién es quién se definió en reunión; no va en el repo).
-- Contacto por área (Contacto → "¿Con quién hablar?"): cotizaciones, proveedores y facturación,
-  compras y logística. Hoy todo va a lols@lols.cl con el asunto ya escrito; cuando haya correos
-  por área, ponerlos en `areas` de `src/data/empresa.ts`.
+- Contacto por área (Contacto → "¿Con quién hablar?"): solo "Cotizaciones y proyectos" y "Trabaja
+  con nosotros". Proveedores y compras se sacaron el 30-09-2026 (hacían pensar que la empresa
+  vende); no van en Contacto ni en el pie. Hoy todo va a lols@lols.cl con el asunto ya escrito;
+  cuando haya correos por área, ponerlos en `areas` de `src/data/empresa.ts`.
 - Política de privacidad (Ley 21.719, vigente desde el 1-12-2026): es un borrador de estructura;
   la revisa quien vea lo legal.
 
