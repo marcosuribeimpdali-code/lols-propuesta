@@ -4339,6 +4339,70 @@ html:not(.js) .form__siguiente {
   margin-top: 24px;
   color: var(--tinta-2);
 }
+/* oficios que buscamos (06-10-2026): cada uno con "Postular", que deja listo el formulario */
+.pn-oficios__bajada {
+  color: var(--tinta-2);
+}
+.pn-oficios__bajada .pn-ej {
+  margin-left: 8px;
+  vertical-align: 1px;
+}
+.pn-oficios__g {
+  margin: 22px 0 8px;
+  font: 700 0.9rem var(--cond);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--verde-osc);
+}
+.pn-oficios__lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--linea);
+}
+.pn-oficio {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--linea);
+}
+.pn-oficio__txt {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.pn-oficio__txt b {
+  font: 700 1.1rem/1.2 var(--titular);
+}
+.pn-oficio__txt span {
+  color: var(--tinta-2);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.pn-oficio__btn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 2px solid var(--verde);
+  color: var(--verde-osc);
+  font: 700 0.85rem var(--cond);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+.pn-oficio__btn:hover {
+  background: var(--verde);
+  color: #fff;
+}
 @media (max-width: 900px) {
   .pn-trabaja {
     grid-template-columns: 1fr;

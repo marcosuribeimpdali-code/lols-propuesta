@@ -5,8 +5,8 @@ import PageBanner from '../components/PageBanner.astro';
 import TituloSeccion from '../components/TituloSeccion.astro';
 import FormPostulacion from '../../comun/FormPostulacion.astro';
 import IconoServicio from '../../comun/IconoServicio.astro';
-import Pendiente from '../../comun/Pendiente.astro';
 import { servicios } from '../../../data/servicios';
+import { oficios, oficiosEjemplo } from '../../../data/oficios';
 import { dron } from '../../../data/dron';
 
 const banner = dron.obraTrabajadores;
@@ -25,8 +25,31 @@ const banner = dron.obraTrabajadores;
             <li><span class="pn-serv__icono"><IconoServicio nombre={s.icono} /></span>{s.nombre}</li>
           ))}
         </ul>
-        <h3 class="pn-trabaja__h solo-marca">Ofertas vigentes</h3>
-        <Pendiente texto="cargos abiertos, si se quieren publicar (cargo, lugar, requisitos)" bloque />
+        <div class="pn-oficios" id="oficios">
+          <h3 class="pn-trabaja__h">Oficios que buscamos</h3>
+          <p class="pn-oficios__bajada">
+            Elija el suyo y apriete «Postular»: el formulario queda listo con su oficio.
+            {oficiosEjemplo && <span class="pn-ej">Datos de ejemplo</span>}
+          </p>
+          {oficios.map((g) => (
+            <div class="pn-oficios__grupo">
+              <h4 class="pn-oficios__g">{g.grupo}</h4>
+              <ul class="pn-oficios__lista">
+                {g.oficios.map((o) => (
+                  <li class="pn-oficio">
+                    <div class="pn-oficio__txt">
+                      <b>{o.nombre}</b>
+                      <span>{o.texto}</span>
+                    </div>
+                    <a class="pn-oficio__btn" href="#form-cv" data-cargo={o.nombre} data-area={o.area}>
+                      Postular<span class="visually-hidden"> como {o.nombre}</span> <span aria-hidden="true">→</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
         <p class="pn-trabaja__nota">
           ¿Busca cotizar una obra? Vaya a <a href={r('contacto')}>Cuéntenos su proyecto</a>.
         </p>
@@ -37,3 +60,22 @@ const banner = dron.obraTrabajadores;
     </div>
   </section>
 </Base>
+
+<script>
+  // "Postular": deja el formulario con el cargo y el área del oficio, lo trae a la vista y pone el
+  // cursor en el nombre. Sin JavaScript el enlace igual lleva al formulario.
+  const cargo = document.querySelector<HTMLInputElement>('#cv-cargo');
+  const area = document.querySelector<HTMLSelectElement>('#cv-area');
+  const form = document.querySelector<HTMLFormElement>('#form-cv');
+  const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLAnchorElement>('.pn-oficio__btn').forEach((a) =>
+    a.addEventListener('click', (e) => {
+      if (!cargo || !area || !form) return;
+      e.preventDefault();
+      cargo.value = a.dataset.cargo ?? '';
+      if ([...area.options].some((o) => o.value === a.dataset.area)) area.value = a.dataset.area ?? '';
+      form.scrollIntoView({ behavior: reducido ? 'auto' : 'smooth', block: 'start' });
+      document.querySelector<HTMLInputElement>('#cv-nombre')?.focus({ preventScroll: true });
+    }),
+  );
+</script>
