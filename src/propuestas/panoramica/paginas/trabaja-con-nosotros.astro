@@ -1,81 +1,210 @@
 ---
+// Trabaja con nosotros (06-10-2026): en vez de una lista larga y el formulario siempre a la vista, la
+// persona elige primero "En obra" o "Profesionales y oficina técnica", ve los cargos de ese grupo y,
+// al apretar "Postular", recién aparece "Envíenos su CV" con el cargo puesto y SUS preguntas (así las
+// postulaciones llegan separadas y filtradas). Cada paso queda en la dirección (#en-obra,
+// #electricista…): el botón atrás del celular vuelve al paso anterior y cada cargo tiene su enlace
+// para compartir. Sin JavaScript se ve todo junto, como antes. Cargos y preguntas: src/data/oficios.ts.
 import Base from '../Base.astro';
 import { r } from '../config';
 import PageBanner from '../components/PageBanner.astro';
 import TituloSeccion from '../components/TituloSeccion.astro';
 import FormPostulacion from '../../comun/FormPostulacion.astro';
-import IconoServicio from '../../comun/IconoServicio.astro';
-import { servicios } from '../../../data/servicios';
 import { oficios, oficiosEjemplo } from '../../../data/oficios';
 import { dron } from '../../../data/dron';
 
 const banner = dron.obraTrabajadores;
+// íconos de línea de cada grupo: casco y plano
+const iconos: Record<string, string> = {
+  'en-obra': 'M4 16a8 8 0 0 1 16 0M2.5 16h19v3h-19zM12 8v4M9 9.5v3M15 9.5v3',
+  profesionales: 'M5 3h10l4 4v14H5zM15 3v4h4M8 11h8M8 15h8M8 19h5',
+};
 ---
-<Base title="Trabaja con nosotros" description="Envíe su CV a LOLS Ingeniería.">
+<Base title="Trabaja con nosotros" description="Postule a LOLS Ingeniería: cargos en obra y profesionales.">
   <PageBanner titulo="Trabaja con nosotros" img={banner.img} referencial={banner.credito ?? undefined}>
-    <p>¿Quiere ser parte del equipo de LOLS Ingeniería? Envíenos sus antecedentes.</p>
+    <p>¿Quiere ser parte del equipo de LOLS Ingeniería? Elija dónde quiere trabajar y postule a su cargo.</p>
   </PageBanner>
 
+  <script is:inline>document.documentElement.classList.add('postula-js');</script>
   <section class="pn-sec">
-    <div class="wrap pn-trabaja">
-      <div class="pn-trabaja__info">
-        <TituloSeccion antetitulo="Postulaciones" titulo="Áreas en las que trabajamos" centrado={false} />
-        <ul class="pn-trabaja__areas">
-          {servicios.map((s) => (
-            <li><span class="pn-serv__icono"><IconoServicio nombre={s.icono} /></span>{s.nombre}</li>
-          ))}
-        </ul>
-        <div class="pn-oficios" id="oficios">
-          <h3 class="pn-trabaja__h">Oficios que buscamos</h3>
-          <p class="pn-oficios__bajada">
-            Elija el suyo y apriete «Postular»: el formulario queda listo con su oficio.
-            {oficiosEjemplo && <span class="pn-ej">Datos de ejemplo</span>}
-          </p>
-          {oficios.map((g) => (
-            <div class="pn-oficios__grupo">
-              <h4 class="pn-oficios__g">{g.grupo}</h4>
-              <ul class="pn-oficios__lista">
-                {g.oficios.map((o) => (
-                  <li class="pn-oficio">
-                    <div class="pn-oficio__txt">
-                      <b>{o.nombre}</b>
-                      <span>{o.texto}</span>
-                    </div>
-                    <a class="pn-oficio__btn" href="#form-cv" data-cargo={o.nombre} data-area={o.area}>
-                      Postular<span class="visually-hidden"> como {o.nombre}</span> <span aria-hidden="true">→</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <p class="pn-trabaja__nota">
-          ¿Busca cotizar una obra? Vaya a <a href={r('contacto')}>Cuéntenos su proyecto</a>.
+    <div class="wrap pn-postula">
+      <TituloSeccion antetitulo="Postulaciones" titulo="¿Dónde quiere trabajar?" centrado={false}>
+        <p>
+          Elija su grupo, vea los cargos y postule al suyo.
+          {oficiosEjemplo && <span class="pn-ej">Datos de ejemplo</span>}
         </p>
+      </TituloSeccion>
+
+      <div class="pn-grupos" id="oficios">
+        {oficios.map((g) => (
+          <a class="pn-grupo" href={`#${g.id}`} data-ir={g.id} aria-expanded="false" aria-controls={`cargos-${g.id}`}>
+            <span class="pn-grupo__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={iconos[g.id]} /></svg></span>
+            <span class="pn-grupo__txt">
+              <b>{g.grupo}</b>
+              <span>{g.bajada}</span>
+            </span>
+            <span class="pn-grupo__n">{g.oficios.length} cargos <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
       </div>
-      <div class="pn-form-caja">
-        <FormPostulacion privacidadHref={r('privacidad')} />
+
+      {oficios.map((g) => (
+        <div class="pn-cargos" id={`cargos-${g.id}`} data-panel={g.id}>
+          <div class="pn-cargos__cab">
+            <h3 class="pn-trabaja__h">{g.grupo}</h3>
+            <a class="pn-cargos__volver" href="#oficios" data-ir="">← Elegir otro grupo</a>
+          </div>
+          <ul class="pn-oficios__lista">
+            {g.oficios.map((o) => (
+              <li class="pn-oficio">
+                <div class="pn-oficio__txt">
+                  <b>{o.nombre}</b>
+                  <span>{o.texto}</span>
+                </div>
+                <a
+                  class="pn-oficio__btn"
+                  href="#form-cv"
+                  data-ir={o.id}
+                  data-cargo={o.nombre}
+                  data-area={o.area}
+                  data-grupo={g.id}
+                  data-cv={g.cvObligatorio ? 'si' : 'no'}
+                >
+                  Postular<span class="visually-hidden"> como {o.nombre}</span> <span aria-hidden="true">→</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p class="pn-trabaja__nota">¿No encuentra su cargo? <a href="#form-cv" data-ir="otro-cargo">Déjenos sus datos</a>.</p>
+        </div>
+      ))}
+
+      <div class="pn-postula__form" data-form>
+        <div class="pn-postula__cab" data-cab>
+          <p>Postulando a</p>
+          <b data-cab-cargo>un cargo</b>
+          <a href="#oficios" data-ir="" data-cambiar>Cambiar de cargo</a>
+        </div>
+        <div class="pn-form-caja">
+          <FormPostulacion privacidadHref={r('privacidad')}>
+            <Fragment slot="preguntas">
+              {oficios.flatMap((g) => g.oficios).map((o) => (
+                <fieldset class="pn-preguntas" data-preguntas={o.id} disabled hidden>
+                  <legend class="visually-hidden">Preguntas para {o.nombre}</legend>
+                  {o.preguntas.map((p, k) => (
+                    <fieldset class="campo pn-pregunta">
+                      <legend>{p.texto}</legend>
+                      {p.varias && <p class="campo__ayuda">Puede marcar varias.</p>}
+                      <div class="pn-opciones">
+                        {p.opciones.map((op) => (
+                          <label>
+                            <input type={p.varias ? 'checkbox' : 'radio'} name={`${o.id}-${k + 1}`} value={op} required={!p.varias} />
+                            <span>{op}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </fieldset>
+                  ))}
+                </fieldset>
+              ))}
+            </Fragment>
+          </FormPostulacion>
+        </div>
       </div>
+
+      <p class="pn-trabaja__nota">
+        ¿Busca cotizar una obra? Vaya a <a href={r('contacto')}>Cuéntenos su proyecto</a>.
+      </p>
     </div>
   </section>
 </Base>
 
 <script>
-  // "Postular": deja el formulario con el cargo y el área del oficio, lo trae a la vista y pone el
-  // cursor en el nombre. Sin JavaScript el enlace igual lleva al formulario.
-  const cargo = document.querySelector<HTMLInputElement>('#cv-cargo');
-  const area = document.querySelector<HTMLSelectElement>('#cv-area');
+  // Tres pasos: grupo → cargos → formulario de ese cargo. El paso va en la dirección (#…), así el
+  // botón atrás funciona y cada cargo tiene su enlace.
+  const raiz = document.querySelector<HTMLElement>('.pn-postula');
   const form = document.querySelector<HTMLFormElement>('#form-cv');
-  const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  document.querySelectorAll<HTMLAnchorElement>('.pn-oficio__btn').forEach((a) =>
-    a.addEventListener('click', (e) => {
-      if (!cargo || !area || !form) return;
+  if (raiz && form) {
+    const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const tarjetas = [...raiz.querySelectorAll<HTMLAnchorElement>('.pn-grupo')];
+    const paneles = [...raiz.querySelectorAll<HTMLElement>('[data-panel]')];
+    const cajaForm = raiz.querySelector<HTMLElement>('[data-form]')!;
+    const cabCargo = raiz.querySelector<HTMLElement>('[data-cab-cargo]')!;
+    const cambiar = raiz.querySelector<HTMLAnchorElement>('[data-cambiar]')!;
+    const preguntas = [...form.querySelectorAll<HTMLFieldSetElement>('[data-preguntas]')];
+    const cargo = form.querySelector<HTMLInputElement>('#cv-cargo')!;
+    const area = form.querySelector<HTMLSelectElement>('#cv-area')!;
+    const cv = form.querySelector<HTMLInputElement>('#cv-archivo');
+    const correo = form.querySelector<HTMLInputElement>('#cv-correo');
+    const botones = new Map([...raiz.querySelectorAll<HTMLAnchorElement>('.pn-oficio__btn')].map((b) => [b.dataset.ir!, b]));
+    const grupos = new Set(paneles.map((p) => p.dataset.panel!));
+
+    // "(opcional)" junto a la etiqueta de un campo que deja de ser obligatorio
+    const obligatorio = (campo: HTMLInputElement | null, si: boolean) => {
+      if (!campo) return;
+      campo.required = si;
+      const etiqueta = form.querySelector(`label[for="${campo.id}"]`);
+      let op = etiqueta?.querySelector<HTMLElement>('.campo__op[data-dinamico]');
+      if (!si && etiqueta && !op) {
+        op = document.createElement('span');
+        op.className = 'campo__op';
+        op.dataset.dinamico = '';
+        op.textContent = ' (opcional)';
+        etiqueta.append(op);
+      }
+      if (si) op?.remove();
+    };
+
+    const mostrar = (paso: string, mover: boolean) => {
+      const boton = botones.get(paso);
+      const enForm = !!boton || paso === 'otro-cargo';
+      const grupo = boton ? boton.dataset.grupo! : grupos.has(paso) ? paso : '';
+      tarjetas.forEach((t) => t.setAttribute('aria-expanded', String(t.dataset.ir === grupo)));
+      paneles.forEach((p) => p.classList.toggle('on', !enForm && p.dataset.panel === grupo));
+      cajaForm.classList.toggle('on', enForm);
+      preguntas.forEach((f) => {
+        const activo = !!boton && f.dataset.preguntas === paso;
+        f.hidden = !activo;
+        f.disabled = !activo;
+      });
+      if (boton) {
+        cabCargo.textContent = boton.dataset.cargo ?? '';
+        cargo.value = boton.dataset.cargo ?? '';
+        cargo.readOnly = true;
+        if ([...area.options].some((o) => o.value === boton.dataset.area)) area.value = boton.dataset.area ?? '';
+        obligatorio(cv, boton.dataset.cv === 'si');
+        obligatorio(correo, boton.dataset.cv === 'si');
+        cambiar.href = `#${grupo}`;
+        cambiar.dataset.ir = grupo;
+      } else if (paso === 'otro-cargo') {
+        cabCargo.textContent = 'otro cargo';
+        if (cargo.readOnly) {
+          cargo.value = '';
+          area.value = '';
+        }
+        cargo.readOnly = false;
+        obligatorio(cv, true);
+        obligatorio(correo, true);
+        cambiar.href = '#oficios';
+        cambiar.dataset.ir = '';
+      }
+      if (!mover) return;
+      const destino = enForm ? cajaForm : grupo ? raiz.querySelector(`[data-panel="${grupo}"]`) : raiz.querySelector('#oficios');
+      destino?.scrollIntoView({ behavior: reducido ? 'auto' : 'smooth', block: 'start' });
+      if (boton) form.querySelector<HTMLInputElement>('#cv-nombre')?.focus({ preventScroll: true });
+      if (paso === 'otro-cargo') cargo.focus({ preventScroll: true });
+    };
+
+    raiz.addEventListener('click', (e) => {
+      const a = (e.target as Element).closest<HTMLAnchorElement>('a[data-ir]');
+      if (!a) return;
       e.preventDefault();
-      cargo.value = a.dataset.cargo ?? '';
-      if ([...area.options].some((o) => o.value === a.dataset.area)) area.value = a.dataset.area ?? '';
-      form.scrollIntoView({ behavior: reducido ? 'auto' : 'smooth', block: 'start' });
-      document.querySelector<HTMLInputElement>('#cv-nombre')?.focus({ preventScroll: true });
-    }),
-  );
+      const paso = a.dataset.ir ?? '';
+      history.pushState(null, '', paso ? `#${paso}` : location.pathname + location.search);
+      mostrar(paso, true);
+    });
+    addEventListener('popstate', () => mostrar(location.hash.slice(1), true));
+    const inicial = location.hash.slice(1);
+    mostrar(inicial === 'oficios' ? '' : inicial, inicial !== '' && inicial !== 'oficios');
+  }
 </script>

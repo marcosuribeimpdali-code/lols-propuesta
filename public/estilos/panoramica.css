@@ -5310,3 +5310,226 @@ fieldset.campo--grupo > legend {
     margin: -6px 0 0 -6px;
   }
 }
+
+/* ---------- Trabaja con nosotros en 3 pasos (06-10-2026) ----------
+   1) dos botones de grupo; 2) los cargos del grupo elegido; 3) "Envíenos su CV" con el cargo puesto
+   y sus preguntas. Con JavaScript se ve un paso a la vez (clase postula-js en <html>); sin él, todo. */
+.pn-postula {
+  display: grid;
+  gap: 24px;
+  max-width: 900px;
+}
+.pn-grupos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  scroll-margin-top: 140px;
+}
+.pn-grupo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 6px 16px;
+  padding: 20px;
+  border: 1px solid var(--linea);
+  background: #fff;
+  color: var(--tinta);
+  text-decoration: none;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+.pn-grupo:hover {
+  border-color: var(--verde);
+}
+.pn-grupo[aria-expanded='true'] {
+  padding: 19px;
+  border: 2px solid var(--verde);
+  background: #eef5ef;
+}
+.pn-grupo:focus-visible {
+  outline: 3px solid var(--verde);
+  outline-offset: 2px;
+}
+.pn-grupo__ico {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  background: var(--verde);
+}
+.pn-grupo__ico svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pn-grupo__txt {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.pn-grupo__txt b {
+  font: 700 1.35rem/1.1 var(--titular);
+}
+.pn-grupo__txt span {
+  color: var(--tinta-2);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.pn-grupo__n {
+  grid-column: 2;
+  font: 700 0.85rem var(--cond);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--verde-osc);
+}
+.pn-cargos,
+.pn-postula__form {
+  scroll-margin-top: 140px;
+}
+.pn-cargos__cab {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin-bottom: 8px;
+}
+.pn-cargos__cab .pn-trabaja__h {
+  margin: 0;
+}
+.pn-cargos__volver {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--verde-osc);
+  font: 700 0.85rem var(--cond);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.postula-js .pn-cargos:not(.on),
+.postula-js .pn-postula__form:not(.on) {
+  display: none;
+}
+html:not(.postula-js) .pn-postula__cab,
+html:not(.postula-js) .pn-cargos__volver {
+  display: none;
+}
+.pn-postula__cab {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 12px;
+  padding: 14px 18px;
+  background: var(--verde-osc);
+  color: #fff;
+}
+.pn-postula__cab p {
+  flex-basis: 100%;
+  font: 700 0.78rem var(--cond);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.85);
+}
+.pn-postula__cab b {
+  font: 700 1.45rem/1.1 var(--titular);
+}
+.pn-postula__cab a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-left: auto;
+  color: #fff;
+  font: 700 0.85rem var(--cond);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-underline-offset: 0.3em;
+}
+.pn-postula .pn-form-caja {
+  margin: 0;
+  border-top: 0;
+}
+/* preguntas propias del cargo, dentro del formulario */
+.pn-preguntas {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.pn-preguntas[hidden] {
+  display: none;
+}
+.pn-pregunta {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.pn-pregunta > legend {
+  margin-bottom: 8px;
+  padding: 0;
+  font: 700 1.02rem var(--cond);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.pn-opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pn-opciones label {
+  position: relative;
+  display: inline-flex;
+  font: inherit;
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+}
+.pn-opciones input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.pn-opciones span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid #c9cfc9;
+  border-radius: 999px;
+  background: #fff;
+  font: 600 0.98rem var(--font);
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+}
+.pn-opciones input:checked + span {
+  border-color: var(--verde);
+  background: var(--verde);
+  color: #fff;
+}
+.pn-opciones input:focus-visible + span {
+  outline: 3px solid var(--verde);
+  outline-offset: 2px;
+}
+@media (max-width: 760px) {
+  .pn-grupos,
+  .pn-cargos,
+  .pn-postula__form {
+    scroll-margin-top: 84px;
+  }
+}
+@media (max-width: 640px) {
+  .pn-grupos {
+    grid-template-columns: 1fr;
+  }
+}

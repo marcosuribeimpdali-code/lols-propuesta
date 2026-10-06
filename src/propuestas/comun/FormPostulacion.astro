@@ -70,6 +70,8 @@ const experiencia = ['Menos de 1 año', '1 a 3 años', '3 a 5 años', '5 a 10 a�
     <input id="cv-cargo" name="cargo" type="text" required aria-describedby="cv-cargo-ayuda" />
     <p id="cv-cargo-ayuda" class="campo__ayuda">Por ejemplo: maestro, eléctrico, jefe de obra, prevencionista.</p>
   </div>
+  <!-- preguntas propias de cada cargo (Panorámica, 06-10-2026); la página que no las pasa no cambia -->
+  <slot name="preguntas" />
   <Adjuntos id="cv-archivo" name="cv" label="Su CV" limites={adjuntoCv}>
     PDF o Word, hasta {mb(adjuntoCv.maxArchivo)}.
   </Adjuntos>
