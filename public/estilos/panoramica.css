@@ -2372,6 +2372,12 @@ main:focus {
   outline: 3px solid var(--verde);
   outline-offset: 2px;
 }
+/* en pantallas táctiles (celular, iPad), botones de 44 px de alto como pide Apple */
+@media (pointer: coarse) {
+  .pn-filtro button {
+    min-height: 44px;
+  }
+}
 .pn-obra {
   display: flex;
   flex-direction: column;

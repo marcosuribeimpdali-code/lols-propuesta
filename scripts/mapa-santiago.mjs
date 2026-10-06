@@ -9,7 +9,7 @@ import fs from 'node:fs';
 
 const BBOX = { oeste: -70.752, este: -70.638, sur: -33.512, norte: -33.432 };
 // etiquetas puestas a mano (en lat/lon) donde la automática queda tapada por las obras
-const ETIQUETAS = { Santiago: [-70.652, -33.47] };
+const ETIQUETAS = { Santiago: [-70.652, -33.47], 'Pedro Aguirre Cerda': [-70.67, -33.4935] };
 const ANCHO = 1000;
 const lat0 = ((BBOX.sur + BBOX.norte) / 2) * (Math.PI / 180);
 const kx = Math.cos(lat0);
