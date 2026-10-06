@@ -31,6 +31,10 @@ const servicios = listaServicios.charAt(0).toLowerCase() + listaServicios.slice(
           {' '}{empresa.cifras.obras} obras realizadas.
         </p>
         <p>Hoy somos más de {empresa.cifras.trabajadores} trabajadores en {servicios} <Revisar nota={empresa.cifrasRevisar} /></p>
+        <p class="pn-mutual">
+          <svg class="pn-mutual__ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.6-3 8.4-7 10-4-1.6-7-5.4-7-10V6z" /><path d="M8.8 12.2l2.2 2.2 4.3-4.4" /></svg>
+          <span>Estamos adheridos a la <b>{empresa.mutual}</b>: nuestros trabajadores están cubiertos ante accidentes del trabajo y enfermedades profesionales.</span>
+        </p>
         <p class="solo-marca"><Pendiente texto="2 o 3 líneas sobre el tipo de obras que hace la empresa y para quién" /></p>
         <a class="btn btn--verde pn-descarga" href={presentacion.href} download={presentacion.nombreArchivo}>
           <svg class="pn-descarga__ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16" /></svg>

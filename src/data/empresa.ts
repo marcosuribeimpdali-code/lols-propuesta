@@ -19,6 +19,10 @@ export const empresa = {
   /** razón social oficial y RUT (confirmados por la empresa, 30-09-2026) */
   razonSocial: 'LOLS Empresa de Ingeniería Limitada',
   rut: '77.085.560-8',
+  /** mutual a la que está adherida (seguro de la Ley 16.744; confirmado por la empresa, 06-10-2026).
+   *  Es lo único de "respaldo" que se publica: la empresa no quiere mostrar registros (MOP, MINVU,
+   *  Mercado Público) porque trabaja solo con clientes privados. */
+  mutual: 'Mutual de Seguridad CChC',
   nombreCorto: 'LOLS Ingeniería',
   lema: 'Sus proyectos en las mejores manos',
   directrices: 'Experiencia, seguridad y calidad son nuestras directrices.',

@@ -2697,6 +2697,28 @@ main:focus {
     grid-template-columns: 1fr;
   }
 }
+/* mutual de seguridad (Quiénes somos, 06-10-2026): lo único de "respaldo" que la empresa quiere mostrar */
+.pn-mutual {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-left: 4px solid var(--verde);
+  background: var(--gris);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+.pn-mutual__ico {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  margin-top: 1px;
+  fill: none;
+  stroke: var(--verde-osc);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 /* botón para descargar la presentación (Quiénes somos) */
 .pn-descarga {
   display: inline-flex;
