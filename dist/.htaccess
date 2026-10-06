@@ -1,0 +1,30 @@
+# El docroot del subdominio queda DENTRO de public_html (el hosting no deja sacarlo), y en
+# public_html vive un WordPress viejo con sus propias reglas de reescritura. Declarar
+# RewriteEngine aquí corta la herencia de esas reglas; sin esto, cualquier URL inexistente
+# devuelve error 500 en vez de 404.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+</IfModule>
+
+Options -Indexes
+ErrorDocument 404 /404.html
+
+# Las páginas van en UTF-8: decirlo también en la respuesta del servidor (06-10-2026), para que las
+# apps que arman la vista previa del enlace (WhatsApp, Facebook) lean bien los acentos.
+AddDefaultCharset UTF-8
+
+# La página de equipos pasó de /maquinaria-y-equipos/ a /capacidad-tecnica/ (29-09-2026):
+# el enlace viejo, que ya se compartió, sigue llegando.
+<IfModule mod_alias.c>
+  RedirectMatch 301 ^/maquinaria-y-equipos/?$ /capacidad-tecnica/
+</IfModule>
+
+# Caché del navegador (30-09-2026): las páginas se revisan con el servidor en cada visita (si no
+# cambiaron, responde "sin cambios" y no se bajan de nuevo). Así lo publicado se ve al tiro, sin
+# Ctrl + F5: antes el navegador podía mostrar una versión guardada por un buen rato. Hojas de
+# estilo, imágenes y scripts llevan versión o código en su dirección, así que no necesitan esto.
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
