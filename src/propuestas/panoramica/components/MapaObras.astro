@@ -1,0 +1,73 @@
+---
+// "Obras en Santiago" (portada, 06-10-2026): mapa propio de las comunas (SVG, sin servicios de
+// terceros) con las obras registradas en Bóveda en ubicación APROXIMADA (src/data/obras-mapa.ts) y
+// la oficina. Los nombres de comuna y los puntos van en HTML encima del dibujo, en %, para que se
+// lean del mismo tamaño en el celular y en el computador. Solo se anima transform y opacity (el
+// pulso de las obras en ejecución), y se detiene fuera de la pantalla.
+import mapa from '../../../data/mapa-santiago.json';
+import { obrasMapa, oficinaMapa, proyectar } from '../../../data/obras-mapa';
+import TituloSeccion from './TituloSeccion.astro';
+import Revisar from '../../comun/Revisar.astro';
+import { r } from '../config';
+
+const { ancho, alto, comunas } = mapa;
+const pct = ([x, y]: [number, number]) => `left: ${((x / ancho) * 100).toFixed(2)}%; top: ${((y / alto) * 100).toFixed(2)}%`;
+const enEjecucion = obrasMapa.filter((o) => o.estado === 'ejecucion').length;
+const terminadas = obrasMapa.filter((o) => o.estado === 'terminada').length;
+const porComuna = [...new Set(obrasMapa.map((o) => o.comuna))]
+  .map((c) => ({ comuna: c, n: obrasMapa.filter((o) => o.comuna === c).length }))
+  .sort((a, b) => b.n - a.n);
+const conObras = new Set(porComuna.map((c) => c.comuna));
+const obras = (n: number) => `${n} ${n === 1 ? 'obra' : 'obras'}`;
+---
+<section class="pn-sec pn-mapa-obras" aria-labelledby="mapa-obras-t">
+  <div class="wrap pn-mapa-obras__in">
+    <div class="pn-mapa-obras__txt">
+      <TituloSeccion antetitulo="Dónde trabajamos" titulo="Obras en Santiago" id="mapa-obras-t" centrado={false} />
+      <p class="pn-grande">
+        Hoy tenemos {obras(enEjecucion)} en ejecución y {terminadas} terminadas este año.
+        <Revisar nota="datos de las obras registradas en Bóveda (octubre de 2026): confirmar con la jefatura" />
+      </p>
+      <dl class="pn-mapa-obras__comunas">
+        {porComuna.map((c) => (
+          <div><dt>{c.comuna}</dt><dd>{obras(c.n)}</dd></div>
+        ))}
+      </dl>
+      <ul class="pn-mapa-obras__leyenda" aria-label="Qué significa cada marca">
+        <li><span class="pn-mapa-obras__marca is-ejecucion" aria-hidden="true"></span>En ejecución</li>
+        <li><span class="pn-mapa-obras__marca is-terminada" aria-hidden="true"></span>Terminada</li>
+        <li><span class="pn-mapa-obras__marca is-oficina" aria-hidden="true"></span>Nuestra oficina</li>
+      </ul>
+      <p class="pn-mapa-obras__nota">Las ubicaciones son aproximadas: el mapa no muestra la dirección de cada obra.</p>
+      <a class="btn btn--verde" href={r('terminados')}>Ver proyectos <span aria-hidden="true">→</span></a>
+    </div>
+
+    <figure class="pn-mapa-obras__fig">
+      <div class="pn-mapa-obras__lienzo" style={`aspect-ratio: ${ancho} / ${alto}`}>
+        <svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-label={`Mapa de Santiago: ${porComuna.map((c) => `${obras(c.n)} en ${c.comuna}`).join(', ')}, y la oficina de LOLS en Cerrillos.`}>
+          {comunas.map((c) => (
+            <path d={c.d} class:list={['pn-mapa-obras__comuna', { 'con-obras': conObras.has(c.nombre) }]} />
+          ))}
+        </svg>
+        {comunas.map((c) => c.etiqueta && (
+          <span class:list={['pn-mapa-obras__nombre', { 'con-obras': conObras.has(c.nombre) }]} style={pct(c.etiqueta as [number, number])} aria-hidden="true">{c.nombre}</span>
+        ))}
+        {obrasMapa.map((o) => (
+          <span class={`pn-mapa-obras__punto is-${o.estado}`} style={pct(proyectar(o.lat, o.lon))} aria-hidden="true"></span>
+        ))}
+        <span class="pn-mapa-obras__punto is-oficina" style={pct(proyectar(oficinaMapa.lat, oficinaMapa.lon))} aria-hidden="true">
+          <span class="pn-mapa-obras__oficina">Oficina LOLS</span>
+        </span>
+      </div>
+      <figcaption>Límites comunales: Biblioteca del Congreso Nacional. Ubicaciones aproximadas con datos de © colaboradores de OpenStreetMap.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<script>
+  // el pulso de las obras en ejecución corre solo mientras el mapa está a la vista
+  const lienzo = document.querySelector<HTMLElement>('.pn-mapa-obras__lienzo');
+  if (lienzo) {
+    new IntersectionObserver(([e]) => lienzo.classList.toggle('is-quieto', !e.isIntersecting)).observe(lienzo);
+  }
+</script>

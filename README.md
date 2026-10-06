@@ -135,6 +135,12 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
   en `src/assets/futuros/`, y el plano sale de ella con `scripts/plano.mjs`), sus datos y un
   calendario previsto. Para cargar uno real: agregarlo a `ejemplosFuturos` con su foto o render,
   y generar su plano.
+- **Obras en Santiago (portada, 06-10-2026)**: mapa propio de comunas (`MapaObras.astro`, sin
+  servicios de terceros) con las obras registradas en Bóveda en ubicación **aproximada** (redondeada
+  a ~300 m, sin nombre ni dirección: `src/data/obras-mapa.ts`) y la oficina. El dibujo de las
+  comunas sale de `node scripts/mapa-santiago.mjs <13.geojson>` (límites de la Biblioteca del
+  Congreso Nacional, vía github.com/caracena/chile-geojson) → `src/data/mapa-santiago.json`. Las
+  obras se ubicaron con OpenStreetMap (Nominatim). Para sumar una obra: agregar su fila redondeada.
 - **F5 en la portada**: al recargar, la portada vuelve siempre arriba (Chrome a veces la dejaba a
   media altura). Lo hace un script al comienzo de `Base.astro`, solo en la portada y solo al
   recargar: el botón "atrás" sigue devolviendo al mismo lugar.
