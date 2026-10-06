@@ -1,11 +1,7 @@
-# Sitio de revisión (propuesta): que Google y los demás buscadores no lo indexen.
+# Sitio de revisión (propuesta). Para que Google y los demás buscadores no lo muestren, cada página
+# lleva <meta name="robots" content="noindex, nofollow">.
+# Aquí NO se bloquea a nadie (06-10-2026): con "Disallow: /" para todos y una excepción abajo,
+# algunas apps no armaban la vista previa del enlace (WhatsApp mostraba solo "new.lols.cl", sin
+# foto ni título). Además, un buscador que no puede entrar tampoco alcanza a leer el "noindex".
 User-agent: *
-Disallow: /
-
-# Excepción: los robots que arman la vista previa al compartir el enlace (WhatsApp, Facebook,
-# LinkedIn, X). No indexan en buscadores; solo leen la foto, el título y la frase.
-User-agent: facebookexternalhit
-User-agent: WhatsApp
-User-agent: LinkedInBot
-User-agent: Twitterbot
-Allow: /
+Disallow:

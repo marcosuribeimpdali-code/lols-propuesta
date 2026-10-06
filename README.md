@@ -1,8 +1,10 @@
 # Sitio web propuesto — LOLS Ingeniería
 
 Propuesta de rediseño de [lols.cl](https://lols.cl), publicada para revisión en
-**https://new.lols.cl**. No es el sitio oficial: está fuera de los buscadores (`robots.txt` +
-`<meta name="robots" content="noindex">`) y muestra marcas amarillas donde falta contenido.
+**https://new.lols.cl**. No es el sitio oficial: está fuera de los buscadores (cada página lleva
+`<meta name="robots" content="noindex, nofollow">`; `robots.txt` no bloquea a nadie para que
+WhatsApp y las demás apps armen la vista previa del enlace) y muestra marcas amarillas donde falta
+contenido.
 
 - `[PENDIENTE: …]` → texto, foto o dato que falta. No se inventa contenido: un hueco evidente es
   mejor que un relleno que parece real.

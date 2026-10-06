@@ -9,6 +9,10 @@
 Options -Indexes
 ErrorDocument 404 /404.html
 
+# Las páginas van en UTF-8: decirlo también en la respuesta del servidor (06-10-2026), para que las
+# apps que arman la vista previa del enlace (WhatsApp, Facebook) lean bien los acentos.
+AddDefaultCharset UTF-8
+
 # La página de equipos pasó de /maquinaria-y-equipos/ a /capacidad-tecnica/ (29-09-2026):
 # el enlace viejo, que ya se compartió, sigue llegando.
 <IfModule mod_alias.c>
