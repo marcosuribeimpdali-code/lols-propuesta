@@ -1,0 +1,51 @@
+---
+// Cifras que se cuentan solas (06-10-2026): los números marcados con `data-contar` suben de 0 a su
+// valor la primera vez que aparecen en pantalla (1,2 s). Sin JavaScript o con "reducir movimiento"
+// se ven quietos con su valor final, y los lectores de pantalla leen el texto oculto de al lado, que
+// no cambia. Acepta valores como "31", "+50" o "+7.000" (punto de miles, como se escribe en Chile).
+---
+<script>
+  interface Cifra {
+    el: HTMLElement;
+    pre: string;
+    n: number;
+    post: string;
+    final: string;
+  }
+  const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const els = [...document.querySelectorAll<HTMLElement>('[data-contar]')];
+  if (els.length && !reducido && 'IntersectionObserver' in window) {
+    const DURA = 1200;
+    const fmt = new Intl.NumberFormat('es-CL');
+    const cifras: Cifra[] = [];
+    els.forEach((el) => {
+      const final = el.textContent?.trim() ?? '';
+      const m = final.match(/^(\D*)([\d.]+)(\D*)$/);
+      if (m) cifras.push({ el, pre: m[1], n: Number(m[2].replace(/\./g, '')), post: m[3], final });
+    });
+    const contar = (c: Cifra) => {
+      const t0 = performance.now();
+      const paso = (t: number) => {
+        const k = Math.min(1, (t - t0) / DURA);
+        const suave = 1 - Math.pow(1 - k, 3);
+        c.el.textContent = k < 1 ? c.pre + fmt.format(Math.round(c.n * suave)) + c.post : c.final;
+        if (k < 1) requestAnimationFrame(paso);
+      };
+      requestAnimationFrame(paso);
+    };
+    const io = new IntersectionObserver(
+      (entradas) =>
+        entradas.forEach((en) => {
+          if (!en.isIntersecting) return;
+          io.unobserve(en.target);
+          const c = cifras.find((x) => x.el === en.target);
+          if (c) contar(c);
+        }),
+      { threshold: 0.6 },
+    );
+    cifras.forEach((c) => {
+      c.el.textContent = c.pre + '0' + c.post;
+      io.observe(c.el);
+    });
+  }
+</script>

@@ -9,6 +9,7 @@ import { r } from '../config';
 // `fotoBanner` de equipos.ts, para volver a PageBanner
 import PortadaObra from '../components/PortadaObra.astro';
 import TituloSeccion from '../components/TituloSeccion.astro';
+import CifrasQueCuentan from '../components/CifrasQueCuentan.astro';
 import CtaFoto from '../components/CtaFoto.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import Revisar from '../../comun/Revisar.astro';
@@ -44,7 +45,7 @@ import { presentacion } from '../../../data/descargas';
           {cifrasEquipos.map((c) => (
             <div class="pn-cifras__item">
               <dt>{c.texto}</dt>
-              <dd><span aria-hidden="true">{c.valor}</span><span class="visually-hidden">{c.leido}</span></dd>
+              <dd><span aria-hidden="true" data-contar>{c.valor}</span><span class="visually-hidden">{c.leido}</span></dd>
             </div>
           ))}
         </dl>
@@ -119,4 +120,5 @@ import { presentacion } from '../../../data/descargas';
   </section>
 
   <CtaFoto />
+  <CifrasQueCuentan />
 </Base>

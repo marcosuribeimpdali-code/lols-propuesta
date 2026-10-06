@@ -7,6 +7,7 @@ import { r, rObra } from '../config';
 // PortadaFundido (opción C), PortadaObra (opción G, hoy en Capacidad técnica) y PortadaCubo.
 import PortadaFija from '../components/PortadaFija.astro';
 import TituloSeccion from '../components/TituloSeccion.astro';
+import CifrasQueCuentan from '../components/CifrasQueCuentan.astro';
 import CtaFoto from '../components/CtaFoto.astro';
 import IconoServicio from '../../comun/IconoServicio.astro';
 import Pendiente from '../../comun/Pendiente.astro';
@@ -39,7 +40,7 @@ const cifras = [
         {cifras.map((c) => (
           <div class="pn-cifras__item">
             <dt>{c.texto}</dt>
-            <dd><span aria-hidden="true">{c.valor}</span><span class="visually-hidden">{c.leido}</span></dd>
+            <dd><span aria-hidden="true" data-contar>{c.valor}</span><span class="visually-hidden">{c.leido}</span></dd>
             {c.revisar && <dd class="pn-cifras__rev"><Revisar nota="cantidad de trabajadores" /></dd>}
           </div>
         ))}
@@ -130,4 +131,5 @@ const cifras = [
   </section>
 
   <CtaFoto />
+  <CifrasQueCuentan />
 </Base>
