@@ -2314,6 +2314,64 @@ main:focus {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr));
   gap: 28px;
 }
+/* filtro por tipo de obra (06-10-2026): el envoltorio no cuenta para la grilla; oculto, desaparece */
+.pn-obra-filtro {
+  display: contents;
+}
+.pn-obra-filtro[hidden] {
+  display: none;
+}
+.pn-filtro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.pn-filtro__rot {
+  margin-right: 6px;
+  font: 700 0.82rem var(--cond);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tinta-2);
+}
+.pn-filtro button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--tinta);
+  font: 600 0.95rem var(--font);
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+}
+.pn-filtro button span {
+  color: var(--tinta-2);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+.pn-filtro button:hover {
+  border-color: var(--verde);
+}
+.pn-filtro button[aria-pressed='true'] {
+  border-color: var(--verde);
+  background: var(--verde);
+  color: #fff;
+}
+.pn-filtro button[aria-pressed='true'] span {
+  color: #fff;
+}
+.pn-filtro button:focus-visible {
+  outline: 3px solid var(--verde);
+  outline-offset: 2px;
+}
 .pn-obra {
   display: flex;
   flex-direction: column;

@@ -3,7 +3,7 @@
 import ObraCard from './ObraCard.astro';
 import Pendiente from '../../comun/Pendiente.astro';
 import Revisar from '../../comun/Revisar.astro';
-import { porEstado, type Estado } from '../../../data/proyectos';
+import { porEstado, TIPOS_OBRA, type Estado } from '../../../data/proyectos';
 import { r } from '../config';
 
 interface Props {
@@ -16,6 +16,9 @@ const tabs = [
   { href: r('construccion'), label: 'En ejecución', n: porEstado('en-construccion').length, activo: estado === 'en-construccion' },
   { href: r('futuros'), label: 'Próximos proyectos', n: porEstado('futuro').length, activo: estado === 'futuro' },
 ];
+// filtro por tipo de obra (06-10-2026): solo los tipos que tienen obras en esta pestaña; si hay
+// menos de dos, no se muestra
+const tipos = TIPOS_OBRA.map((t) => ({ t, n: lista.filter((p) => p.tipos.includes(t)).length })).filter((x) => x.n > 0);
 ---
 <section class="pn-sec">
   <div class="wrap">
@@ -46,8 +49,45 @@ const tabs = [
     </div>
     )}
 
+    {tipos.length > 1 && (
+      <div class="pn-filtro" role="group" aria-label="Filtrar las obras por tipo">
+        <span class="pn-filtro__rot" aria-hidden="true">Tipo de obra</span>
+        <button type="button" data-tipo="" aria-pressed="true">Todas <span>{lista.length}</span></button>
+        {tipos.map(({ t, n }) => (
+          <button type="button" data-tipo={t} aria-pressed="false">{t} <span>{n}</span></button>
+        ))}
+        <p class="visually-hidden" aria-live="polite" data-filtro-anuncio></p>
+      </div>
+    )}
+
     <div class="pn-obras-grid">
-      {lista.map((p, i) => <ObraCard proyecto={p} numero={i + 1} nivel="h2" />)}
+      {lista.map((p, i) => (
+        <div class="pn-obra-filtro" data-tipos={p.tipos.join('|')}>
+          <ObraCard proyecto={p} numero={i + 1} nivel="h2" />
+        </div>
+      ))}
     </div>
   </div>
 </section>
+
+<script>
+  // filtro por tipo: muestra solo las obras del tipo elegido ("Todas" las vuelve a mostrar)
+  document.querySelectorAll<HTMLElement>('.pn-filtro').forEach((filtro) => {
+    const botones = [...filtro.querySelectorAll<HTMLButtonElement>('button')];
+    const obras = [...document.querySelectorAll<HTMLElement>('.pn-obra-filtro')];
+    const anuncio = filtro.querySelector<HTMLElement>('[data-filtro-anuncio]');
+    botones.forEach((b) =>
+      b.addEventListener('click', () => {
+        const tipo = b.dataset.tipo ?? '';
+        botones.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        let n = 0;
+        obras.forEach((o) => {
+          const ver = !tipo || (o.dataset.tipos ?? '').split('|').includes(tipo);
+          o.hidden = !ver;
+          if (ver) n++;
+        });
+        if (anuncio) anuncio.textContent = `${n} ${n === 1 ? 'obra' : 'obras'}${tipo ? ` de ${tipo.toLowerCase()}` : ''}`;
+      }),
+    );
+  });
+</script>

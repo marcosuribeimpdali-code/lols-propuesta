@@ -88,6 +88,8 @@ export interface Proyecto {
   imagen: Imagen | null;
   /** true = nombre y datos inventados, para ver cómo se ve la ficha (el sitio lo marca) */
   datosEjemplo: boolean;
+  /** tipos de obra para el filtro de Proyectos (salen del uso del edificio; [] = sin datos) */
+  tipos: string[];
   /** paso a paso: Antes → Durante → Después; en las obras en ejecución, Inicio → Obra gruesa →
    *  Avance actual → Así quedará (el render) */
   etapas: Foto[];
@@ -192,6 +194,21 @@ const ejemplos: Record<string, Ejemplo> = {
 
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 /** "Marzo 2015", contando meses hacia atrás desde la entrega */
+// filtro de Proyectos (06-10-2026): los tipos se deducen del uso del edificio; una obra puede tener
+// varios ("bodegas y oficinas" → Bodegas y Oficinas)
+export const TIPOS_OBRA = ['Bodegas', 'Oficinas', 'Locales comerciales', 'Departamentos', 'Industrial'];
+const tiposDe = (uso?: string | null): string[] => {
+  if (!uso) return [];
+  const u = uso.toLowerCase();
+  const t: string[] = [];
+  if (u.includes('bodega')) t.push('Bodegas');
+  if (u.includes('oficina')) t.push('Oficinas');
+  if (u.includes('local') || u.includes('sala de ventas')) t.push('Locales comerciales');
+  if (u.includes('departamento')) t.push('Departamentos');
+  if (u.includes('galpón') || u.includes('industrial')) t.push('Industrial');
+  return t;
+};
+
 const mesAnio = ([mes, anio]: [number, number], menos = 0) => {
   const total = anio * 12 + (mes - 1) - menos;
   const m = MESES[total % 12];
@@ -241,6 +258,7 @@ const ficha = (estado: Estado, img: Imagen | null, slug: string | null = null, i
     estado,
     imagen: img,
     datosEjemplo: !!e,
+    tipos: tiposDe(e?.uso),
     etapas,
     galeria,
     avance: null,
@@ -308,6 +326,7 @@ const fichaEjecucion = (img: Imagen | null, slug: string, i: number): Proyecto =
     estado: 'en-construccion',
     imagen: img,
     datosEjemplo: true,
+    tipos: tiposDe(e.uso),
     etapas,
     galeria: [],
     avance: e.avance,
@@ -362,6 +381,7 @@ const fichaFutura = (slug: string): Proyecto => {
     estado: 'futuro',
     imagen: { src: e.foto, tipo: 'referencial', origen: e.credito },
     datosEjemplo: true,
+    tipos: tiposDe(e.uso),
     etapas,
     galeria: [],
     avance: null,
