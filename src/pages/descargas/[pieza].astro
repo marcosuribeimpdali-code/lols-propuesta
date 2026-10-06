@@ -24,7 +24,7 @@ import { cifrasEquipos, ventajas, usos } from '../../data/equipos';
 import { porEstado } from '../../data/proyectos';
 import { proceso } from '../../data/proceso';
 import { dron } from '../../data/dron';
-import { diapositivas } from '../../data/portada';
+import { diapositivas, portadaFija } from '../../data/portada';
 
 export function getStaticPaths() {
   return import.meta.env.DEV ? [{ params: { pieza: 'compartir' } }, { params: { pieza: 'presentacion' } }] : [];
@@ -32,6 +32,9 @@ export function getStaticPaths() {
 
 const { pieza } = Astro.params;
 const portada = dron.obraGrua;
+// la vista previa al compartir usa una obra TERMINADA (06-10-2026: se recomendó no mostrar obras a
+// medio construir); es la primera foto de la portada. La presentación sigue con la toma de dron.
+const fotoCompartir = portadaFija[0];
 const obras = porEstado('terminado').slice(0, 8);
 const hoy = new Date();
 const mes = hoy.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
@@ -53,7 +56,7 @@ const total = 6;
   <body class={pieza}>
     {pieza === 'compartir' ? (
       <main class="tarjeta">
-        <Image format="jpg" quality={72} class="fondo" src={portada.img} alt="" widths={[1400]} sizes="1200px" loading="eager" />
+        <Image format="jpg" quality={72} class="fondo" src={fotoCompartir.img} alt="" widths={[1400]} sizes="1200px" loading="eager" style="object-position: 70% 60%" />
         <div class="tarjeta__velo"></div>
         <div class="tarjeta__txt">
           <Logo class="tarjeta__logo" decorativo />
@@ -62,7 +65,7 @@ const total = 6;
           <p class="tarjeta__sub">{empresa.anios} años en el mercado · Santiago, Chile</p>
           <p class="tarjeta__serv">{servicios.map((s) => s.nombre).join(' · ')}</p>
         </div>
-        {portada.credito && <p class="ref">Imagen referencial</p>}
+        {fotoCompartir.credito && <p class="ref">Imagen referencial</p>}
       </main>
     ) : (
       <main>

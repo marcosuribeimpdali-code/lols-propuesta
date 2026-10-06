@@ -139,8 +139,7 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
   media altura). Lo hace un script al comienzo de `Base.astro`, solo en la portada y solo al
   recargar: el botón "atrás" sigue devolviendo al mismo lugar.
 - **Tomas con dron (`src/assets/dron/`)**: fotos aéreas de ejemplo en los banners de Quiénes somos,
-  Proyectos y Trabaja con nosotros, el llamado final, la vista previa al compartir y la
-  presentación. Stock de Unsplash (Centar MURID, CHUTTERSNAP, Ivan Bandura, Jamie Street y Eli
+  Proyectos y Trabaja con nosotros, el llamado final y la presentación. Stock de Unsplash (Centar MURID, CHUTTERSNAP, Ivan Bandura, Jamie Street y Eli
   Williams), marcadas "Imagen referencial"; se cambian en `src/data/dron.ts`.
 - **Servicios**: cada servicio es una franja con foto grande y el texto al lado. Construcción,
   montaje y electricidad usan fotos de la portada; mantención y voz y datos, las de
@@ -167,7 +166,11 @@ Todo campo `null` se muestra en el sitio como `[PENDIENTE]`: basta con completar
   se descarga desde Quiénes somos, el pie y Capacidad técnica. Es un **borrador**: usa los mismos
   datos del sitio (con las obras de ejemplo marcadas) y lo dice en cada hoja.
 - **Vista previa al compartir** (`public/compartir.jpg`, 1200 × 630): la foto, el logo y el lema
-  que aparecen al mandar el enlace por WhatsApp o correo (etiquetas `og:` en `Base.astro`).
+  que aparecen al mandar el enlace por WhatsApp o correo (etiquetas `og:` en `Base.astro`). Desde
+  el 06-10-2026 la foto es una obra terminada (la primera de `portadaFija`, edificio de oficinas con
+  árboles), no una obra a medio construir. Después de cambiarla, WhatsApp sigue mostrando la vieja
+  hasta pasar https://new.lols.cl/ por el Depurador de Meta
+  (developers.facebook.com/tools/debug) y apretar "Volver a extraer".
 
 Las dos se arman desde `src/pages/descargas/[pieza].astro` (páginas que solo existen con
 `npm run dev`) y se "imprimen" con Chrome. Cuando cambien los datos o las fotos:
