@@ -7,3 +7,14 @@ export const proceso = [
   { titulo: 'Ejecución y entrega', texto: 'Construimos, coordinamos cada etapa y entregamos la obra terminada.' },
 ];
 export const procesoRevisar = 'pasos del proceso a confirmar con la jefatura';
+
+// "¿Qué pasa con su mensaje?" (Contacto, 06-10-2026): lo que viene después de enviar el formulario,
+// para que la persona sepa qué esperar. Texto propuesto, sin plazos (el tiempo de respuesta está
+// pendiente con la jefatura).
+export const despuesDeEnviar = [
+  { titulo: 'Recibimos su mensaje', texto: 'Revisamos lo que nos contó y los archivos que adjuntó.' },
+  { titulo: 'Le contactamos', texto: 'Le llamamos o escribimos para aclarar dudas y coordinar una visita.' },
+  { titulo: 'Visitamos la obra', texto: 'Conocemos el lugar en terreno o por videollamada.' },
+  { titulo: 'Le enviamos la propuesta', texto: 'Presupuesto en pesos, alcance y plazo, para que decida con calma.' },
+];
+export const despuesRevisar = 'pasos después de enviar el formulario, a confirmar con la jefatura';

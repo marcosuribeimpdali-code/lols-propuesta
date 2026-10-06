@@ -2746,6 +2746,92 @@ main:focus {
   color: var(--verde-osc);
   font-weight: 600;
 }
+/* "¿Qué pasa con su mensaje?" (06-10-2026): 4 pasos en línea sobre el formulario; en el celular,
+   una línea de tiempo vertical */
+.pn-pasos {
+  margin-block: clamp(40px, 6vw, 64px);
+}
+.pn-pasos__ante {
+  font: 700 0.82rem var(--cond);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--verde-osc);
+}
+.pn-pasos__t {
+  margin-top: 6px;
+  font: 700 clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem) / 1.05 var(--titular);
+}
+.pn-pasos__lista {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+/* tramo de línea entre un número y el siguiente (el último no lleva) */
+.pn-pasos__lista li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 21px;
+  left: 50px;
+  right: -18px;
+  height: 2px;
+  background: var(--linea);
+}
+.pn-pasos__lista li {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-width: 0;
+}
+.pn-pasos__n {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--verde);
+  color: #fff;
+  font: 800 1.2rem var(--cond);
+  box-shadow: 0 0 0 6px #fff;
+}
+.pn-pasos__lista h3 {
+  margin-top: 10px;
+  font: 700 1.15rem/1.2 var(--titular);
+}
+.pn-pasos__lista p {
+  color: var(--tinta-2);
+  font-size: 0.97rem;
+  line-height: 1.45;
+}
+@media (max-width: 760px) {
+  .pn-pasos__lista {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .pn-pasos__lista li:not(:last-child)::after {
+    top: 50px;
+    bottom: -12px;
+    left: 21px;
+    right: auto;
+    width: 2px;
+    height: auto;
+  }
+  .pn-pasos__lista li {
+    grid-template-columns: 44px minmax(0, 1fr);
+    column-gap: 14px;
+    row-gap: 2px;
+  }
+  .pn-pasos__n {
+    grid-row: span 2;
+  }
+  .pn-pasos__lista h3 {
+    margin-top: 9px;
+  }
+}
 /* formulario a la izquierda y mapa a la derecha */
 .pn-contacto {
   display: grid;

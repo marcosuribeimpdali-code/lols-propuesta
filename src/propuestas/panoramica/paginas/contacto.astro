@@ -5,9 +5,11 @@ import BannerPlano from '../components/BannerPlano.astro';
 import FormContacto from '../../comun/FormContacto.astro';
 import Mapa from '../../comun/Mapa.astro';
 import Pendiente from '../../comun/Pendiente.astro';
+import Revisar from '../../comun/Revisar.astro';
 import IconoWhatsapp from '../../comun/IconoWhatsapp.astro';
 import TituloSeccion from '../components/TituloSeccion.astro';
 import { empresa, mapas, whatsappHref, areas, correoArea } from '../../../data/empresa';
+import { despuesDeEnviar, despuesRevisar } from '../../../data/proceso';
 // cabecera "del plano a la obra" (opción H): foto de una obra terminada y su plano, que sale de
 // la misma foto con scripts/plano.mjs. Stock (Unsplash) hasta tener una obra real de LOLS.
 import fotoObra from '../../../assets/contacto/obra-terminada.jpg';
@@ -63,6 +65,20 @@ const iconosArea = ['M6 3h9l3 3v15H6zM15 3v3h3M9 11h6M9 15h6M9 19h4'];
           <p><Pendiente texto="días y horario de atención" /></p>
         </li>
       </ul>
+
+      <section class="pn-pasos" aria-labelledby="pasos-t">
+        <p class="pn-pasos__ante">Después de enviar</p>
+        <h2 id="pasos-t" class="pn-pasos__t">¿Qué pasa con su mensaje? <Revisar nota={despuesRevisar} /></h2>
+        <ol class="pn-pasos__lista">
+          {despuesDeEnviar.map((p, i) => (
+            <li>
+              <span class="pn-pasos__n" aria-hidden="true">{i + 1}</span>
+              <h3>{p.titulo}</h3>
+              <p>{p.texto}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
 
       <div class="pn-contacto">
         <div class="pn-form-caja">
